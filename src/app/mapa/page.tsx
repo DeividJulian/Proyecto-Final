@@ -3,14 +3,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Dir = "up" | "right" | "down" | "left";
+type KeyMap = Record<"ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight", boolean>;
 
 export default function MapaPage() {
   // Posición del avatar en % dentro del contenedor del mapa
   const [pos, setPos] = useState({ x: 18, y: 72 });
-  const [dir, setDir] = useState<Dir>("right");
+  // Si quieres recordar la dirección sin causar re-render, usa ref:
+  const dirRef = useRef<Dir>("right");
   const [moving, setMoving] = useState(false);
 
   // Movimiento con flechas
@@ -18,7 +20,7 @@ export default function MapaPage() {
     let raf: number | null = null;
 
     const speed = 0.45; // velocidad en % por frame
-    const keys = {
+    const keys: KeyMap = {
       ArrowUp: false,
       ArrowDown: false,
       ArrowLeft: false,
@@ -27,18 +29,20 @@ export default function MapaPage() {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key in keys) {
-        (keys as any)[e.key] = true;
+        const k = e.key as keyof KeyMap;
+        keys[k] = true;
         setMoving(true);
-        if (e.key === "ArrowUp") setDir("up");
-        if (e.key === "ArrowDown") setDir("down");
-        if (e.key === "ArrowLeft") setDir("left");
-        if (e.key === "ArrowRight") setDir("right");
+        if (k === "ArrowUp") dirRef.current = "up";
+        if (k === "ArrowDown") dirRef.current = "down";
+        if (k === "ArrowLeft") dirRef.current = "left";
+        if (k === "ArrowRight") dirRef.current = "right";
       }
     };
 
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.key in keys) {
-        (keys as any)[e.key] = false;
+        const k = e.key as keyof KeyMap;
+        keys[k] = false;
         if (!Object.values(keys).some(Boolean)) setMoving(false);
       }
     };
@@ -108,7 +112,7 @@ export default function MapaPage() {
           aria-hidden
         >
           <Image
-            src="/assets/question.png"  // tu PNG sin fondo
+            src="/assets/question.png"
             alt="Ayuda"
             width={40}
             height={56}

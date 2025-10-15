@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function ProyectosPage() {
   const [showHelp, setShowHelp] = useState(false);
@@ -38,30 +38,32 @@ export default function ProyectosPage() {
 
         {/* Botones inferiores */}
         <div className="mt-10 flex items-center justify-center gap-10">
-          <PixelBrownButton as={Link} href="/">
-            VOLVER
-          </PixelBrownButton>
+          <PixelBrownLinkBtn href="/">VOLVER</PixelBrownLinkBtn>
 
-          <PixelBrownButton as="a" href="#" onClick={(e: any) => e.preventDefault()}>
+          <PixelBrownABtn
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
             DESCARGAR
-          </PixelBrownButton>
+          </PixelBrownABtn>
         </div>
       </section>
 
       {/* Signo de interrogación con globito */}
       <div
         className="fixed right-4 md:right-6 bottom-6 z-30 animate-bob cursor-pointer flex items-center gap-3"
-        onClick={() => setShowHelp(!showHelp)}
+        onClick={() => setShowHelp((v) => !v)}
       >
-       {/* Globito blanco que aparece al hacer click */}
-{showHelp && (
-  <div className="bg-white text-black border-8 border-black rounded-md px-6 py-5 shadow-[0_8px_0_#000] font-[PressStart] text-[25px] leading-relaxed w-[380px]">
-    Aquí verás mis proyectos. <br />
-    Pasa el cursor por encima <br />
-    y haz clic para conocerlos.
-  </div>
-)}
-
+        {/* Globito blanco que aparece al hacer click */}
+        {showHelp && (
+          <div className="bg-white text-black border-8 border-black rounded-md px-6 py-5 shadow-[0_8px_0_#000] font-[PressStart] text-[25px] leading-relaxed w-[380px]">
+            Aquí verás mis proyectos. <br />
+            Pasa el cursor por encima <br />
+            y haz clic para conocerlos.
+          </div>
+        )}
 
         <Image
           src="/assets/question.png"
@@ -76,9 +78,15 @@ export default function ProyectosPage() {
       {/* Animaciones locales */}
       <style jsx>{`
         @keyframes bob {
-          0% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
-          100% { transform: translateY(0); }
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+          100% {
+            transform: translateY(0);
+          }
         }
         .animate-bob {
           animation: bob 1.4s ease-in-out infinite;
@@ -124,20 +132,46 @@ function ProjectCard({ title, img }: { title: string; img: string }) {
   );
 }
 
-function PixelBrownButton({
-  as = "button",
+/* ---- Botón como Next Link (tipado) ---- */
+function PixelBrownLinkBtn({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="
+        inline-block
+        bg-[#6e3a06] text-white
+        border-8 border-black rounded-md
+        shadow-[0_10px_0_#000]
+        px-8 py-3
+        font-[PressStart] text-[16px] tracking-wide
+        hover:translate-y-0.5 hover:shadow-[0_8px_0_#000]
+        active:translate-y-1 active:shadow-[0_6px_0_#000]
+        transition-transform
+      "
+    >
+      {children}
+    </Link>
+  );
+}
+
+/* ---- Botón como <a> (tipado) ---- */
+function PixelBrownABtn({
   href,
   onClick,
   children,
 }: {
-  as?: any;
-  href?: string;
-  onClick?: (e: any) => void;
+  href: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   children: React.ReactNode;
 }) {
-  const Comp = as as any;
   return (
-    <Comp
+    <a
       href={href}
       onClick={onClick}
       className="
@@ -153,6 +187,6 @@ function PixelBrownButton({
       "
     >
       {children}
-    </Comp>
+    </a>
   );
 }
