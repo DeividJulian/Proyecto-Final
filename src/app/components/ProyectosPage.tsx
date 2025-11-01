@@ -1,4 +1,3 @@
-// src/app/proyectos/page.tsx
 "use client";
 
 import Image from "next/image";
@@ -49,9 +48,9 @@ export default function ProyectosPage() {
           />
         </div>
 
-        {/* Botón inferior centrado */}
+        {/* Botón inferior centrado -> vuelve al MAPA */}
         <div className="mt-10 flex items-center justify-center">
-          <PixelBrownLinkBtn href="/">VOLVER</PixelBrownLinkBtn>
+          <PixelBrownLinkBtn href="/mapa">VOLVER</PixelBrownLinkBtn>
         </div>
       </section>
 

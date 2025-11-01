@@ -1,4 +1,3 @@
-// src/app/mapa/page.tsx
 "use client";
 
 import Image from "next/image";
@@ -20,8 +19,11 @@ export default function MapaPage() {
 
   // Puntos de interés en el mapa
   const proyectosPoint = { x: 23, y: 10 };
-  const acercaPoint = { x: 73, y: 13 }; // Nueva coordenada para Acerca de Mi
-  const PROXIMITY_THRESHOLD = 6;
+  const acercaPoint = { x: 73, y: 13 }; // coordenada para Acerca de Mi
+  const opinionesPoint = { x: 18, y: 83 };
+  const timelinePoint = { x: 76, y: 73 };
+
+  const PROXIMITY_THRESHOLD = 6; // en porcentaje (ajusta si quieres más/menos sensibilidad)
 
   // Estado para mostrar/ocultar el globo de ayuda al pulsar "?"
   const [showHelpBubble, setShowHelpBubble] = useState(false);
@@ -103,20 +105,37 @@ export default function MapaPage() {
     const dyAcerca = pos.y - acercaPoint.y;
     const distanceAcerca = Math.sqrt(dxAcerca * dxAcerca + dyAcerca * dyAcerca);
 
+    // Calcular distancia a Opiniones (si quisieras)
+    const dxOpiniones = pos.x - opinionesPoint.x;
+    const dyOpiniones = pos.y - opinionesPoint.y;
+    const distanceOpiniones = Math.sqrt(dxOpiniones * dxOpiniones + dyOpiniones * dyOpiniones);
+
     // Redirigir a Proyectos si está cerca
     if (distanceProyectos <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
+      // breve delay para permitir animación/feedback
       setTimeout(() => {
         router.push("/proyectos");
       }, 220);
+      return;
     }
-    
+
     // Redirigir a Acerca de Mi si está cerca
     if (distanceAcerca <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
       setTimeout(() => {
         router.push("/acerca");
       }, 220);
+      return;
+    }
+
+    // (Opcional) redirigir a Opiniones
+    if (distanceOpiniones <= PROXIMITY_THRESHOLD) {
+      redirectedRef.current = true;
+      setTimeout(() => {
+        router.push("/opiniones");
+      }, 220);
+      return;
     }
   }, [pos, router]);
 
@@ -136,7 +155,7 @@ export default function MapaPage() {
           aria-hidden
         />
 
-        {/* Botón Volver */}
+        {/* Botón Volver (ahora a /mapa si vienes desde otras secciones) */}
         <Link
           href="/"
           className="absolute top-4 left-4 z-30 bg-[#2b93ff] text-yellow-300 border-8 border-black rounded-md shadow-[0_10px_0_#000] px-3 py-1 font-[PressStart] text-[12px]"
@@ -144,7 +163,7 @@ export default function MapaPage() {
           VOLVER
         </Link>
 
-        {/* Carteles (con href) */}
+        {/* Etiquetas del mapa: ahora MapLabel es interactivo y accesible por teclado */}
         <MapLabel text="Proyectos" top="10%" left="23%" href="/proyectos" />
         <MapLabel text="Acerca de Mi" top="13%" left="73%" href="/acerca" />
         <MapLabel text="Opiniones" top="83%" left="18%" href="/opiniones" />
@@ -169,7 +188,7 @@ export default function MapaPage() {
               aria-label="Ayuda mapa"
               className="mr-3 bg-white text-black border-8 border-black rounded-md px-6 py-5 shadow-[0_8px_0_#000] font-[PressStart] text-[18px] leading-tight max-w-xs"
             >
-              Utiliza las flechas para moverte por el mapa y conocer mi portafolio, acercate a cada 
+              Utiliza las flechas para moverte por el mapa y conocer mi portafolio, acercate a cada
               seccion para visitarla.
             </div>
           )}
@@ -236,6 +255,10 @@ export default function MapaPage() {
 
 /* ---------- Componentes auxiliares ---------- */
 
+/**
+ * MapLabel: ahora es accesible (button) y además mantiene el Link para SEO/semántica.
+ * Si el usuario hace Enter o Space en el botón, se navega también.
+ */
 function MapLabel({
   text,
   top,
@@ -247,11 +270,16 @@ function MapLabel({
   left: string;
   href?: string;
 }) {
-  const box = (
-    <div className="bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md shadow-[0_10px_0_#000] px-4 py-2 font-[PressStart] text-[12px]">
-      {text}
-    </div>
-  );
+  // useRouter aquí para navegar programáticamente si se presiona Enter/Space
+  const router = useRouter();
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!href) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      router.push(href);
+    }
+  };
 
   return (
     <div
@@ -259,11 +287,20 @@ function MapLabel({
       style={{ top, left, transform: "translate(-50%, -50%)" }}
     >
       {href ? (
-        <Link href={href} className="block hover:scale-[1.04] transition-transform">
-          {box}
+        // mantenemos el Link (para comportamiento normal con click/SEO)
+        <Link href={href} className="block">
+          <button
+            onKeyDown={onKeyDown}
+            className="bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md shadow-[0_10px_0_#000] px-4 py-2 font-[PressStart] text-[12px] hover:scale-[1.04] transition-transform"
+            aria-label={text}
+          >
+            {text}
+          </button>
         </Link>
       ) : (
-        box
+        <div className="bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md shadow-[0_10px_0_#000] px-4 py-2 font-[PressStart] text-[12px]">
+          {text}
+        </div>
       )}
     </div>
   );

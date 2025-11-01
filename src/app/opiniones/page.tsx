@@ -1,4 +1,4 @@
-// src/app/opiniones/page.tsx
+import React from "react";
 import OpinionesPage from "../components/OpinionesPage";
 
 export default function Page() {

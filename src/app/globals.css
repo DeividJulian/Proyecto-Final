@@ -183,4 +183,42 @@ body { @apply bg-bgDark text-white; }
   image-rendering: pixelated;
 }
 
+.boton-retro-play {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(180deg, #ffcc33 0%, #ff9900 100%);
+  border: 4px solid #5a1e00;
+  box-shadow: 0 4px #3c1400, inset 0 2px #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+/* Triángulo central estilo pixel-art */
+.play-icon {
+  width: 0;
+  height: 0;
+  border-left: 18px solid #ff00cc;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  filter: drop-shadow(2px 2px 0 #800080);
+}
+
+/* Efecto hover: más brillante y con sombra */
+.boton-retro-play:hover {
+  background: linear-gradient(180deg, #ffe066 0%, #ffbb33 100%);
+  box-shadow: 0 6px #3c1400, inset 0 2px #fff;
+  transform: translateY(-2px);
+}
+
+/* Simula un efecto de “presionado” */
+.boton-retro-play:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px #3c1400;
+}
+
 

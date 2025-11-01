@@ -5,6 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+/**
+ * Componente principal de la página Opiniones.
+ * Requisitos:
+ * - Imágenes en public/assets/
+ * - Este archivo debe estar en src/app/components/
+ */
+
 export default function OpinionesPage() {
   const videos = [
     { id: 1, videoId: "dQw4w9WgXcQ", titulo: "Video 1" },
@@ -15,13 +22,16 @@ export default function OpinionesPage() {
 
   return (
     <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
+      {/* Fondo de cine/teatro */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
         style={{ backgroundImage: 'url("/assets/sala-cine.png")' }}
         aria-hidden
       />
 
+      {/* Contenedor principal */}
       <div className="w-full max-w-[1100px] mx-auto px-4 py-8">
+        {/* Título OPINIONES */}
         <div className="bg-[#2e1b6b] border-[6px] border-black rounded-md shadow-[0_8px_0_#000] mb-8">
           <h1 className="text-center text-yellow-300 font-[PressStart] text-[22px] py-5 tracking-wider">
             OPINIONES
@@ -29,20 +39,25 @@ export default function OpinionesPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
+          {/* Columna izquierda: Grid de videos */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {videos.map((video) => (
               <VideoCard key={video.id} videoId={video.videoId} titulo={video.titulo} />
             ))}
           </div>
 
+          {/* Columna derecha: Globo de diálogo y avatar */}
           <aside className="flex flex-col items-center gap-6 lg:min-w-[320px]">
+            {/* Globo de diálogo */}
             <div className="relative bg-white border-[6px] border-black rounded-xl shadow-[0_8px_0_#000] p-5 max-w-[300px]">
               <p className="text-black text-[13px] leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
                 Aquí podrás escuchar las opiniones y comentarios de personas que han compartido conmigo
               </p>
+              {/* Flecha del globo apuntando hacia abajo */}
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-b-[6px] border-r-[6px] border-black transform rotate-45"></div>
             </div>
 
+            {/* Avatar flotante - espejado para que mire hacia los videos */}
             <div className="relative">
               <div className="animate-float">
                 <Image
@@ -50,13 +65,14 @@ export default function OpinionesPage() {
                   alt="Avatar"
                   width={180}
                   height={180}
-                  style={{ imageRendering: "pixelated" }}
+                  style={{ imageRendering: "pixelated", transform: "scaleX(-1)" }}
                 />
               </div>
             </div>
           </aside>
         </div>
 
+        {/* Botón VOLVER centrado */}
         <div className="flex justify-center mt-8">
           <Link
             href="/mapa"
@@ -67,39 +83,96 @@ export default function OpinionesPage() {
         </div>
       </div>
 
+      {/* Animación de flotación y estilos específicos */}
       <style jsx>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-15px); }
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-15px);
+          }
         }
-        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        /* Estilo del botón play retro dentro de cada tarjeta */
+        .play-button-frame {
+          width: 110px;
+          height: 72px;
+          display: grid;
+          place-items: center;
+          border: 6px solid #23181b; /* borde oscuro tipo pixel */
+          background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%); /* amarillo -> dorado */
+          box-shadow:
+            0 6px 0 #000,
+            inset 0 2px 0 rgba(255,255,255,0.25),
+            0 6px 12px rgba(0,0,0,0.4);
+          border-radius: 6px;
+          image-rendering: pixelated;
+          transform: translateZ(0);
+        }
+        .play-button-frame:active {
+          transform: translateY(3px);
+          box-shadow: 0 3px 0 #000;
+        }
+        .play-triangle {
+          width: 48px;
+          height: 48px;
+          transform: scale(1);
+          transition: transform 150ms ease;
+        }
+        .play-wrap:hover .play-triangle {
+          transform: scale(1.06) translateY(-2px);
+        }
+
+        /* adaptaciones responsivas para que se parezca a la referencia */
+        @media (min-width: 1024px) {
+          .play-button-frame { width: 140px; height: 92px; }
+          .play-triangle { width: 60px; height: 60px; }
+        }
       `}</style>
     </main>
   );
 }
 
-/* Componente interno VideoCard */
+/* Componente de tarjeta de video */
 function VideoCard({ videoId, titulo }: { videoId: string; titulo: string }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <div className="bg-black border-[6px] border-white rounded-md shadow-[0_8px_0_#000] overflow-hidden">
-      <div className="relative w-full aspect-video bg-black flex items-center justify-center">
+      <div className="relative w-full aspect-video bg-black flex items-center justify-center p-4">
         {!isPlaying ? (
-          <button onClick={() => setIsPlaying(true)} className="relative w-full h-full flex items-center justify-center group">
+          // Thumbnail con botón de play retro
+          <button
+            onClick={() => setIsPlaying(true)}
+            className="relative w-full h-full flex items-center justify-center group play-wrap"
+            aria-label={`Reproducir ${titulo}`}
+          >
+            {/* Fondo oscuro degradado */}
             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black" />
-            <div className="relative z-10">
+
+            {/* Marco blanco alrededor del "televisor" */}
+            <div className="absolute inset-2 border-4 border-white rounded-md pointer-events-none" />
+
+            {/* Botón play estilo retro centrado */}
+            <div className="relative z-10 play-button-frame">
+              {/* Usa la imagen 'play-retro.png' si la tienes en public/assets */}
+              {/* Si quieres usar la imagen que ya existía, cambia src aquí */}
               <Image
-                src="/assets/play-icon.png"
-                alt="Reproducir"
-                width={80}
-                height={80}
+                src="/assets/reproducir.png"
+                alt="Play retro"
+                width={72}
+                height={72}
                 style={{ imageRendering: "pixelated" }}
-                className="group-hover:scale-110 transition-transform"
+                className="play-triangle"
               />
             </div>
           </button>
         ) : (
+          // Iframe de YouTube
           <iframe
             width="100%"
             height="100%"
