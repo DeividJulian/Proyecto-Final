@@ -135,7 +135,7 @@ export default function AcercaPage() {
             {/* Botón VOLVER */}
             <div className="pt-2">
               <Link
-                href="/"
+                href="/mapa"
                 className="inline-block bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-10 py-3 font-[PressStart] text-[16px] tracking-wide"
               >
                 VOLVER
@@ -292,12 +292,13 @@ export default function AcercaPage() {
 
                 {/* Botón VOLVER centrado */}
                 <div className="flex justify-center">
-                  <button
+                  <Link
+                    href="/mapa"
                     onClick={() => setShowHabilidadesModal(false)}
                     className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
                   >
                     VOLVER
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -333,12 +334,13 @@ export default function AcercaPage() {
                 </div>
 
                 <div className="flex justify-center">
-                  <button
+                  <Link
+                    href="/mapa"
                     onClick={() => setShowDebilidadesModal(false)}
                     className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
                   >
                     VOLVER
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -410,17 +412,18 @@ export default function AcercaPage() {
 
                 <div className="space-y-6 mb-8">
                   <HabilidadBarraItem color="#ffd200" titulo="Pizza" />
-                  <HabilidadBarraItem color="#ff6b9d" titulo="Papas Fritas" />
+                  <HabilidadBarraItem color="#ff6b9d" titulo="Sushi" />
                   <HabilidadBarraItem color="#fb923c" titulo="Hamburguesas" />
                 </div>
 
                 <div className="flex justify-center">
-                  <button
+                  <Link
+                    href="/mapa"
                     onClick={() => setShowAlimentosModal(false)}
                     className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
                   >
                     VOLVER
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
