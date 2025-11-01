@@ -49,7 +49,7 @@ export default function AcercaPage() {
           />
         </button>
 
-        {/* Tooltip mensaje estilo primera imagen */}
+        {/* Tooltip mensaje */}
         {showTooltip && (
           <div className="absolute top-24 right-0 w-[380px]">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
@@ -132,7 +132,7 @@ export default function AcercaPage() {
               </div>
             </div>
 
-            {/* Botón VOLVER */}
+            {/* Botón VOLVER (va a /mapa) */}
             <div className="pt-2">
               <Link
                 href="/mapa"
@@ -290,15 +290,14 @@ export default function AcercaPage() {
                   <HabilidadBarraItem color="#ffd200" titulo="Adaptibilidad" />
                 </div>
 
-                {/* Botón VOLVER centrado */}
+                {/* Botón VOLVER centrado — cierra el modal y NO navega */}
                 <div className="flex justify-center">
-                  <Link
-                    href="/mapa"
+                  <button
                     onClick={() => setShowHabilidadesModal(false)}
                     className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
                   >
                     VOLVER
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -334,13 +333,12 @@ export default function AcercaPage() {
                 </div>
 
                 <div className="flex justify-center">
-                  <Link
-                    href="/mapa"
+                  <button
                     onClick={() => setShowDebilidadesModal(false)}
                     className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
                   >
                     VOLVER
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -417,13 +415,12 @@ export default function AcercaPage() {
                 </div>
 
                 <div className="flex justify-center">
-                  <Link
-                    href="/mapa"
+                  <button
                     onClick={() => setShowAlimentosModal(false)}
                     className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
                   >
                     VOLVER
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
