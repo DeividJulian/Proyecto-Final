@@ -80,12 +80,12 @@ const LineaTiempoPage = () => {
         <div className="relative max-w-6xl mx-auto">
           {/* Character avatar - left side */}
           <div className="absolute left-5 top-[30%] -translate-y-1/2 z-20">
-            <div className="bg-gradient-to-br from-cyan-600 to-cyan-800 p-6 rounded-2xl border-4 border-cyan-900 shadow-2xl" style={{
-              boxShadow: '0 0 30px rgba(6, 182, 212, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
+            <div className="bg-gradient-to-br p-6 rounded-2xl  shadow-2xl" style={{
+              boxShadow: ')',
               imageRendering: 'pixelated'
             }}>
               <div className="w-50 h-50 relative">
-                <div className="w-full h-full bg-gradient-to-b bg-amber-900 to-slate-900 rounded-xl relative overflow-hidden flex items-center justify-center border-2 border-cyan-700">
+                <div className="rounded-xl relative overflow-hidden flex items-center justify-center ">
                   <img 
                     src="/assets/avatar-primera-persona.png" 
                     alt="Avatar"
