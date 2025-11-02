@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const LineaTiempoPage = () => {
@@ -12,56 +11,67 @@ const LineaTiempoPage = () => {
       id: 1,
       image: '/assets/reproducir.png',
       alt: 'Excursionista en montaña',
-      position: { top: '20%', left: '38%' }
+      position: { top: '35%', left: '32%' }
     },
     {
       id: 2,
       image: '/assets/sala-cine.png',
       alt: 'Ciudad al atardecer',
-      position: { top: '20%', right: '22%' }
+      position: { top: '35%', right: '27%' }
     },
     {
       id: 3,
       image: '/assets/mapas.png',
       alt: 'Playa al atardecer',
-      position: { top: '50%', left: '50%', transform: 'translateX(-50%)' }
+      position: { top: '65%', left: '50%', transform: 'translateX(-50%)' }
     }
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-slate-950">
       {/* Background image */}
       <div className="absolute inset-0 z-0">
-        <Image
+        <img
           src="/assets/linea de tiempo.png"
           alt="Fondo línea de tiempo"
-          fill
-          className="object-cover"
-          priority
+          className="w-full h-full object-cover"
         />
       </div>
 
-      {/* Pixel border decoration with darker overlay */}
-      <div className="absolute inset-0 pointer-events-none z-[1]">
-        <div className="w-full h-full border-8 border-cyan-600" style={{
-          boxShadow: 'inset 0 0 30px rgba(0, 0, 0, 0.5)',
-          imageRendering: 'pixelated',
-          backgroundColor: 'rgba(0, 20, 40, 0.3)'
-        }}></div>
-      </div>
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cyan-950/40 via-slate-950/60 to-slate-950/80 z-[1]"></div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        {/* Header */}
-        <div className="flex justify-center mb-12">
-          <div className="bg-gradient-to-r from-indigo-900 to-indigo-800 px-20 py-6 rounded-lg border-4 border-indigo-700 shadow-2xl" style={{
+      {/* Decorative tech border frame */}
+      <div className="absolute inset-0 pointer-events-none z-[2]">
+        {/* Main frame border */}
+        <div className="absolute inset-4 border-8 border-cyan-600 rounded-3xl"
+          style={{
+            boxShadow: '0 0 40px rgba(6, 182, 212, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.8)',
             imageRendering: 'pixelated'
           }}>
-            <h1 className="text-6xl font-bold text-yellow-400 tracking-wider" style={{
-              textShadow: '4px 4px 0px rgba(0,0,0,0.7)',
+        </div>
+        
+        {/* Inner decorative corners */}
+        <div className="absolute top-8 left-8 w-32 h-32 border-l-4 border-t-4 border-cyan-500"></div>
+        <div className="absolute top-8 right-8 w-32 h-32 border-r-4 border-t-4 border-cyan-500"></div>
+        <div className="absolute bottom-8 left-8 w-32 h-32 border-l-4 border-b-4 border-cyan-500"></div>
+        <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500"></div>
+      </div>
+
+      <div className="container mx-auto px-4 py-12 relative z-10">
+        {/* Header */}
+        <div className="flex justify-center mb-16 mt-8">
+          <div className="bg-indigo-900 px-32 py-6 rounded-3xl border-4 border-black shadow-2xl" style={{
+            boxShadow: '0 8px 0px rgba(0, 0, 0, 0.8)',
+            imageRendering: 'pixelated',
+            backgroundColor: '#312e81'
+          }}>
+            <h1 className="text-5xl font-bold text-yellow-400 tracking-widest" style={{
+              textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
               fontFamily: 'monospace',
               imageRendering: 'pixelated'
             }}>
-              LÍNEA DE TIEMPO
+              LINEA DE TIEMPO
             </h1>
           </div>
         </div>
@@ -69,18 +79,17 @@ const LineaTiempoPage = () => {
         {/* Main content area */}
         <div className="relative max-w-6xl mx-auto">
           {/* Character avatar - left side */}
-          <div className="absolute left-8 top-1/2 -translate-y-1/2 z-20">
-            <div className="bg-cyan-700 p-4 rounded-lg border-4 border-cyan-900 shadow-2xl" style={{
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20">
+            <div className="bg-gradient-to-br from-cyan-600 to-cyan-800 p-6 rounded-2xl border-4 border-cyan-900 shadow-2xl" style={{
+              boxShadow: '0 0 30px rgba(6, 182, 212, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
               imageRendering: 'pixelated'
             }}>
-              <div className="w-36 h-36 relative">
-                <div className="w-full h-full bg-gradient-to-b from-amber-200 to-amber-300 rounded-lg relative overflow-hidden flex items-center justify-center">
-                  <Image 
+              <div className="w-40 h-40 relative">
+                <div className="w-full h-full bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl relative overflow-hidden flex items-center justify-center border-2 border-cyan-700">
+                  <img 
                     src="/assets/porta.png" 
                     alt="Avatar"
-                    width={130}
-                    height={130}
-                    className="object-contain"
+                    className="w-full h-full object-contain"
                     style={{ imageRendering: 'pixelated' }}
                   />
                 </div>
@@ -89,20 +98,24 @@ const LineaTiempoPage = () => {
           </div>
 
           {/* Timeline container */}
-          <div className="ml-56 mr-12 relative min-h-[500px]">
+          <div className="ml-64 mr-12 relative min-h-[450px]">
             {/* Timeline lines */}
             <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
               {/* Horizontal main line */}
-              <line x1="10%" y1="28%" x2="90%" y2="28%" 
-                    stroke="#22c55e" strokeWidth="5" />
+              <line x1="15%" y1="42%" x2="85%" y2="42%" 
+                    stroke="#22c55e" strokeWidth="6" 
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
               
-              {/* Vertical lines */}
-              <line x1="35%" y1="28%" x2="35%" y2="23%" 
-                    stroke="#22c55e" strokeWidth="5" />
-              <line x1="75%" y1="28%" x2="75%" y2="23%" 
-                    stroke="#22c55e" strokeWidth="5" />
-              <line x1="50%" y1="28%" x2="50%" y2="55%" 
-                    stroke="#22c55e" strokeWidth="5" />
+              {/* Vertical lines from nodes */}
+              <line x1="29%" y1="42%" x2="29%" y2="37%" 
+                    stroke="#22c55e" strokeWidth="6" 
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
+              <line x1="71%" y1="42%" x2="71%" y2="37%" 
+                    stroke="#22c55e" strokeWidth="6" 
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
+              <line x1="50%" y1="42%" x2="50%" y2="67%" 
+                    stroke="#22c55e" strokeWidth="6" 
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
             </svg>
 
             {/* Timeline nodes/images */}
@@ -113,21 +126,20 @@ const LineaTiempoPage = () => {
                 style={node.position}
               >
                 <div className="relative">
-                  <div className="w-36 h-36 border-4 border-cyan-500 rounded-lg overflow-hidden shadow-2xl bg-slate-900" style={{
+                  <div className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden shadow-2xl bg-slate-900" style={{
+                    boxShadow: '0 0 25px rgba(6, 182, 212, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.5)',
                     imageRendering: 'pixelated'
                   }}>
-                    <Image
+                    <img
                       src={node.image}
                       alt={node.alt}
-                      width={144}
-                      height={144}
                       className="w-full h-full object-cover"
                       style={{ imageRendering: 'pixelated' }}
                     />
                   </div>
                   {/* Glow effect */}
-                  <div className="absolute inset-0 border-4 border-cyan-400 rounded-lg opacity-0 hover:opacity-60 transition-opacity"
-                       style={{ boxShadow: '0 0 25px rgba(6, 182, 212, 0.9)' }}>
+                  <div className="absolute inset-0 border-4 border-cyan-300 rounded-xl opacity-0 hover:opacity-70 transition-opacity"
+                       style={{ boxShadow: '0 0 30px rgba(6, 182, 212, 1)' }}>
                   </div>
                 </div>
               </div>
@@ -136,16 +148,18 @@ const LineaTiempoPage = () => {
         </div>
 
         {/* Bottom buttons */}
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-8 z-30">
+        <div className="fixed bottom-12 left-1/2 -translate-x-1/2 flex gap-6 z-30">
           <button
             onClick={() => router.push('/')}
-            className="bg-gradient-to-b from-orange-600 to-orange-800 hover:from-orange-500 hover:to-orange-700 
-                     text-yellow-300 font-bold text-2xl px-16 py-5 rounded-lg 
-                     border-4 border-orange-950 shadow-2xl transition-all hover:scale-105"
+            className="bg-amber-900 hover:bg-amber-800 
+                     text-white font-bold text-2xl px-20 py-5 rounded-xl 
+                     border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{ 
-              textShadow: '3px 3px 0px rgba(0,0,0,0.7)',
+              textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
               fontFamily: 'monospace',
-              imageRendering: 'pixelated'
+              imageRendering: 'pixelated',
+              boxShadow: '0 8px 0px rgba(0, 0, 0, 0.6)',
+              backgroundColor: '#78350f'
             }}
           >
             PANTALLA COMPLETA
@@ -153,15 +167,17 @@ const LineaTiempoPage = () => {
           
           <button
             onClick={() => router.back()}
-            className="bg-gradient-to-b from-orange-600 to-orange-800 hover:from-orange-500 hover:to-orange-700 
-                     text-yellow-300 font-bold text-2xl px-16 py-5 rounded-lg 
-                     border-4 border-orange-950 shadow-2xl transition-all hover:scale-105"
+            className="bg-amber-900 hover:bg-amber-800 
+                     text-white font-bold text-2xl px-20 py-5 rounded-xl 
+                     border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{ 
-              textShadow: '3px 3px 0px rgba(0,0,0,0.7)',
+              textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
               fontFamily: 'monospace',
-              imageRendering: 'pixelated'
+              imageRendering: 'pixelated',
+              boxShadow: '0 8px 0px rgba(0, 0, 0, 0.6)',
+              backgroundColor: '#9a3412'
             }}
-          >
+          > 
             VOLVER
           </button>
         </div>
