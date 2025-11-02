@@ -11,19 +11,19 @@ const LineaTiempoPage = () => {
       id: 1,
       image: '/assets/reproducir.png',
       alt: 'Excursionista en montaña',
-      position: { top: '35%', left: '32%' }
+      position: { top: '-3%', left: '27%' }
     },
     {
       id: 2,
       image: '/assets/sala-cine.png',
       alt: 'Ciudad al atardecer',
-      position: { top: '35%', right: '27%' }
+      position: { top: '-3%', right: '18%' }
     },
     {
       id: 3,
       image: '/assets/mapas.png',
       alt: 'Playa al atardecer',
-      position: { top: '65%', left: '50%', transform: 'translateX(-50%)' }
+      position: { top: '40%', left: '50%', transform: 'translateX(-50%)' }
     }
   ];
 
@@ -79,15 +79,15 @@ const LineaTiempoPage = () => {
         {/* Main content area */}
         <div className="relative max-w-6xl mx-auto">
           {/* Character avatar - left side */}
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20">
+          <div className="absolute left-5 top-[30%] -translate-y-1/2 z-20">
             <div className="bg-gradient-to-br from-cyan-600 to-cyan-800 p-6 rounded-2xl border-4 border-cyan-900 shadow-2xl" style={{
               boxShadow: '0 0 30px rgba(6, 182, 212, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
               imageRendering: 'pixelated'
             }}>
-              <div className="w-40 h-40 relative">
-                <div className="w-full h-full bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl relative overflow-hidden flex items-center justify-center border-2 border-cyan-700">
+              <div className="w-50 h-50 relative">
+                <div className="w-full h-full bg-gradient-to-b bg-amber-900 to-slate-900 rounded-xl relative overflow-hidden flex items-center justify-center border-2 border-cyan-700">
                   <img 
-                    src="/assets/porta.png" 
+                    src="/assets/avatar-primera-persona.png" 
                     alt="Avatar"
                     className="w-full h-full object-contain"
                     style={{ imageRendering: 'pixelated' }}
@@ -102,18 +102,18 @@ const LineaTiempoPage = () => {
             {/* Timeline lines */}
             <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
               {/* Horizontal main line */}
-              <line x1="15%" y1="42%" x2="85%" y2="42%" 
+              <line x1="-2%" y1="30%" x2="90%" y2="30%" 
                     stroke="#22c55e" strokeWidth="6" 
                     style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
               
               {/* Vertical lines from nodes */}
-              <line x1="29%" y1="42%" x2="29%" y2="37%" 
+              <line x1="35%" y1="30%" x2="35%" y2="22%" 
                     stroke="#22c55e" strokeWidth="6" 
                     style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
-              <line x1="71%" y1="42%" x2="71%" y2="37%" 
+              <line x1="75%" y1="30%" x2="75%" y2="22%" 
                     stroke="#22c55e" strokeWidth="6" 
                     style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
-              <line x1="50%" y1="42%" x2="50%" y2="67%" 
+              <line x1="50%" y1="30%" x2="50%" y2="65%" 
                     stroke="#22c55e" strokeWidth="6" 
                     style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
             </svg>
@@ -152,7 +152,7 @@ const LineaTiempoPage = () => {
           <button
             onClick={() => router.push('/')}
             className="bg-amber-900 hover:bg-amber-800 
-                     text-white font-bold text-2xl px-20 py-5 rounded-xl 
+                     text-yellow-400 font-bold text-2xl px-20 py-5 rounded-xl 
                      border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{ 
               textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
@@ -167,8 +167,8 @@ const LineaTiempoPage = () => {
           
           <button
             onClick={() => router.back()}
-            className="bg-amber-900 hover:bg-amber-800 
-                     text-white font-bold text-2xl px-20 py-5 rounded-xl 
+            className="bg-orange-900 hover:bg-orange-800 
+                     text-yellow-400 font-bold text-2xl px-20 py-5 rounded-xl 
                      border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{ 
               textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
