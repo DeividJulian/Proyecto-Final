@@ -25,8 +25,8 @@ export default function MapaPage() {
 
   const PROXIMITY_THRESHOLD = 6; // en porcentaje (ajusta si quieres más/menos sensibilidad)
 
-  // Estado para mostrar/ocultar el globo de ayuda al pulsar "?"
-  const [showHelpBubble, setShowHelpBubble] = useState(false);
+  // Estado para mostrar/ocultar el globo de ayuda del botón "?"
+  const [showTooltip, setShowTooltip] = useState(false);
 
   // Movimiento con flechas
   useEffect(() => {
@@ -51,9 +51,9 @@ export default function MapaPage() {
         if (k === "ArrowRight") dirRef.current = "right";
       }
 
-      // allow Esc to close help bubble quickly
+      // Escape cierra el tooltip
       if (e.key === "Escape") {
-        setShowHelpBubble(false);
+        setShowTooltip(false);
       }
     };
 
@@ -118,7 +118,6 @@ export default function MapaPage() {
     // Redirigir a Proyectos si está cerca
     if (distanceProyectos <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
-      // breve delay para permitir animación/feedback
       setTimeout(() => {
         router.push("/proyectos");
       }, 220);
@@ -153,13 +152,42 @@ export default function MapaPage() {
     }
   }, [pos, router]);
 
-  // toggle help bubble when clicking icon
-  const onQuestionClick = () => {
-    setShowHelpBubble((v) => !v);
-  };
-
   return (
     <main className="min-h-screen w-full flex items-center justify-center bg-[#072130]">
+      {/* Botón de interrogación flotante (igual que en /acerca) */}
+      <div className="fixed top-8 right-8 z-50">
+        <button
+          onClick={() => setShowTooltip((v) => !v)}
+          onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
+          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
+          aria-label="Ayuda"
+          title="Ayuda"
+        >
+          <Image
+            src="/assets/question.png"
+            alt="Ayuda"
+            width={70}
+            height={70}
+            style={{ imageRendering: "pixelated" }}
+            className="group-hover:scale-110 transition-transform"
+            priority
+          />
+        </button>
+
+        {showTooltip && (
+          <div className="absolute top-24 right-0 w-[380px]">
+            <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
+              <p className="text-black text-[15px] leading-relaxed" style={{ fontFamily: "Arial, sans-serif" }}>
+                Utiliza las flechas para moverte por el mapa. Acércate a cada
+                letrero para entrar: <strong>Proyectos</strong>, <strong>Acerca de Mi</strong>,
+                <strong> Opiniones</strong> o <strong>Línea de tiempo</strong>.
+              </p>
+            </div>
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
+          </div>
+        )}
+      </div>
+
       {/* Contenedor del mapa (cuadrado y centrado) */}
       <div className="relative w-[min(92vw,950px)] aspect-square overflow-hidden">
         {/* Fondo del mapa */}
@@ -169,7 +197,7 @@ export default function MapaPage() {
           aria-hidden
         />
 
-        {/* Botón Volver (ahora a /mapa si vienes desde otras secciones) */}
+        {/* Botón Volver */}
         <Link
           href="/"
           className="absolute top-4 left-4 z-30 bg-[#2b93ff] text-yellow-300 border-8 border-black rounded-md shadow-[0_10px_0_#000] px-3 py-1 font-[PressStart] text-[12px]"
@@ -187,43 +215,6 @@ export default function MapaPage() {
         <SpeechBubble top="47%" left="49%">
           Explora el mapa para <br /> conocer mi portafolio
         </SpeechBubble>
-
-        {/* Signo de interrogación PNG (abajo derecha, zona "polpixel") */}
-        <div
-          className="absolute z-30 animate-bob flex items-end"
-          style={{ bottom: "6%", right: "7%" }}
-          title="Ayuda"
-        >
-          {/* help bubble aparece a la izquierda del icono */}
-          {showHelpBubble && (
-            <div
-              role="dialog"
-              aria-live="polite"
-              aria-label="Ayuda mapa"
-              className="mr-3 bg-white text-black border-8 border-black rounded-md px-6 py-5 shadow-[0_8px_0_#000] font-[PressStart] text-[18px] leading-tight max-w-xs"
-            >
-              Utiliza las flechas para moverte por el mapa y conocer mi portafolio. Acércate a cada
-              sección (Proyectos, Acerca de Mi, Opiniones o Línea de tiempo) para visitarla.
-            </div>
-          )}
-
-          <button
-            onClick={onQuestionClick}
-            className="p-0 m-0 bg-transparent border-0"
-            aria-expanded={showHelpBubble}
-            aria-controls="help-bubble"
-            title="Ayuda"
-          >
-            <Image
-              src="/assets/question.png"
-              alt="Ayuda"
-              width={46}
-              height={64}
-              style={{ imageRendering: "pixelated", display: "block" }}
-              priority
-            />
-          </button>
-        </div>
 
         {/* Avatar PNG (idle bob cuando no se mueve) */}
         <div
@@ -269,10 +260,6 @@ export default function MapaPage() {
 
 /* ---------- Componentes auxiliares ---------- */
 
-/**
- * MapLabel: accesible (button) y mantiene el Link para SEO/semántica.
- * Si el usuario hace Enter o Space en el botón, se navega también.
- */
 function MapLabel({
   text,
   top,
@@ -362,4 +349,3 @@ function SpeechBubble({
     </div>
   );
 }
-

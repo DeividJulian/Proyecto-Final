@@ -1,35 +1,65 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const LineaTiempoPage = () => {
+type NodeItem = {
+  id: number;
+  image: string;
+  alt: string;
+  /** posición horizontal en % a lo largo de la línea principal (0–100) */
+  x: number;
+  /** posición vertical del cuadro (porcentaje del alto del contenedor).
+   * Usa valores < yMain para “arriba” y > yMain para “abajo”.
+   */
+  y: number;
+};
+
+export default function LineaTiempoPage() {
   const router = useRouter();
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  const timelineNodes = [
-    {
-      id: 1,
-      image: '/assets/reproducir.png',
-      alt: 'Excursionista en montaña',
-      position: { top: '-3%', left: '27%' }
-    },
-    {
-      id: 2,
-      image: '/assets/sala-cine.png',
-      alt: 'Ciudad al atardecer',
-      position: { top: '-3%', right: '18%' }
-    },
-    {
-      id: 3,
-      image: '/assets/mapas.png',
-      alt: 'Playa al atardecer',
-      position: { top: '40%', left: '50%', transform: 'translateX(-50%)' }
+  // Ref para pantalla completa
+  const frameRef = useRef<HTMLDivElement | null>(null);
+
+  /** Línea principal (horizontal) en % de la altura del contenedor */
+  const yMain = 38;
+
+  /** 👉 AÑADE / QUITA nodos aquí.
+   *  Solo define { x, y, image, alt } y el componente dibuja el conector y coloca la imagen.
+   *  Pon y < yMain para que el cuadro quede arriba, y > yMain para abajo.
+   */
+  const timelineNodes: NodeItem[] = useMemo(
+    () => [
+      // Ejemplos (los 3 de tu maqueta + espacio para más)
+      { id: 1, image: '/assets/sala-cine.png',       alt: 'Excursión en montaña', x: 32, y: 18 },
+      { id: 2, image: '/assets/mapas.png',           alt: 'Playa al atardecer',   x: 50, y: 62 },
+      { id: 3, image: '/assets/reproducir.png',      alt: 'Ciudad al atardecer',  x: 78, y: 18 },
+
+      // Puedes seguir agregando:
+      // { id: 4, image: '/assets/mi-foto-4.png', alt: 'Otro hito', x: 15, y: 62 },
+      // { id: 5, image: '/assets/mi-foto-5.png', alt: 'Otro hito', x: 90, y: 62 },
+    ],
+    []
+  );
+
+  const handleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await frameRef.current?.requestFullscreen?.();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch {
+      // sin bloquear si no está soportado
     }
-  ];
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950">
-      {/* Background image */}
+      {/* Fondo */}
       <div className="absolute inset-0 z-0">
         <img
           src="/assets/linea de tiempo.png"
@@ -38,152 +68,215 @@ const LineaTiempoPage = () => {
         />
       </div>
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-cyan-950/40 via-slate-950/60 to-slate-950/80 z-[1]"></div>
+      {/* Degradado oscuro para contraste */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cyan-950/40 via-slate-950/60 to-slate-950/80 z-[1]" />
 
-      {/* Decorative tech border frame */}
+      {/* Marco/Frame “tech” */}
       <div className="absolute inset-0 pointer-events-none z-[2]">
-        {/* Main frame border */}
-        <div className="absolute inset-4 border-8 border-cyan-600 rounded-3xl"
+        <div
+          className="absolute inset-4 border-8 border-cyan-600 rounded-3xl"
           style={{
-            boxShadow: '0 0 40px rgba(6, 182, 212, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.8)',
-            imageRendering: 'pixelated'
-          }}>
-        </div>
-        
-        {/* Inner decorative corners */}
-        <div className="absolute top-8 left-8 w-32 h-32 border-l-4 border-t-4 border-cyan-500"></div>
-        <div className="absolute top-8 right-8 w-32 h-32 border-r-4 border-t-4 border-cyan-500"></div>
-        <div className="absolute bottom-8 left-8 w-32 h-32 border-l-4 border-b-4 border-cyan-500"></div>
-        <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500"></div>
+            boxShadow:
+              '0 0 40px rgba(6, 182, 212, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.8)',
+            imageRendering: 'pixelated',
+          }}
+        />
+        <div className="absolute top-8 left-8 w-32 h-32 border-l-4 border-t-4 border-cyan-500" />
+        <div className="absolute top-8 right-8 w-32 h-32 border-r-4 border-t-4 border-cyan-500" />
+        <div className="absolute bottom-8 left-8 w-32 h-32 border-l-4 border-b-4 border-cyan-500" />
+        <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500" />
       </div>
 
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        {/* Header */}
-        <div className="flex justify-center mb-16 mt-8">
-          <div className="bg-indigo-900 px-32 py-6 rounded-3xl border-4 border-black shadow-2xl" style={{
-            boxShadow: '0 8px 0px rgba(0, 0, 0, 0.8)',
-            imageRendering: 'pixelated',
-            backgroundColor: '#312e81'
-          }}>
-            <h1 className="text-5xl font-bold text-yellow-400 tracking-widest" style={{
-              textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
-              fontFamily: 'monospace',
-              imageRendering: 'pixelated'
-            }}>
+      {/* Botón de interrogación (igual que en /acerca) */}
+      <div className="fixed top-8 right-8 z-[60]">
+        <button
+          onClick={() => setShowTooltip((v) => !v)}
+          onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
+          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
+          aria-label="Ayuda"
+          title="Ayuda"
+        >
+          <Image
+            src="/assets/question.png"
+            alt="Ayuda"
+            width={70}
+            height={70}
+            style={{ imageRendering: 'pixelated' }}
+            className="group-hover:scale-110 transition-transform"
+            priority
+          />
+        </button>
+
+        {showTooltip && (
+          <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
+            <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
+              <p
+                className="text-black text-[15px] leading-relaxed"
+                style={{ fontFamily: 'Arial, sans-serif' }}
+              >
+                Explora mi historia: cada cuadro es un momento. Usa
+                <strong> PANTALLA COMPLETA</strong> para verlo mejor.
+              </p>
+            </div>
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
+          </div>
+        )}
+      </div>
+
+      {/* Contenido principal dentro del marco */}
+      <div className="container mx-auto px-6 py-10 relative z-10" ref={frameRef}>
+        {/* Título en pastilla morada */}
+        <div className="flex justify-center mb-10 mt-6">
+          <div
+            className="px-10 py-4 rounded-2xl border-4 border-black"
+            style={{
+              boxShadow: '0 8px 0px rgba(0,0,0,0.8)',
+              imageRendering: 'pixelated',
+              backgroundColor: '#2D246A', // morado oscuro
+            }}
+          >
+            <h1
+              className="text-3xl md:text-4xl font-bold text-yellow-400 tracking-widest"
+              style={{
+                textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
+                fontFamily: 'monospace',
+              }}
+            >
               LINEA DE TIEMPO
             </h1>
           </div>
         </div>
 
-        {/* Main content area */}
-        <div className="relative max-w-6xl mx-auto">
-          {/* Character avatar - left side */}
-          <div className="absolute left-5 top-[30%] -translate-y-1/2 z-20">
-            <div className="bg-gradient-to-br p-6 rounded-2xl  shadow-2xl" style={{
-              boxShadow: ')',
-              imageRendering: 'pixelated'
-            }}>
-              <div className="w-50 h-50 relative">
-                <div className="rounded-xl relative overflow-hidden flex items-center justify-center ">
-                  <img 
-                    src="/assets/avatar-primera-persona.png" 
-                    alt="Avatar"
-                    className="w-full h-full object-contain"
-                    style={{ imageRendering: 'pixelated' }}
-                  />
-                </div>
+        <div className="relative max-w-[1200px] mx-auto">
+          {/* Avatar izquierdo */}
+          <div className="absolute left-2 top-[36%] -translate-y-1/2 z-20">
+            <div
+              className="p-2 rounded-xl shadow-2xl bg-transparent"
+              style={{ imageRendering: 'pixelated' }}
+            >
+              <div className="w-[140px] h-[140px] rounded-xl overflow-hidden border-4 border-cyan-700 bg-slate-900 grid place-items-center">
+                <img
+                  src="/assets/avatar-primera-persona.png"
+                  alt="Avatar pixel"
+                  className="w-full h-full object-contain"
+                  style={{ imageRendering: 'pixelated' }}
+                />
               </div>
             </div>
           </div>
 
-          {/* Timeline container */}
-          <div className="ml-64 mr-12 relative min-h-[450px]">
-            {/* Timeline lines */}
+          {/* Contenedor de la línea de tiempo */}
+          <div className="ml-[170px] mr-6 relative min-h-[520px]">
+            {/* SVG de líneas (más largo para albergar más fotos) */}
             <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-              {/* Horizontal main line */}
-              <line x1="-2%" y1="30%" x2="90%" y2="30%" 
-                    stroke="#22c55e" strokeWidth="6" 
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
-              
-              {/* Vertical lines from nodes */}
-              <line x1="35%" y1="30%" x2="35%" y2="22%" 
-                    stroke="#22c55e" strokeWidth="6" 
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
-              <line x1="75%" y1="30%" x2="75%" y2="22%" 
-                    stroke="#22c55e" strokeWidth="6" 
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
-              <line x1="50%" y1="30%" x2="50%" y2="65%" 
-                    stroke="#22c55e" strokeWidth="6" 
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.8))' }} />
+              {/* Línea principal */}
+              <line
+                x1="-3%"
+                y1={`${yMain}%`}
+                x2="103%"
+                y2={`${yMain}%`}
+                stroke="#22c55e"
+                strokeWidth="6"
+                style={{ filter: 'drop-shadow(0 0 8px rgba(34,197,94,0.9))' }}
+              />
+
+              {/* Conectores verticales por cada nodo */}
+              {timelineNodes.map((n) => (
+                <line
+                  key={`v-${n.id}`}
+                  x1={`${n.x}%`}
+                  y1={`${yMain}%`}
+                  x2={`${n.x}%`}
+                  y2={`${n.y}%`}
+                  stroke="#22c55e"
+                  strokeWidth="6"
+                  style={{ filter: 'drop-shadow(0 0 8px rgba(34,197,94,0.9))' }}
+                />
+              ))}
             </svg>
 
-            {/* Timeline nodes/images */}
-            {timelineNodes.map((node) => (
+            {/* Cuadros/imágenes de los nodos */}
+            {timelineNodes.map((n) => (
               <div
-                key={node.id}
+                key={n.id}
                 className="absolute z-10 cursor-pointer transition-transform hover:scale-110"
-                style={node.position}
+                style={{
+                  left: `calc(${n.x}% - 64px)`,
+                  top: `calc(${n.y}% - 64px)`,
+                }}
+                title={n.alt}
               >
-                <div className="relative">
-                  <div className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden shadow-2xl bg-slate-900" style={{
-                    boxShadow: '0 0 25px rgba(6, 182, 212, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.5)',
-                    imageRendering: 'pixelated'
-                  }}>
-                    <img
-                      src={node.image}
-                      alt={node.alt}
-                      className="w-full h-full object-cover"
-                      style={{ imageRendering: 'pixelated' }}
-                    />
-                  </div>
-                  {/* Glow effect */}
-                  <div className="absolute inset-0 border-4 border-cyan-300 rounded-xl opacity-0 hover:opacity-70 transition-opacity"
-                       style={{ boxShadow: '0 0 30px rgba(6, 182, 212, 1)' }}>
-                  </div>
+                <div
+                  className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden shadow-2xl bg-slate-900 relative"
+                  style={{
+                    boxShadow:
+                      '0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)',
+                    imageRendering: 'pixelated',
+                  }}
+                >
+                  <img
+                    src={n.image}
+                    alt={n.alt}
+                    className="w-full h-full object-cover"
+                    style={{ imageRendering: 'pixelated' }}
+                  />
+                  {/* Glow exterior al pasar el mouse */}
+                  <div
+                    className="absolute inset-0 rounded-xl opacity-0 hover:opacity-70 transition-opacity pointer-events-none"
+                    style={{ boxShadow: '0 0 30px rgba(6, 182, 212, 1)' }}
+                  />
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Bottom buttons */}
-        <div className="fixed bottom-12 left-1/2 -translate-x-1/2 flex gap-6 z-30">
+        {/* Botones inferiores (sin “Descargar”) */}
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex gap-6 z-[50]">
           <button
-            onClick={() => router.push('/')}
-            className="bg-amber-900 hover:bg-amber-800 
-                     text-yellow-400 font-bold text-2xl px-20 py-5 rounded-xl 
-                     border-4 border-black shadow-2xl transition-all hover:scale-105"
-            style={{ 
+            onClick={handleFullscreen}
+            className="bg-amber-900 hover:bg-amber-800 text-yellow-400 font-bold text-xl md:text-2xl px-10 md:px-16 py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
+            style={{
               textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
               fontFamily: 'monospace',
               imageRendering: 'pixelated',
-              boxShadow: '0 8px 0px rgba(0, 0, 0, 0.6)',
-              backgroundColor: '#78350f'
+              boxShadow: '0 8px 0px rgba(0,0,0,0.6)',
+              backgroundColor: '#78350f',
             }}
           >
             PANTALLA COMPLETA
           </button>
-          
-          <button
-            onClick={() => router.back()}
-            className="bg-orange-900 hover:bg-orange-800 
-                     text-yellow-400 font-bold text-2xl px-20 py-5 rounded-xl 
-                     border-4 border-black shadow-2xl transition-all hover:scale-105"
-            style={{ 
+
+          <Link
+            href="/mapa"
+            className="bg-orange-900 hover:bg-orange-800 text-yellow-400 font-bold text-xl md:text-2xl px-10 md:px-16 py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
+            style={{
               textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
               fontFamily: 'monospace',
               imageRendering: 'pixelated',
-              boxShadow: '0 8px 0px rgba(0, 0, 0, 0.6)',
-              backgroundColor: '#9a3412'
+              boxShadow: '0 8px 0px rgba(0,0,0,0.6)',
+              backgroundColor: '#9a3412',
             }}
-          > 
+          >
             VOLVER
-          </button>
+          </Link>
         </div>
       </div>
+
+      {/* Animaciones */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+      `}</style>
     </div>
   );
-};
-
-export default LineaTiempoPage;
+}

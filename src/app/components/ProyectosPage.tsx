@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 export default function ProyectosPage() {
-  const [showHelp, setShowHelp] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden relative">
@@ -15,6 +15,42 @@ export default function ProyectosPage() {
         style={{ backgroundImage: 'url("/assets/cielo.jpg")' }}
         aria-hidden
       />
+
+      {/* Botón de interrogación flotante (igual que en /acerca) */}
+      <div className="fixed top-8 right-8 z-50">
+        <button
+          onClick={() => setShowTooltip((v) => !v)}
+          onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
+          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
+          aria-label="Ayuda"
+          title="Ayuda"
+        >
+          <Image
+            src="/assets/question.png"
+            alt="Ayuda"
+            width={70}
+            height={70}
+            style={{ imageRendering: "pixelated" }}
+            className="group-hover:scale-110 transition-transform"
+            priority
+          />
+        </button>
+
+        {showTooltip && (
+          <div className="absolute top-24 right-0 w-[380px]">
+            <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
+              <p
+                className="text-black text-[15px] leading-relaxed"
+                style={{ fontFamily: "Arial, sans-serif" }}
+              >
+                Aquí verás mis proyectos. Haz clic en <strong>VER PROYECTO</strong> para abrirlos
+                en una pestaña nueva. Usa <strong>VOLVER</strong> para regresar al mapa.
+              </p>
+            </div>
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
+          </div>
+        )}
+      </div>
 
       {/* Cabecera */}
       <header className="px-4 pt-10 pb-6">
@@ -53,30 +89,6 @@ export default function ProyectosPage() {
           <PixelBrownLinkBtn href="/mapa">VOLVER</PixelBrownLinkBtn>
         </div>
       </section>
-
-      {/* Signo de interrogación con globito */}
-      <div
-        className="fixed right-4 md:right-6 bottom-6 z-30 animate-bob cursor-pointer flex items-center gap-3"
-        onClick={() => setShowHelp((v) => !v)}
-      >
-        {/* Globito blanco que aparece al hacer click */}
-        {showHelp && (
-          <div className="bg-white text-black border-8 border-black rounded-md px-6 py-5 shadow-[0_8px_0_#000] font-[PressStart] text-[25px] leading-relaxed w-[380px]">
-            Aquí verás mis proyectos. <br />
-            Haz clic en el enlace <br />
-            para visitarlos.
-          </div>
-        )}
-
-        <Image
-          src="/assets/question.png"
-          alt="Ayuda"
-          width={46}
-          height={64}
-          style={{ imageRendering: "pixelated" }}
-          priority
-        />
-      </div>
 
       {/* Animaciones locales */}
       <style jsx>{`

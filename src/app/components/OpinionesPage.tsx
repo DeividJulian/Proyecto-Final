@@ -20,6 +20,9 @@ export default function OpinionesPage() {
     { id: 4, videoId: "dQw4w9WgXcQ", titulo: "Video 4" },
   ];
 
+  // Tooltip del botón de interrogación (igual que en /acerca)
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
       {/* Fondo de cine/teatro */}
@@ -28,6 +31,43 @@ export default function OpinionesPage() {
         style={{ backgroundImage: 'url("/assets/sala-cine.png")' }}
         aria-hidden
       />
+
+      {/* Botón de interrogación flotante (mismo estilo que /acerca) */}
+      <div className="fixed top-8 right-8 z-50">
+        <button
+          onClick={() => setShowTooltip(!showTooltip)}
+          onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
+          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
+          aria-label="Ayuda"
+        >
+          <Image
+            src="/assets/question.png"
+            alt="Ayuda"
+            width={70}
+            height={70}
+            style={{ imageRendering: "pixelated" }}
+            className="group-hover:scale-110 transition-transform"
+            priority
+          />
+        </button>
+
+        {/* Tooltip mensaje */}
+        {showTooltip && (
+          <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
+            <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
+              <p
+                className="text-black text-[15px] leading-relaxed"
+                style={{ fontFamily: "Arial, sans-serif" }}
+              >
+                Da clic en cualquier tarjeta para reproducir el video. Cuando termines, usa el botón
+                <strong> VOLVER</strong> para regresar al mapa.
+              </p>
+            </div>
+            {/* Flecha apuntando al botón */}
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45"></div>
+          </div>
+        )}
+      </div>
 
       {/* Contenedor principal */}
       <div className="w-full max-w-[1100px] mx-auto px-4 py-8">
@@ -50,8 +90,12 @@ export default function OpinionesPage() {
           <aside className="flex flex-col items-center gap-6 lg:min-w-[320px]">
             {/* Globo de diálogo */}
             <div className="relative bg-white border-[6px] border-black rounded-xl shadow-[0_8px_0_#000] p-5 max-w-[300px]">
-              <p className="text-black text-[13px] leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Aquí podrás escuchar las opiniones y comentarios de personas que han compartido conmigo
+              <p
+                className="text-black text-[13px] leading-relaxed"
+                style={{ fontFamily: "Arial, sans-serif" }}
+              >
+                Aquí podrás escuchar las opiniones y comentarios de personas que han compartido
+                conmigo
               </p>
               {/* Flecha del globo apuntando hacia abajo */}
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-b-[6px] border-r-[6px] border-black transform rotate-45"></div>
@@ -86,7 +130,8 @@ export default function OpinionesPage() {
       {/* Animación de flotación y estilos específicos */}
       <style jsx>{`
         @keyframes float {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px);
           }
           50% {
@@ -105,10 +150,8 @@ export default function OpinionesPage() {
           place-items: center;
           border: 6px solid #23181b; /* borde oscuro tipo pixel */
           background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%); /* amarillo -> dorado */
-          box-shadow:
-            0 6px 0 #000,
-            inset 0 2px 0 rgba(255,255,255,0.25),
-            0 6px 12px rgba(0,0,0,0.4);
+          box-shadow: 0 6px 0 #000, inset 0 2px 0 rgba(255, 255, 255, 0.25),
+            0 6px 12px rgba(0, 0, 0, 0.4);
           border-radius: 6px;
           image-rendering: pixelated;
           transform: translateZ(0);
@@ -127,10 +170,29 @@ export default function OpinionesPage() {
           transform: scale(1.06) translateY(-2px);
         }
 
-        /* adaptaciones responsivas para que se parezca a la referencia */
+        /* adaptaciones responsivas */
         @media (min-width: 1024px) {
-          .play-button-frame { width: 140px; height: 92px; }
-          .play-triangle { width: 60px; height: 60px; }
+          .play-button-frame {
+            width: 140px;
+            height: 92px;
+          }
+          .play-triangle {
+            width: 60px;
+            height: 60px;
+          }
+        }
+
+        /* animación del tooltip */
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
         }
       `}</style>
     </main>
@@ -159,8 +221,6 @@ function VideoCard({ videoId, titulo }: { videoId: string; titulo: string }) {
 
             {/* Botón play estilo retro centrado */}
             <div className="relative z-10 play-button-frame">
-              {/* Usa la imagen 'play-retro.png' si la tienes en public/assets */}
-              {/* Si quieres usar la imagen que ya existía, cambia src aquí */}
               <Image
                 src="/assets/reproducir.png"
                 alt="Play retro"
