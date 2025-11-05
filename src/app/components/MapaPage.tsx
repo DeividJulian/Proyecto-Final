@@ -21,7 +21,7 @@ export default function MapaPage() {
   const proyectosPoint = { x: 23, y: 10 };
   const acercaPoint = { x: 73, y: 13 }; // coordenada para Acerca de Mi
   const opinionesPoint = { x: 18, y: 83 };
-  const timelinePoint = { x: 76, y: 73 };
+  const timelinePoint = { x: 76, y: 73 }; // Línea de tiempo
 
   const PROXIMITY_THRESHOLD = 6; // en porcentaje (ajusta si quieres más/menos sensibilidad)
 
@@ -91,7 +91,7 @@ export default function MapaPage() {
     };
   }, []);
 
-  // Proximidad -> redirigir a /proyectos o /acerca
+  // Proximidad -> redirigir a /proyectos, /acerca, /opiniones, /timeline
   useEffect(() => {
     if (redirectedRef.current) return;
 
@@ -105,10 +105,15 @@ export default function MapaPage() {
     const dyAcerca = pos.y - acercaPoint.y;
     const distanceAcerca = Math.sqrt(dxAcerca * dxAcerca + dyAcerca * dyAcerca);
 
-    // Calcular distancia a Opiniones (si quisieras)
+    // Calcular distancia a Opiniones
     const dxOpiniones = pos.x - opinionesPoint.x;
     const dyOpiniones = pos.y - opinionesPoint.y;
     const distanceOpiniones = Math.sqrt(dxOpiniones * dxOpiniones + dyOpiniones * dyOpiniones);
+
+    // Calcular distancia a Línea de tiempo
+    const dxTimeline = pos.x - timelinePoint.x;
+    const dyTimeline = pos.y - timelinePoint.y;
+    const distanceTimeline = Math.sqrt(dxTimeline * dxTimeline + dyTimeline * dyTimeline);
 
     // Redirigir a Proyectos si está cerca
     if (distanceProyectos <= PROXIMITY_THRESHOLD) {
@@ -129,11 +134,20 @@ export default function MapaPage() {
       return;
     }
 
-    // (Opcional) redirigir a Opiniones
+    // Redirigir a Opiniones si está cerca
     if (distanceOpiniones <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
       setTimeout(() => {
         router.push("/opiniones");
+      }, 220);
+      return;
+    }
+
+    // Redirigir a Línea de tiempo si está cerca
+    if (distanceTimeline <= PROXIMITY_THRESHOLD) {
+      redirectedRef.current = true;
+      setTimeout(() => {
+        router.push("/timeline");
       }, 220);
       return;
     }
@@ -163,7 +177,7 @@ export default function MapaPage() {
           VOLVER
         </Link>
 
-        {/* Etiquetas del mapa: ahora MapLabel es interactivo y accesible por teclado */}
+        {/* Etiquetas del mapa */}
         <MapLabel text="Proyectos" top="10%" left="23%" href="/proyectos" />
         <MapLabel text="Acerca de Mi" top="13%" left="73%" href="/acerca" />
         <MapLabel text="Opiniones" top="83%" left="18%" href="/opiniones" />
@@ -188,8 +202,8 @@ export default function MapaPage() {
               aria-label="Ayuda mapa"
               className="mr-3 bg-white text-black border-8 border-black rounded-md px-6 py-5 shadow-[0_8px_0_#000] font-[PressStart] text-[18px] leading-tight max-w-xs"
             >
-              Utiliza las flechas para moverte por el mapa y conocer mi portafolio, acercate a cada
-              seccion para visitarla.
+              Utiliza las flechas para moverte por el mapa y conocer mi portafolio. Acércate a cada
+              sección (Proyectos, Acerca de Mi, Opiniones o Línea de tiempo) para visitarla.
             </div>
           )}
 
@@ -256,7 +270,7 @@ export default function MapaPage() {
 /* ---------- Componentes auxiliares ---------- */
 
 /**
- * MapLabel: ahora es accesible (button) y además mantiene el Link para SEO/semántica.
+ * MapLabel: accesible (button) y mantiene el Link para SEO/semántica.
  * Si el usuario hace Enter o Space en el botón, se navega también.
  */
 function MapLabel({
@@ -270,7 +284,6 @@ function MapLabel({
   left: string;
   href?: string;
 }) {
-  // useRouter aquí para navegar programáticamente si se presiona Enter/Space
   const router = useRouter();
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -287,7 +300,6 @@ function MapLabel({
       style={{ top, left, transform: "translate(-50%, -50%)" }}
     >
       {href ? (
-        // mantenemos el Link (para comportamiento normal con click/SEO)
         <Link href={href} className="block">
           <button
             onKeyDown={onKeyDown}
@@ -350,3 +362,4 @@ function SpeechBubble({
     </div>
   );
 }
+
