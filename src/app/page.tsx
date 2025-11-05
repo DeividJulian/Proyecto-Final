@@ -10,11 +10,11 @@ type Theme = "light" | "dark";
 export default function Home() {
   const [theme, setTheme] = useState<Theme>("light");
 
-  // Carga preferencia guardada o la del sistema
+  // Carga preferencia guardada o la del sistema (solo en cliente)
   useEffect(() => {
-    const fromStorage = (typeof window !== "undefined" && localStorage.getItem("theme")) as Theme | null;
-    if (fromStorage === "light" || fromStorage === "dark") {
-      setTheme(fromStorage);
+    const saved = (typeof window !== "undefined" ? localStorage.getItem("theme") : null) as Theme | null;
+    if (saved === "light" || saved === "dark") {
+      setTheme(saved);
       return;
     }
     const prefersDark =
@@ -24,7 +24,7 @@ export default function Home() {
     setTheme(prefersDark ? "dark" : "light");
   }, []);
 
-  // Guarda preferencia
+  // Guarda preferencia (solo en cliente)
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("theme", theme);
@@ -32,29 +32,28 @@ export default function Home() {
   }, [theme]);
 
   const isDark = theme === "dark";
-
-  // Cambia el fondo según el tema
   const bgUrl = isDark ? "/assets/modo-oscuro.jpg" : "/assets/bg-city.png";
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
       {/* Fondo */}
       <div
-        className="absolute inset-0 -z-10 bg-cover bg-center"
+        className="absolute inset-0 -z-10 bg-cover bg-center transition-all duration-700 ease-in-out"
         style={{ backgroundImage: `url(${bgUrl})` }}
         aria-hidden
       />
 
       {/* Toggle Claro/Oscuro (pixelado) */}
-      <ThemeToggle isDark={isDark} onToggle={() => setTheme(isDark ? "light" : "dark")} />
+      <ThemeToggle
+        isDark={isDark}
+        onToggle={() => setTheme(isDark ? "light" : "dark")}
+      />
 
-      {/* Contenido centrado */}
+      {/* Contenido */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-24">
-        {/* Fila principal: cartel + botones | avatar */}
         <div className="grid grid-cols-1 lg:grid-cols-[560px_1fr] items-start gap-8 lg:gap-16">
           {/* Columna izquierda */}
           <section className="w-full">
-            {/* Cartucho de saludo */}
             <div
               className={`mx-auto w-[560px] max-w-full border-8 border-black shadow-[0_10px_0_#000] rounded-md ${
                 isDark ? "bg-[#101b2a] text-[#e5ff7a]" : "bg-[#31256c] text-yellow-300"
@@ -75,9 +74,9 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Columna derecha: avatar + nombre */}
+          {/* Columna derecha */}
           <section className="relative justify-self-center lg:justify-self-end mt-6 lg:mt-0 pt-20">
-            {/* Cartel con nombre */}
+            {/* Cartel nombre */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-[320px]">
               <div className="animate-name-bob">
                 <div
@@ -91,7 +90,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Avatar con idle-bob */}
+            {/* Avatar */}
             <Image
               src="/assets/avatar-parado.png"
               alt="Avatar"
@@ -116,49 +115,45 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Animaciones */}
+      {/* Animaciones locales */}
       <style jsx>{`
         @keyframes bob {
-          0% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-6px);
-          }
-          100% {
-            transform: translateY(0);
-          }
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+          100% { transform: translateY(0); }
         }
-        .animate-bob {
-          animation: bob 1.4s ease-in-out infinite;
-        }
+        .animate-bob { animation: bob 1.4s ease-in-out infinite; }
+
         @keyframes nameBob {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-4px);
-          }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-4px); }
         }
-        .animate-name-bob {
-          animation: nameBob 2.2s ease-in-out infinite;
-        }
+        .animate-name-bob { animation: nameBob 2.2s ease-in-out infinite; }
       `}</style>
     </main>
   );
 }
 
-/* ==== Toggle de tema PIXELADO ==== */
-function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => void }) {
+/* ===== Toggle tema pixelado accesible (compatible Vercel) ===== */
+function ThemeToggle({
+  isDark,
+  onToggle,
+}: {
+  isDark: boolean;
+  onToggle: () => void;
+}) {
+  const label = isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
+
   return (
     <button
       onClick={onToggle}
+      aria-label={label}
+      aria-pressed={isDark}
       className="fixed top-5 right-5 z-50 select-none"
-      aria-label="Cambiar tema"
-      title="Cambiar tema"
+      title={label}
+      type="button"
     >
-      {/* Rail del switch con estética pixel */}
+      {/* Rail */}
       <div
         className={`
           relative w-[136px] h-[64px]
@@ -169,14 +164,14 @@ function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => vo
         `}
         style={{ imageRendering: "pixelated" }}
       >
-        {/* Segmentos “pixel” del rail */}
+        {/* Segmentos del rail */}
         <div className="absolute inset-0 grid grid-cols-6 opacity-20 pointer-events-none">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="border-r-2 border-black/40" />
+            <div key={`seg-${i}`} className="border-r-2 border-black/40" />
           ))}
         </div>
 
-        {/* Círculo deslizante tipo ficha */}
+        {/* Knob */}
         <div
           className={`
             absolute top-[6px] w-[48px] h-[48px]
@@ -187,7 +182,6 @@ function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => vo
           `}
           style={{ imageRendering: "pixelated", boxShadow: "0 4px 0 #000" }}
         >
-          {/* Icono tipo pixel (usamos emoji pero con borde grueso y pixel rendering) */}
           <span
             className="text-[22px] select-none"
             style={{ filter: "drop-shadow(2px 2px 0 #000)" }}
@@ -196,19 +190,22 @@ function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => vo
           </span>
         </div>
       </div>
-
-      <div className="mt-1 text-center text-[10px] font-[PressStart] text-black drop-shadow-[0_2px_0_rgba(0,0,0,1)]">
-      </div>
     </button>
   );
 }
 
-/* ==== UI helpers ==== */
-function PixelButton({ href, label, isDark }: { href: string; label: string; isDark: boolean }) {
-  // Paletas
+/* ========= Componentes auxiliares ========= */
+function PixelButton({
+  href,
+  label,
+  isDark,
+}: {
+  href: string;
+  label: string;
+  isDark: boolean;
+}) {
   const lightClasses =
     "bg-[#2b93ff] text-yellow-300 shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
-  // Estética oscuro: cian verdoso + texto lima (neón retro)
   const darkClasses =
     "bg-[#0ea5a8] text-[#e5ff7a] shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
 
@@ -229,7 +226,13 @@ function PixelButton({ href, label, isDark }: { href: string; label: string; isD
   );
 }
 
-function ContactPanel({ children, isDark }: { children: React.ReactNode; isDark: boolean }) {
+function ContactPanel({
+  children,
+  isDark,
+}: {
+  children: React.ReactNode;
+  isDark: boolean;
+}) {
   return (
     <div
       className={`
