@@ -2,11 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Dir = "up" | "right" | "down" | "left";
 type KeyMap = Record<"ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight", boolean>;
+
+/** Constante estable fuera del componente para no generar warnings en deps */
+const PROXIMITY_THRESHOLD = 6; // en porcentaje (ajusta si quieres más/menos sensibilidad)
 
 export default function MapaPage() {
   // Posición del avatar en % dentro del contenedor del mapa
@@ -17,13 +20,11 @@ export default function MapaPage() {
   const router = useRouter();
   const redirectedRef = useRef(false);
 
-  // Puntos de interés en el mapa
-  const proyectosPoint = { x: 23, y: 10 };
-  const acercaPoint = { x: 73, y: 13 }; // coordenada para Acerca de Mi
-  const opinionesPoint = { x: 18, y: 83 };
-  const timelinePoint = { x: 76, y: 73 }; // Línea de tiempo
-
-  const PROXIMITY_THRESHOLD = 6; // en porcentaje (ajusta si quieres más/menos sensibilidad)
+  // Puntos de interés en el mapa (memoizados para no romper reglas de deps)
+  const proyectosPoint = useMemo(() => ({ x: 23, y: 10 }), []);
+  const acercaPoint = useMemo(() => ({ x: 73, y: 13 }), []); // coordenada para Acerca de Mi
+  const opinionesPoint = useMemo(() => ({ x: 18, y: 83 }), []);
+  const timelinePoint = useMemo(() => ({ x: 76, y: 73 }), []); // Línea de tiempo
 
   // Estado para mostrar/ocultar el globo de ayuda del botón "?"
   const [showTooltip, setShowTooltip] = useState(false);
@@ -150,7 +151,7 @@ export default function MapaPage() {
       }, 220);
       return;
     }
-  }, [pos, router]);
+  }, [pos, router, proyectosPoint, acercaPoint, opinionesPoint, timelinePoint]);
 
   return (
     <main className="min-h-screen w-full flex items-center justify-center bg-[#072130]">

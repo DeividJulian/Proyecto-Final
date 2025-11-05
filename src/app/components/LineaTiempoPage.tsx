@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
-import React, { useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
+import React, { useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 type NodeItem = {
   id: number;
@@ -11,14 +10,11 @@ type NodeItem = {
   alt: string;
   /** posición horizontal en % a lo largo de la línea principal (0–100) */
   x: number;
-  /** posición vertical del cuadro (porcentaje del alto del contenedor).
-   * Usa valores < yMain para “arriba” y > yMain para “abajo”.
-   */
+  /** posición vertical del cuadro (porcentaje del alto del contenedor). */
   y: number;
 };
 
 export default function LineaTiempoPage() {
-  const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
 
   // Ref para pantalla completa
@@ -27,20 +23,12 @@ export default function LineaTiempoPage() {
   /** Línea principal (horizontal) en % de la altura del contenedor */
   const yMain = 38;
 
-  /** 👉 AÑADE / QUITA nodos aquí.
-   *  Solo define { x, y, image, alt } y el componente dibuja el conector y coloca la imagen.
-   *  Pon y < yMain para que el cuadro quede arriba, y > yMain para abajo.
-   */
+  /** 👉 AÑADE / QUITA nodos aquí. */
   const timelineNodes: NodeItem[] = useMemo(
     () => [
-      // Ejemplos (los 3 de tu maqueta + espacio para más)
-      { id: 1, image: '/assets/sala-cine.png',       alt: 'Excursión en montaña', x: 32, y: 18 },
-      { id: 2, image: '/assets/mapas.png',           alt: 'Playa al atardecer',   x: 50, y: 62 },
-      { id: 3, image: '/assets/reproducir.png',      alt: 'Ciudad al atardecer',  x: 78, y: 18 },
-
-      // Puedes seguir agregando:
-      // { id: 4, image: '/assets/mi-foto-4.png', alt: 'Otro hito', x: 15, y: 62 },
-      // { id: 5, image: '/assets/mi-foto-5.png', alt: 'Otro hito', x: 90, y: 62 },
+      { id: 1, image: "/assets/sala-cine.png",  alt: "Excursión en montaña", x: 32, y: 18 },
+      { id: 2, image: "/assets/mapas.png",      alt: "Playa al atardecer",   x: 50, y: 62 },
+      { id: 3, image: "/assets/reproducir.png", alt: "Ciudad al atardecer",  x: 78, y: 18 },
     ],
     []
   );
@@ -59,12 +47,15 @@ export default function LineaTiempoPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950">
-      {/* Fondo */}
+      {/* Fondo (usa %20 para el espacio del nombre) */}
       <div className="absolute inset-0 z-0">
-        <img
-          src="/assets/linea de tiempo.png"
+        <Image
+          src="/assets/linea-de-tiempo.png"
           alt="Fondo línea de tiempo"
-          className="w-full h-full object-cover"
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
         />
       </div>
 
@@ -76,9 +67,8 @@ export default function LineaTiempoPage() {
         <div
           className="absolute inset-4 border-8 border-cyan-600 rounded-3xl"
           style={{
-            boxShadow:
-              '0 0 40px rgba(6, 182, 212, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.8)',
-            imageRendering: 'pixelated',
+            boxShadow: "0 0 40px rgba(6, 182, 212, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.8)",
+            imageRendering: "pixelated",
           }}
         />
         <div className="absolute top-8 left-8 w-32 h-32 border-l-4 border-t-4 border-cyan-500" />
@@ -95,13 +85,14 @@ export default function LineaTiempoPage() {
           className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
           aria-label="Ayuda"
           title="Ayuda"
+          type="button"
         >
           <Image
             src="/assets/question.png"
             alt="Ayuda"
             width={70}
             height={70}
-            style={{ imageRendering: 'pixelated' }}
+            style={{ imageRendering: "pixelated" }}
             className="group-hover:scale-110 transition-transform"
             priority
           />
@@ -110,10 +101,7 @@ export default function LineaTiempoPage() {
         {showTooltip && (
           <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
-              <p
-                className="text-black text-[15px] leading-relaxed"
-                style={{ fontFamily: 'Arial, sans-serif' }}
-              >
+              <p className="text-black text-[15px] leading-relaxed" style={{ fontFamily: "Arial, sans-serif" }}>
                 Explora mi historia: cada cuadro es un momento. Usa
                 <strong> PANTALLA COMPLETA</strong> para verlo mejor.
               </p>
@@ -130,17 +118,14 @@ export default function LineaTiempoPage() {
           <div
             className="px-10 py-4 rounded-2xl border-4 border-black"
             style={{
-              boxShadow: '0 8px 0px rgba(0,0,0,0.8)',
-              imageRendering: 'pixelated',
-              backgroundColor: '#2D246A', // morado oscuro
+              boxShadow: "0 8px 0px rgba(0,0,0,0.8)",
+              imageRendering: "pixelated",
+              backgroundColor: "#2D246A",
             }}
           >
             <h1
               className="text-3xl md:text-4xl font-bold text-yellow-400 tracking-widest"
-              style={{
-                textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
-                fontFamily: 'monospace',
-              }}
+              style={{ textShadow: "2px 2px 0px rgba(0,0,0,0.8)", fontFamily: "monospace" }}
             >
               LINEA DE TIEMPO
             </h1>
@@ -150,16 +135,16 @@ export default function LineaTiempoPage() {
         <div className="relative max-w-[1200px] mx-auto">
           {/* Avatar izquierdo */}
           <div className="absolute left-2 top-[36%] -translate-y-1/2 z-20">
-            <div
-              className="p-2 rounded-xl shadow-2xl bg-transparent"
-              style={{ imageRendering: 'pixelated' }}
-            >
+            <div className="p-2 rounded-xl shadow-2xl bg-transparent" style={{ imageRendering: "pixelated" }}>
               <div className="w-[140px] h-[140px] rounded-xl overflow-hidden border-4 border-cyan-700 bg-slate-900 grid place-items-center">
-                <img
+                <Image
                   src="/assets/avatar-primera-persona.png"
                   alt="Avatar pixel"
-                  className="w-full h-full object-contain"
-                  style={{ imageRendering: 'pixelated' }}
+                  width={140}
+                  height={140}
+                  className="object-contain"
+                  style={{ imageRendering: "pixelated" }}
+                  priority
                 />
               </div>
             </div>
@@ -167,7 +152,7 @@ export default function LineaTiempoPage() {
 
           {/* Contenedor de la línea de tiempo */}
           <div className="ml-[170px] mr-6 relative min-h-[520px]">
-            {/* SVG de líneas (más largo para albergar más fotos) */}
+            {/* SVG de líneas */}
             <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
               {/* Línea principal */}
               <line
@@ -177,7 +162,7 @@ export default function LineaTiempoPage() {
                 y2={`${yMain}%`}
                 stroke="#22c55e"
                 strokeWidth="6"
-                style={{ filter: 'drop-shadow(0 0 8px rgba(34,197,94,0.9))' }}
+                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
               />
 
               {/* Conectores verticales por cada nodo */}
@@ -190,7 +175,7 @@ export default function LineaTiempoPage() {
                   y2={`${n.y}%`}
                   stroke="#22c55e"
                   strokeWidth="6"
-                  style={{ filter: 'drop-shadow(0 0 8px rgba(34,197,94,0.9))' }}
+                  style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
                 />
               ))}
             </svg>
@@ -200,30 +185,25 @@ export default function LineaTiempoPage() {
               <div
                 key={n.id}
                 className="absolute z-10 cursor-pointer transition-transform hover:scale-110"
-                style={{
-                  left: `calc(${n.x}% - 64px)`,
-                  top: `calc(${n.y}% - 64px)`,
-                }}
+                style={{ left: `calc(${n.x}% - 64px)`, top: `calc(${n.y}% - 64px)` }}
                 title={n.alt}
               >
                 <div
                   className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden shadow-2xl bg-slate-900 relative"
-                  style={{
-                    boxShadow:
-                      '0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)',
-                    imageRendering: 'pixelated',
-                  }}
+                  style={{ boxShadow: "0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)", imageRendering: "pixelated" }}
                 >
-                  <img
+                  <Image
                     src={n.image}
                     alt={n.alt}
+                    width={128}
+                    height={128}
                     className="w-full h-full object-cover"
-                    style={{ imageRendering: 'pixelated' }}
+                    style={{ imageRendering: "pixelated" }}
                   />
                   {/* Glow exterior al pasar el mouse */}
                   <div
                     className="absolute inset-0 rounded-xl opacity-0 hover:opacity-70 transition-opacity pointer-events-none"
-                    style={{ boxShadow: '0 0 30px rgba(6, 182, 212, 1)' }}
+                    style={{ boxShadow: "0 0 30px rgba(6, 182, 212, 1)" }}
                   />
                 </div>
               </div>
@@ -237,12 +217,13 @@ export default function LineaTiempoPage() {
             onClick={handleFullscreen}
             className="bg-amber-900 hover:bg-amber-800 text-yellow-400 font-bold text-xl md:text-2xl px-10 md:px-16 py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{
-              textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
-              fontFamily: 'monospace',
-              imageRendering: 'pixelated',
-              boxShadow: '0 8px 0px rgba(0,0,0,0.6)',
-              backgroundColor: '#78350f',
+              textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
+              fontFamily: "monospace",
+              imageRendering: "pixelated",
+              boxShadow: "0 8px 0px rgba(0,0,0,0.6)",
+              backgroundColor: "#78350f",
             }}
+            type="button"
           >
             PANTALLA COMPLETA
           </button>
@@ -251,11 +232,11 @@ export default function LineaTiempoPage() {
             href="/mapa"
             className="bg-orange-900 hover:bg-orange-800 text-yellow-400 font-bold text-xl md:text-2xl px-10 md:px-16 py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{
-              textShadow: '2px 2px 0px rgba(0,0,0,0.8)',
-              fontFamily: 'monospace',
-              imageRendering: 'pixelated',
-              boxShadow: '0 8px 0px rgba(0,0,0,0.6)',
-              backgroundColor: '#9a3412',
+              textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
+              fontFamily: "monospace",
+              imageRendering: "pixelated",
+              boxShadow: "0 8px 0px rgba(0, 0, 0, 0.6)",
+              backgroundColor: "#9a3412",
             }}
           >
             VOLVER
@@ -266,16 +247,10 @@ export default function LineaTiempoPage() {
       {/* Animaciones */}
       <style jsx>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
       `}</style>
     </div>
   );
