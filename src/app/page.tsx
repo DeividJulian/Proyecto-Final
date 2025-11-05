@@ -10,7 +10,7 @@ type Theme = "light" | "dark";
 export default function Home() {
   const [theme, setTheme] = useState<Theme>("light");
 
-  // Carga preferencia del sistema o la última guardada
+  // Carga preferencia guardada o la del sistema
   useEffect(() => {
     const fromStorage = (typeof window !== "undefined" && localStorage.getItem("theme")) as Theme | null;
     if (fromStorage === "light" || fromStorage === "dark") {
@@ -33,6 +33,7 @@ export default function Home() {
 
   const isDark = theme === "dark";
 
+  // Cambia el fondo según el tema
   const bgUrl = isDark ? "/assets/modo-oscuro.jpg" : "/assets/bg-city.png";
 
   return (
@@ -44,7 +45,7 @@ export default function Home() {
         aria-hidden
       />
 
-      {/* Toggle Claro/Oscuro */}
+      {/* Toggle Claro/Oscuro (pixelado) */}
       <ThemeToggle isDark={isDark} onToggle={() => setTheme(isDark ? "light" : "dark")} />
 
       {/* Contenido centrado */}
@@ -66,7 +67,6 @@ export default function Home() {
 
             {/* Botones */}
             <div className="mt-6 space-y-5 w-[560px] max-w-full">
-              {/* Aquí redirige al mapa */}
               <PixelButton href="/mapa" label="EMPEZAR" isDark={isDark} />
               <PixelButton href="/proyectos" label="PROYECTOS" isDark={isDark} />
               <PixelButton href="/acerca" label="ACERCA DE MI" isDark={isDark} />
@@ -107,16 +107,16 @@ export default function Home() {
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 w-[880px] max-w-full">
           <ContactPanel isDark={isDark}>
             <span className={isDark ? "text-[#e5ff7a]" : "text-yellow-300"}>Contáctame :</span>{" "}
-            <span className={isDark ? "text-white" : "text-white"}>316 895 7503</span>
+            <span className="text-white">316 895 7503</span>
           </ContactPanel>
 
           <ContactPanel isDark={isDark}>
-            <span className={isDark ? "text-white" : "text-white"}>deividjulianalvarado@gmail.com</span>
+            <span className="text-white">deividjulianalvarado@gmail.com</span>
           </ContactPanel>
         </div>
       </div>
 
-      {/* Animaciones locales (si usas la clase animate-name-bob en alguna parte) */}
+      {/* Animaciones */}
       <style jsx>{`
         @keyframes bob {
           0% {
@@ -149,7 +149,7 @@ export default function Home() {
   );
 }
 
-/* ==== Toggle de tema ==== */
+/* ==== Toggle de tema PIXELADO ==== */
 function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => void }) {
   return (
     <button
@@ -158,12 +158,46 @@ function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => vo
       aria-label="Cambiar tema"
       title="Cambiar tema"
     >
-      <div className="relative w-16 h-16 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all grid place-items-center overflow-hidden">
-        {/* Ícono simple usando emoji para no depender de más assets */}
-        <span className="text-2xl">{isDark ? "🌙" : "☀️"}</span>
+      {/* Rail del switch con estética pixel */}
+      <div
+        className={`
+          relative w-[136px] h-[64px]
+          border-[6px] border-black rounded-full
+          transition-all duration-300 ease-in-out
+          shadow-[0_6px_0_#000]
+          ${isDark ? "bg-gradient-to-r from-[#0ea5a8] to-[#1e3a8a]" : "bg-gradient-to-r from-[#f97316] to-[#facc15]"}
+        `}
+        style={{ imageRendering: "pixelated" }}
+      >
+        {/* Segmentos “pixel” del rail */}
+        <div className="absolute inset-0 grid grid-cols-6 opacity-20 pointer-events-none">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="border-r-2 border-black/40" />
+          ))}
+        </div>
+
+        {/* Círculo deslizante tipo ficha */}
+        <div
+          className={`
+            absolute top-[6px] w-[48px] h-[48px]
+            border-[6px] border-black rounded-full
+            flex items-center justify-center
+            transition-transform duration-300 ease-in-out
+            ${isDark ? "translate-x-[76px] bg-[#0ea5a8]" : "translate-x-0 bg-[#facc15]"}
+          `}
+          style={{ imageRendering: "pixelated", boxShadow: "0 4px 0 #000" }}
+        >
+          {/* Icono tipo pixel (usamos emoji pero con borde grueso y pixel rendering) */}
+          <span
+            className="text-[22px] select-none"
+            style={{ filter: "drop-shadow(2px 2px 0 #000)" }}
+          >
+            {isDark ? "🌙" : "☀️"}
+          </span>
+        </div>
       </div>
+
       <div className="mt-1 text-center text-[10px] font-[PressStart] text-black drop-shadow-[0_2px_0_rgba(0,0,0,1)]">
-        {isDark ? "Oscuro" : "Claro"}
       </div>
     </button>
   );
@@ -174,7 +208,7 @@ function PixelButton({ href, label, isDark }: { href: string; label: string; isD
   // Paletas
   const lightClasses =
     "bg-[#2b93ff] text-yellow-300 shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
-  // Estética para oscuro: cian verdoso brillante + texto lima suave
+  // Estética oscuro: cian verdoso + texto lima (neón retro)
   const darkClasses =
     "bg-[#0ea5a8] text-[#e5ff7a] shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
 
