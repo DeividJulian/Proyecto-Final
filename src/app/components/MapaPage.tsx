@@ -49,12 +49,10 @@ export default function MapaPage() {
         const k = e.key as keyof KeyMap;
         keys[k] = true;
         setMoving(true);
-
         if (k === "ArrowUp") dirRef.current = "up";
         if (k === "ArrowDown") dirRef.current = "down";
         if (k === "ArrowLeft") dirRef.current = "left";
         if (k === "ArrowRight") dirRef.current = "right";
-
         if (!hasMovedRef.current) {
           hasMovedRef.current = true;
           setShowIntro(false);
@@ -97,115 +95,83 @@ export default function MapaPage() {
 
   useEffect(() => {
     if (redirectedRef.current) return;
-
     const dist = (a: { x: number; y: number }, b: { x: number; y: number }) =>
       Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 
     if (dist(pos, proyectosPoint) <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
       setTimeout(() => router.push("/proyectos"), 220);
-      return;
-    }
-    if (dist(pos, acercaPoint) <= PROXIMITY_THRESHOLD) {
+    } else if (dist(pos, acercaPoint) <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
       setTimeout(() => router.push("/acerca"), 220);
-      return;
-    }
-    if (dist(pos, opinionesPoint) <= PROXIMITY_THRESHOLD) {
+    } else if (dist(pos, opinionesPoint) <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
       setTimeout(() => router.push("/opiniones"), 220);
-      return;
-    }
-    if (dist(pos, timelinePoint) <= PROXIMITY_THRESHOLD) {
+    } else if (dist(pos, timelinePoint) <= PROXIMITY_THRESHOLD) {
       redirectedRef.current = true;
       setTimeout(() => router.push("/timeline"), 220);
-      return;
     }
   }, [pos, router, proyectosPoint, acercaPoint, opinionesPoint, timelinePoint]);
 
   return (
     <main className="h-screen w-full overflow-hidden flex items-center justify-center bg-[#072130]">
-      {/* Botón de ayuda mejorado */}
+      {/* Botón de ayuda con el mismo diseño que “Acerca de mi” */}
       <div className="fixed top-6 right-6 z-50">
         <button
           onClick={() => setShowTooltip((v) => !v)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
-          className="relative w-[74px] h-[74px] rounded-full grid place-items-center transition-transform duration-300 hover:scale-105"
+          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden animate-float"
           aria-label="Ayuda"
           title="Ayuda"
-          style={{
-            boxShadow: "0 6px 0 #000",
-            background: "#000",
-            padding: "6px",
-            animation: "float 2.5s ease-in-out infinite",
-          }}
         >
-          <div className="w-full h-full rounded-full bg-white border-[6px] border-black flex items-center justify-center">
-            <Image
-              src="/assets/question.png"
-              alt="Ayuda"
-              width={50}
-              height={50}
-              priority
-              style={{ imageRendering: "pixelated" }}
-            />
-          </div>
+          <Image
+            src="/assets/question.png"
+            alt="Ayuda"
+            width={70}
+            height={70}
+            priority
+            style={{ imageRendering: "pixelated" }}
+            className="group-hover:scale-110 transition-transform"
+          />
         </button>
 
         {showTooltip && (
           <div className="absolute top-24 right-0 w-[340px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
-              <p
-                className="text-black text-[15px] leading-relaxed"
-                style={{ fontFamily: "Arial, sans-serif" }}
-              >
-                Usa las flechas para moverte. Acércate a{" "}
-                <strong>Proyectos</strong>, <strong>Acerca de Mi</strong>,{" "}
-                <strong>Opiniones</strong> o <strong>Línea de tiempo</strong>{" "}
-                para entrar.
+              <p className="text-black text-[15px] leading-relaxed font-sans">
+                Usa las flechas para moverte. Acércate a <strong>Proyectos</strong>,{" "}
+                <strong>Acerca de Mi</strong>, <strong>Opiniones</strong> o{" "}
+                <strong>Línea de tiempo</strong> para entrar.
               </p>
             </div>
-            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45"></div>
           </div>
         )}
       </div>
 
-      {/* Contenedor principal */}
       <div
         className="relative overflow-hidden"
-        style={{
-          width: "min(90vw, 90vh, 850px)",
-          height: "min(90vw, 90vh, 850px)",
-        }}
+        style={{ width: "min(90vw, 90vh, 850px)", height: "min(90vw, 90vh, 850px)" }}
       >
         <div
           className="absolute inset-0 bg-center bg-no-repeat bg-contain"
           style={{ backgroundImage: 'url("/assets/mapa-overworld.jpg")' }}
-          aria-hidden
         />
-
-        {/* Botón Volver */}
         <Link
           href="/"
           className="absolute top-3 left-3 z-30 bg-[#2b93ff] text-yellow-300 border-8 border-black rounded-md shadow-[0_8px_0_#000] px-3 py-1 font-[PressStart] text-[10px]"
         >
           VOLVER
         </Link>
-
-        {/* Letreros más pequeños */}
         <MapLabel text="Proyectos" top="9%" left="23%" href="/proyectos" />
         <MapLabel text="Acerca de Mi" top="12%" left="73%" href="/acerca" />
         <MapLabel text="Opiniones" top="83%" left="18%" href="/opiniones" />
         <MapLabel text="Línea de tiempo" top="73%" left="76%" href="/timeline" />
-
-        {/* Globo introductorio */}
         {showIntro && (
           <SpeechBubble top="47%" left="49%">
             Explora el mapa para <br /> conocer mi portafolio
           </SpeechBubble>
         )}
-
-        {/* Avatar más pequeño */}
         <div
           className="absolute z-20"
           style={{
@@ -226,48 +192,28 @@ export default function MapaPage() {
         </div>
       </div>
 
-      {/* Animaciones */}
       <style jsx>{`
         @keyframes bob {
-          0% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-6px);
-          }
-          100% {
-            transform: translateY(0);
-          }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
         }
-        .animate-bob {
-          animation: bob 1.4s ease-in-out infinite;
-        }
+        .animate-bob { animation: bob 1.4s ease-in-out infinite; }
+
         @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-6px);
-          }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
         }
+        .animate-float { animation: float 2.5s ease-in-out infinite; }
+
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-        .animate-fadeIn {
-          animation: fadeIn 0.25s ease-out;
-        }
+        .animate-fadeIn { animation: fadeIn 0.25s ease-out; }
       `}</style>
     </main>
   );
 }
-
-/* --- Componentes auxiliares --- */
 
 function MapLabel({
   text,
@@ -289,32 +235,18 @@ function MapLabel({
     }
   };
   return (
-    <div
-      className="absolute z-20"
-      style={{ top, left, transform: "translate(-50%, -50%)" }}
-    >
+    <div className="absolute z-20" style={{ top, left, transform: "translate(-50%, -50%)" }}>
       {href ? (
         <Link href={href}>
           <button
             onKeyDown={onKeyDown}
-            className="
-              bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md
-              shadow-[0_8px_0_#000] px-2 py-1
-              font-[PressStart] text-[clamp(8px,1vw,12px)]
-              hover:scale-[1.05] transition-transform
-            "
+            className="bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md shadow-[0_8px_0_#000] px-2 py-1 font-[PressStart] text-[clamp(8px,1vw,12px)] hover:scale-[1.05] transition-transform"
           >
             {text}
           </button>
         </Link>
       ) : (
-        <div
-          className="
-            bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md
-            shadow-[0_8px_0_#000] px-2 py-1
-            font-[PressStart] text-[clamp(8px,1vw,12px)]
-          "
-        >
+        <div className="bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md shadow-[0_8px_0_#000] px-2 py-1 font-[PressStart] text-[clamp(8px,1vw,12px)]">
           {text}
         </div>
       )}
@@ -332,18 +264,8 @@ function SpeechBubble({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className="absolute z-10"
-      style={{ top, left, transform: "translate(-50%, -50%)" }}
-    >
-      <div
-        className="
-          bg-white text-black border-8 border-black rounded-md
-          px-3 py-2 shadow-[0_8px_0_#000]
-          font-[PressStart] text-[clamp(8px,1vw,11px)]
-          leading-relaxed text-center
-        "
-      >
+    <div className="absolute z-10" style={{ top, left, transform: "translate(-50%, -50%)" }}>
+      <div className="bg-white text-black border-8 border-black rounded-md px-3 py-2 shadow-[0_8px_0_#000] font-[PressStart] text-[clamp(8px,1vw,11px)] leading-relaxed text-center">
         {children}
       </div>
       <div
