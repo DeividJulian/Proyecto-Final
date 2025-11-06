@@ -1,3 +1,4 @@
+// src/app/mapa/page.tsx
 "use client";
 
 import Image from "next/image";
@@ -7,10 +8,33 @@ import { useRouter } from "next/navigation";
 
 type Dir = "up" | "right" | "down" | "left";
 type KeyMap = Record<"ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight", boolean>;
+type Theme = "light" | "dark";
 
 const PROXIMITY_THRESHOLD = 6;
 
 export default function MapaPage() {
+  // ---------- Tema sincronizado con el inicio ----------
+  const [theme, setTheme] = useState<Theme>("light");
+  useEffect(() => {
+    const fromStorage = (typeof window !== "undefined" && localStorage.getItem("theme")) as
+      | Theme
+      | null;
+    if (fromStorage === "light" || fromStorage === "dark") {
+      setTheme(fromStorage);
+    } else {
+      const prefersDark =
+        typeof window !== "undefined" &&
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setTheme(prefersDark ? "dark" : "light");
+    }
+  }, []);
+  const isDark = theme === "dark";
+  const mapBgUrl = isDark
+    ? "/assets/modo-dark-mapa.png" // ← si tu archivo es .jpg cámbialo aquí
+    : "/assets/mapa-overworld.jpg";
+
+  // ---------- Estado del mapa ----------
   const [pos, setPos] = useState({ x: 18, y: 72 });
   const dirRef = useRef<Dir>("right");
   const [moving, setMoving] = useState(false);
@@ -26,6 +50,7 @@ export default function MapaPage() {
 
   const [showTooltip, setShowTooltip] = useState(false);
 
+  // Bloquear scroll de la página
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -34,6 +59,7 @@ export default function MapaPage() {
     };
   }, []);
 
+  // Movimiento con teclas
   useEffect(() => {
     let raf: number | null = null;
     const speed = 0.45;
@@ -93,6 +119,7 @@ export default function MapaPage() {
     };
   }, []);
 
+  // Detección de proximidad y navegación
   useEffect(() => {
     if (redirectedRef.current) return;
     const dist = (a: { x: number; y: number }, b: { x: number; y: number }) =>
@@ -115,7 +142,7 @@ export default function MapaPage() {
 
   return (
     <main className="h-screen w-full overflow-hidden flex items-center justify-center bg-[#072130]">
-      {/* Botón de ayuda con el mismo diseño que “Acerca de mi” */}
+      {/* Botón de ayuda (mismo diseño que Acerca de mí) */}
       <div className="fixed top-6 right-6 z-50">
         <button
           onClick={() => setShowTooltip((v) => !v)}
@@ -144,34 +171,45 @@ export default function MapaPage() {
                 <strong>Línea de tiempo</strong> para entrar.
               </p>
             </div>
-            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45"></div>
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
           </div>
         )}
       </div>
 
+      {/* Lienzo cuadrado del mapa */}
       <div
         className="relative overflow-hidden"
         style={{ width: "min(90vw, 90vh, 850px)", height: "min(90vw, 90vh, 850px)" }}
       >
+        {/* Fondo del mapa dependiente del tema */}
         <div
           className="absolute inset-0 bg-center bg-no-repeat bg-contain"
-          style={{ backgroundImage: 'url("/assets/mapa-overworld.jpg")' }}
+          style={{ backgroundImage: `url("${mapBgUrl}")` }}
+          aria-hidden
         />
+
+        {/* Volver */}
         <Link
           href="/"
           className="absolute top-3 left-3 z-30 bg-[#2b93ff] text-yellow-300 border-8 border-black rounded-md shadow-[0_8px_0_#000] px-3 py-1 font-[PressStart] text-[10px]"
         >
           VOLVER
         </Link>
+
+        {/* Letreros */}
         <MapLabel text="Proyectos" top="9%" left="23%" href="/proyectos" />
         <MapLabel text="Acerca de Mi" top="12%" left="73%" href="/acerca" />
         <MapLabel text="Opiniones" top="83%" left="18%" href="/opiniones" />
         <MapLabel text="Línea de tiempo" top="73%" left="76%" href="/timeline" />
+
+        {/* Globo introductorio al entrar (desaparece al mover) */}
         {showIntro && (
           <SpeechBubble top="47%" left="49%">
             Explora el mapa para <br /> conocer mi portafolio
           </SpeechBubble>
         )}
+
+        {/* Avatar */}
         <div
           className="absolute z-20"
           style={{
@@ -192,6 +230,7 @@ export default function MapaPage() {
         </div>
       </div>
 
+      {/* Animaciones */}
       <style jsx>{`
         @keyframes bob {
           0%, 100% { transform: translateY(0); }
@@ -215,6 +254,7 @@ export default function MapaPage() {
   );
 }
 
+/* ---------- Auxiliares ---------- */
 function MapLabel({
   text,
   top,
