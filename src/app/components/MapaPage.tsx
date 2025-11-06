@@ -217,8 +217,8 @@ export default function MapaPage() {
           <Image
             src="/assets/avatar-parado.png"
             alt="Avatar"
-            width={80}
-            height={80}
+            width={60}
+            height={60}
             priority
             className={moving ? "select-none" : "select-none animate-bob"}
             style={{ imageRendering: "pixelated" }}
