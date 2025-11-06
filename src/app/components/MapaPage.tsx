@@ -1,4 +1,3 @@
-// src/app/mapa/page.tsx
 "use client";
 
 import Image from "next/image";
@@ -13,7 +12,7 @@ type Theme = "light" | "dark";
 const PROXIMITY_THRESHOLD = 6;
 
 export default function MapaPage() {
-  // ---------- Tema sincronizado con el inicio ----------
+  // --- Tema sincronizado con Home ---
   const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
     const fromStorage = (typeof window !== "undefined" && localStorage.getItem("theme")) as
@@ -30,11 +29,9 @@ export default function MapaPage() {
     }
   }, []);
   const isDark = theme === "dark";
-  const mapBgUrl = isDark
-    ? "/assets/modo-dark-mapa.png" // ← si tu archivo es .jpg cámbialo aquí
-    : "/assets/mapa-overworld.jpg";
+  const mapBgUrl = isDark ? "/assets/modo-dark-mapa.png" : "/assets/mapa-overworld.jpg";
 
-  // ---------- Estado del mapa ----------
+  // --- Estado de juego/pos ---
   const [pos, setPos] = useState({ x: 18, y: 72 });
   const dirRef = useRef<Dir>("right");
   const [moving, setMoving] = useState(false);
@@ -50,7 +47,6 @@ export default function MapaPage() {
 
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Bloquear scroll de la página
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -59,7 +55,6 @@ export default function MapaPage() {
     };
   }, []);
 
-  // Movimiento con teclas
   useEffect(() => {
     let raf: number | null = null;
     const speed = 0.45;
@@ -119,7 +114,6 @@ export default function MapaPage() {
     };
   }, []);
 
-  // Detección de proximidad y navegación
   useEffect(() => {
     if (redirectedRef.current) return;
     const dist = (a: { x: number; y: number }, b: { x: number; y: number }) =>
@@ -142,7 +136,7 @@ export default function MapaPage() {
 
   return (
     <main className="h-screen w-full overflow-hidden flex items-center justify-center bg-[#072130]">
-      {/* Botón de ayuda (mismo diseño que Acerca de mí) */}
+      {/* Ayuda (mismo diseño que Acerca) */}
       <div className="fixed top-6 right-6 z-50">
         <button
           onClick={() => setShowTooltip((v) => !v)}
@@ -181,28 +175,32 @@ export default function MapaPage() {
         className="relative overflow-hidden"
         style={{ width: "min(90vw, 90vh, 850px)", height: "min(90vw, 90vh, 850px)" }}
       >
-        {/* Fondo del mapa dependiente del tema */}
+        {/* Fondo del mapa por tema */}
         <div
           className="absolute inset-0 bg-center bg-no-repeat bg-contain"
           style={{ backgroundImage: `url("${mapBgUrl}")` }}
           aria-hidden
         />
 
-        {/* Volver */}
+        {/* VOLVER con estilo de PixelButton (compacto) */}
         <Link
           href="/"
-          className="absolute top-3 left-3 z-30 bg-[#2b93ff] text-yellow-300 border-8 border-black rounded-md shadow-[0_8px_0_#000] px-3 py-1 font-[PressStart] text-[10px]"
+          className={`absolute top-3 left-3 z-30 border-8 border-black rounded-md px-3 py-[6px] font-[PressStart] text-[10px] hover:translate-y-0.5 active:translate-y-1 transition-transform shadow-[0_8px_0_#000] ${
+            isDark
+              ? "bg-[#0ea5a8] text-[#e5ff7a] hover:shadow-[0_6px_0_#000]"
+              : "bg-[#2b93ff] text-yellow-300 hover:shadow-[0_6px_0_#000]"
+          }`}
         >
           VOLVER
         </Link>
 
-        {/* Letreros */}
-        <MapLabel text="Proyectos" top="9%" left="23%" href="/proyectos" />
-        <MapLabel text="Acerca de Mi" top="12%" left="73%" href="/acerca" />
-        <MapLabel text="Opiniones" top="83%" left="18%" href="/opiniones" />
-        <MapLabel text="Línea de tiempo" top="73%" left="76%" href="/timeline" />
+        {/* Letreros del mapa con el mismo estilo (versión mini) */}
+        <MapLabel isDark={isDark} text="Proyectos" top="9%" left="23%" href="/proyectos" />
+        <MapLabel isDark={isDark} text="Acerca de Mi" top="12%" left="73%" href="/acerca" />
+        <MapLabel isDark={isDark} text="Opiniones" top="83%" left="18%" href="/opiniones" />
+        <MapLabel isDark={isDark} text="Línea de tiempo" top="73%" left="76%" href="/timeline" />
 
-        {/* Globo introductorio al entrar (desaparece al mover) */}
+        {/* Globo inicial (se oculta al mover) */}
         {showIntro && (
           <SpeechBubble top="47%" left="49%">
             Explora el mapa para <br /> conocer mi portafolio
@@ -260,11 +258,13 @@ function MapLabel({
   top,
   left,
   href,
+  isDark,
 }: {
   text: string;
   top: string;
   left: string;
   href?: string;
+  isDark: boolean;
 }) {
   const router = useRouter();
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -274,21 +274,24 @@ function MapLabel({
       router.push(href);
     }
   };
+
+  // Mismo estilo de PixelButton, tamaño mini
+  const base =
+    "border-8 border-black rounded-md shadow-[0_8px_0_#000] px-3 py-[6px] font-[PressStart] text-[clamp(9px,1vw,12px)] hover:translate-y-0.5 active:translate-y-1 transition-transform";
+  const themeClass = isDark
+    ? "bg-[#0ea5a8] text-[#e5ff7a] hover:shadow-[0_6px_0_#000]"
+    : "bg-[#2b93ff] text-yellow-300 hover:shadow-[0_6px_0_#000]";
+
   return (
     <div className="absolute z-20" style={{ top, left, transform: "translate(-50%, -50%)" }}>
       {href ? (
         <Link href={href}>
-          <button
-            onKeyDown={onKeyDown}
-            className="bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md shadow-[0_8px_0_#000] px-2 py-1 font-[PressStart] text-[clamp(8px,1vw,12px)] hover:scale-[1.05] transition-transform"
-          >
+          <button onKeyDown={onKeyDown} className={`${base} ${themeClass}`}>
             {text}
           </button>
         </Link>
       ) : (
-        <div className="bg-[#2b2367] text-[#ffd54a] border-8 border-black rounded-md shadow-[0_8px_0_#000] px-2 py-1 font-[PressStart] text-[clamp(8px,1vw,12px)]">
-          {text}
-        </div>
+        <div className={`${base} ${themeClass}`}>{text}</div>
       )}
     </div>
   );
