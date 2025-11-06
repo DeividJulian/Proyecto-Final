@@ -10,7 +10,7 @@ export default function ProyectosPage() {
   const [theme, setTheme] = useState<Theme>("light");
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Lee la preferencia guardada (o la del sistema) para sincronizar con Home
+  // Sincronizar tema con localStorage (igual que en Home)
   useEffect(() => {
     const fromStorage = (typeof window !== "undefined" && localStorage.getItem("theme")) as
       | Theme
@@ -32,37 +32,35 @@ export default function ProyectosPage() {
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden relative">
-      {/* Fondo según tema */}
+      {/* Fondo */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
         style={{ backgroundImage: `url("${bgUrl}")` }}
         aria-hidden
       />
 
-      {/* Botón de ayuda: mismo estilo que en Mapa */}
-      <div className="fixed top-6 right-6 z-50">
+      {/* Botón de ayuda — diseño de la página Acerca de mí */}
+      <div className="fixed top-8 right-8 z-50">
         <button
-          onClick={() => setShowTooltip((v) => !v)}
+          onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
-          className="pixel-help"
+          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden animate-float"
           aria-label="Ayuda"
           title="Ayuda"
         >
-          <span className="pixel-help__ring" />
-          <span className="pixel-help__disc">
-            <Image
-              src="/assets/question.png"
-              alt="Ayuda"
-              width={64}
-              height={64}
-              priority
-              style={{ imageRendering: "pixelated" }}
-            />
-          </span>
+          <Image
+            src="/assets/question.png"
+            alt="Ayuda"
+            width={70}
+            height={70}
+            style={{ imageRendering: "pixelated" }}
+            className="group-hover:scale-110 transition-transform"
+          />
         </button>
 
+        {/* Tooltip */}
         {showTooltip && (
-          <div className="absolute top-24 right-0 w-[360px] animate-fadeIn">
+          <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
               <p
                 className="text-black text-[15px] leading-relaxed"
@@ -73,7 +71,7 @@ export default function ProyectosPage() {
                 nueva. Usa <strong>VOLVER</strong> para regresar al mapa.
               </p>
             </div>
-            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45"></div>
           </div>
         )}
       </div>
@@ -116,64 +114,27 @@ export default function ProyectosPage() {
           />
         </div>
 
-        {/* Volver al mapa */}
+        {/* Botón VOLVER */}
         <div className="mt-10 flex items-center justify-center">
           <PixelBrownLinkBtn href="/mapa">VOLVER</PixelBrownLinkBtn>
         </div>
       </section>
 
-      {/* Estilos locales para animaciones/botón ayuda */}
+      {/* Estilos locales */}
       <style jsx>{`
         @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
         }
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
-
-        .pixel-help {
-          position: relative;
-          width: 84px;
-          height: 84px;
-          border: none;
-          background: transparent;
-          padding: 0;
-          cursor: pointer;
-          display: grid;
-          place-items: center;
-          animation: float 2.6s ease-in-out infinite;
-          filter: drop-shadow(0 6px 0 #000);
-        }
-        .pixel-help__ring {
-          position: absolute;
-          inset: 0;
-          border-radius: 9999px;
-          background: #000;
-          box-shadow: inset 0 0 0 8px #000;
-        }
-        .pixel-help__disc {
-          position: relative;
-          width: 76px;
-          height: 76px;
-          border-radius: 9999px;
-          background: #fff;
-          display: grid;
-          place-items: center;
-          border: 6px solid #000;
+        .animate-float {
+          animation: float 2.5s ease-in-out infinite;
         }
       `}</style>
     </main>
@@ -193,10 +154,7 @@ function ProjectCard({
   link: string;
   isDark: boolean;
 }) {
-  // Paleta del botón según tema
-  const btnClass = isDark
-    ? "bg-[#1c4f82] text-white"
-    : "bg-[#2a6f97] text-white";
+  const btnClass = isDark ? "bg-[#1c4f82] text-white" : "bg-[#2a6f97] text-white";
 
   return (
     <div className="relative w-[290px]">
@@ -228,7 +186,6 @@ function ProjectCard({
           {title}
         </p>
 
-        {/* Enlace debajo del título */}
         <div className="mt-3 text-center">
           <a
             href={link}
@@ -244,7 +201,6 @@ function ProjectCard({
   );
 }
 
-/* ---- Botón pixelado tipo Link ---- */
 function PixelBrownLinkBtn({
   href,
   children,
