@@ -100,7 +100,7 @@ export default function Home() {
                 imageRendering: "pixelated",
               }}
               priority
-              className="select-none -mt-1 animate-bob"
+              className="select-none mt-10 animate-bob"
             />
           </section>
         </div>
