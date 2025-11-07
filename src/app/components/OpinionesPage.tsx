@@ -3,14 +3,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-/**
- * Componente principal de la página Opiniones.
- * Requisitos:
- * - Imágenes en public/assets/
- * - Este archivo debe estar en src/app/components/
- */
+type Theme = "light" | "dark";
 
 export default function OpinionesPage() {
   const videos = [
@@ -20,19 +15,54 @@ export default function OpinionesPage() {
     { id: 4, videoId: "dQw4w9WgXcQ", titulo: "Video 4" },
   ];
 
-  // Tooltip del botón de interrogación (igual que en /acerca)
+  // === Tema sincronizado con Home ===
+  const [theme, setTheme] = useState<Theme>("light");
+  useEffect(() => {
+    const saved = (typeof window !== "undefined"
+      ? localStorage.getItem("theme")
+      : null) as Theme | null;
+
+    if (saved === "light" || saved === "dark") {
+      setTheme(saved);
+      return;
+    }
+    const prefersDark =
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(prefersDark ? "dark" : "light");
+  }, []);
+
+  const isDark = theme === "dark";
+  const bgUrl = isDark
+    ? "/assets/sala-cine.png"        // modo oscuro
+    : "/assets/modo-light-cine.png"; // modo claro (con gente)
+
+  // Tooltip del botón de interrogación
   const [showTooltip, setShowTooltip] = useState(false);
+
+  // === Clases de botones según tema ===
+  const volverBtn =
+    isDark
+      ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
+      : "bg-[#5a3921] hover:bg-[#6e4528] text-white";
+
+  // Variante botón Play
+  const playVariant = isDark ? "dark-frame" : "light-frame";
+
+  // Colores del letrero según tema
+  const titleBg = isDark ? "bg-[#0e2a3a] text-[#e5ff7a]" : "bg-[#2e1b6b] text-yellow-300";
 
   return (
     <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
-      {/* Fondo de cine/teatro */}
+      {/* Fondo según tema */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
-        style={{ backgroundImage: 'url("/assets/sala-cine.png")' }}
+        style={{ backgroundImage: `url("${bgUrl}")` }}
         aria-hidden
       />
 
-      {/* Botón de interrogación flotante (mismo estilo que /acerca) */}
+      {/* Botón de interrogación flotante */}
       <div className="fixed top-8 right-8 z-50">
         <button
           onClick={() => setShowTooltip(!showTooltip)}
@@ -51,7 +81,6 @@ export default function OpinionesPage() {
           />
         </button>
 
-        {/* Tooltip mensaje */}
         {showTooltip && (
           <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
@@ -63,45 +92,37 @@ export default function OpinionesPage() {
                 <strong> VOLVER</strong> para regresar al mapa.
               </p>
             </div>
-            {/* Flecha apuntando al botón */}
-            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45"></div>
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45" />
           </div>
         )}
       </div>
 
-      {/* Contenedor principal */}
+      {/* Contenido principal */}
       <div className="w-full max-w-[1100px] mx-auto px-4 py-8">
         {/* Título OPINIONES */}
-        <div className="bg-[#2e1b6b] border-[6px] border-black rounded-md shadow-[0_8px_0_#000] mb-8">
-          <h1 className="text-center text-yellow-300 font-[PressStart] text-[22px] py-5 tracking-wider">
+        <div className={`${titleBg} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] mb-8`}>
+          <h1 className="text-center font-[PressStart] text-[22px] py-5 tracking-wider">
             OPINIONES
           </h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
-          {/* Columna izquierda: Grid de videos */}
+          {/* Grid de videos */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {videos.map((video) => (
-              <VideoCard key={video.id} videoId={video.videoId} titulo={video.titulo} />
+              <VideoCard key={video.id} videoId={video.videoId} titulo={video.titulo} playVariant={playVariant} />
             ))}
           </div>
 
-          {/* Columna derecha: Globo de diálogo y avatar */}
+          {/* Globo + Avatar */}
           <aside className="flex flex-col items-center gap-6 lg:min-w-[320px]">
-            {/* Globo de diálogo */}
             <div className="relative bg-white border-[6px] border-black rounded-xl shadow-[0_8px_0_#000] p-5 max-w-[300px]">
-              <p
-                className="text-black text-[13px] leading-relaxed"
-                style={{ fontFamily: "Arial, sans-serif" }}
-              >
-                Aquí podrás escuchar las opiniones y comentarios de personas que han compartido
-                conmigo
+              <p className="text-black text-[13px] leading-relaxed" style={{ fontFamily: "Arial, sans-serif" }}>
+                Aquí podrás escuchar las opiniones y comentarios de personas que han compartido conmigo
               </p>
-              {/* Flecha del globo apuntando hacia abajo */}
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-b-[6px] border-r-[6px] border-black transform rotate-45"></div>
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-b-[6px] border-r-[6px] border-black transform rotate-45" />
             </div>
 
-            {/* Avatar flotante - espejado para que mire hacia los videos */}
             <div className="relative">
               <div className="animate-float">
                 <Image
@@ -116,45 +137,42 @@ export default function OpinionesPage() {
           </aside>
         </div>
 
-        {/* Botón VOLVER centrado */}
+        {/* Botón VOLVER */}
         <div className="flex justify-center mt-8">
           <Link
             href="/mapa"
-            className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
+            className={`${volverBtn} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
           >
             VOLVER
           </Link>
         </div>
       </div>
 
-      {/* Animación de flotación y estilos específicos */}
+      {/* Estilos */}
       <style jsx>{`
         @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-15px);
-          }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-15px); }
         }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
 
-        /* Estilo del botón play retro dentro de cada tarjeta */
+        /* Botón play retro */
         .play-button-frame {
           width: 110px;
           height: 72px;
           display: grid;
           place-items: center;
-          border: 6px solid #23181b; /* borde oscuro tipo pixel */
-          background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%); /* amarillo -> dorado */
-          box-shadow: 0 6px 0 #000, inset 0 2px 0 rgba(255, 255, 255, 0.25),
-            0 6px 12px rgba(0, 0, 0, 0.4);
+          border: 6px solid #23181b;
+          box-shadow: 0 6px 0 #000, inset 0 2px 0 rgba(255,255,255,.25), 0 6px 12px rgba(0,0,0,.4);
           border-radius: 6px;
           image-rendering: pixelated;
           transform: translateZ(0);
+        }
+        .play-button-frame.light-frame {
+          background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%);
+        }
+        .play-button-frame.dark-frame {
+          background: linear-gradient(180deg, #0ea5a8 0%, #1e3a8a 100%);
         }
         .play-button-frame:active {
           transform: translateY(3px);
@@ -166,61 +184,44 @@ export default function OpinionesPage() {
           transform: scale(1);
           transition: transform 150ms ease;
         }
-        .play-wrap:hover .play-triangle {
-          transform: scale(1.06) translateY(-2px);
-        }
+        .play-wrap:hover .play-triangle { transform: scale(1.06) translateY(-2px); }
 
-        /* adaptaciones responsivas */
         @media (min-width: 1024px) {
-          .play-button-frame {
-            width: 140px;
-            height: 92px;
-          }
-          .play-triangle {
-            width: 60px;
-            height: 60px;
-          }
+          .play-button-frame { width: 140px; height: 92px; }
+          .play-triangle { width: 60px; height: 60px; }
         }
 
-        /* animación del tooltip */
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
       `}</style>
     </main>
   );
 }
 
-/* Componente de tarjeta de video */
-function VideoCard({ videoId, titulo }: { videoId: string; titulo: string }) {
+/* Tarjeta de video */
+function VideoCard({
+  videoId,
+  titulo,
+  playVariant,
+}: {
+  videoId: string;
+  titulo: string;
+  playVariant: "light-frame" | "dark-frame";
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <div className="bg-black border-[6px] border-white rounded-md shadow-[0_8px_0_#000] overflow-hidden">
       <div className="relative w-full aspect-video bg-black flex items-center justify-center p-4">
         {!isPlaying ? (
-          // Thumbnail con botón de play retro
           <button
             onClick={() => setIsPlaying(true)}
             className="relative w-full h-full flex items-center justify-center group play-wrap"
             aria-label={`Reproducir ${titulo}`}
           >
-            {/* Fondo oscuro degradado */}
             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black" />
-
-            {/* Marco blanco alrededor del "televisor" */}
             <div className="absolute inset-2 border-4 border-white rounded-md pointer-events-none" />
-
-            {/* Botón play estilo retro centrado */}
-            <div className="relative z-10 play-button-frame">
+            <div className={`relative z-10 play-button-frame ${playVariant}`}>
               <Image
                 src="/assets/reproducir.png"
                 alt="Play retro"
@@ -232,7 +233,6 @@ function VideoCard({ videoId, titulo }: { videoId: string; titulo: string }) {
             </div>
           </button>
         ) : (
-          // Iframe de YouTube
           <iframe
             width="100%"
             height="100%"
