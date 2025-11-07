@@ -13,64 +13,89 @@ export default function AcercaPage() {
     "Soy un estudiante de Ingeniería de Software apasionado por el desarrollo web y el diseño creativo. " +
     "Me gusta construir proyectos que combinen tecnología con ideas innovadoras, aplicando diferentes lenguajes y herramientas.";
 
-  // valores de barras
+  // barras
   const [habilidades] = useState(78);
   const [debilidades] = useState(34);
   const [pasatiempos] = useState(88);
   const [alimentos] = useState(64);
 
-  // tema sincronizado con Home
+  // tema sincronizado con Home (sin optional-call para evitar parseos raros en SSR)
   const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
     const saved = (typeof window !== "undefined"
       ? localStorage.getItem("theme")
       : null) as Theme | null;
+
     if (saved === "light" || saved === "dark") {
       setTheme(saved);
       return;
     }
+
     const prefersDark =
       typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-    setTheme(prefersDark ? "dark" : "light");
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(perfers-color-scheme: dark)").matches; // <-- typo intencional? NO
+    // Corrige el typo: "perfers" -> "prefers"
   }, []);
+  // Corregido:
+  useEffect(() => {
+    const prefersDark =
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (!localStorage.getItem("theme")) {
+      setTheme(prefersDark ? "dark" : "light");
+    }
+  }, []);
+
   const isDark = theme === "dark";
 
-  // UI
+  // UI modales / tooltip
   const [showTooltip, setShowTooltip] = useState(false);
   const [showHabilidadesModal, setShowHabilidadesModal] = useState(false);
   const [showDebilidadesModal, setShowDebilidadesModal] = useState(false);
   const [showPasatiemposModal, setShowPasatiemposModal] = useState(false);
   const [showAlimentosModal, setShowAlimentosModal] = useState(false);
 
-  const bgUrl = isDark
-    ? "/assets/habitacion-gamer.png" // NOCTURNO (tu diseño actual)
-    : "/assets/modo-light-habitacion.png"; // DIURNO (imagen que generaste)
+  // ----- NUEVO: alternar avatar/foto -----
+  const [showPhoto, setShowPhoto] = useState(false);
+  const currentImage = showPhoto ? "/assets/mi-foto.png" : "/assets/avatar-parado.png";
+  const currentAlt = showPhoto ? "Foto de Deivid" : "Avatar pixel art";
 
-  // clases dependientes del tema
-  const titleCard =
-    isDark ? "bg-[#2e1b6b] text-yellow-300" : "bg-[#31256c] text-yellow-300";
-  const panelCard = isDark ? "bg-[#1e0f3e]" : "bg-[#1b2b3b]"; // panel del texto
-  const chipBtn =
-    isDark
-      ? "bg-[#2e1b6b] hover:bg-[#3d2589] text-yellow-300"
-      : "bg-[#31256c] hover:bg-[#3a2e79] text-yellow-300";
-  const meterShell = "bg-[#0d1821]"; // se ve bien en ambos
-  const meterTrack = "bg-[#1a2530]"; // se ve bien en ambos
-  const avatarPanel = isDark ? "bg-[#1e0f3e]" : "bg-[#1b2b3b]";
-  const volverBtn =
-    "bg-[#5a3921] hover:bg-[#6e4528] text-white"; // igual para ambos
+  // fondos
+  const bgUrl = isDark
+    ? "/assets/habitacion-gamer.png" // noche
+    : "/assets/modo-light-habitacion.png"; // día
+
+  // paletas
+  const titleCard = isDark
+    ? "bg-[#101b2a] text-[#e5ff7a]"
+    : "bg-[#31256c] text-yellow-300";
+
+  const panelCard = isDark ? "bg-[#0f1c2a]" : "bg-[#1b2b3b]";
+
+  const chipBtn = isDark
+    ? "bg-[#0ea5a8] hover:bg-[#0c9294] text-[#e5ff7a]"
+    : "bg-[#31256c] hover:bg-[#3a2e79] text-yellow-300";
+
+  const meterShell = "bg-[#0d1821]";
+  const meterTrack = "bg-[#1a2530]";
+  const avatarPanel = isDark ? "bg-[#0f1c2a]" : "bg-[#1b2b3b]";
+
+  const volverBtnClasses = isDark
+    ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
+    : "bg-[#5a3921] hover:bg-[#6e4528] text-white";
 
   return (
     <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
-      {/* Fondo según tema */}
+      {/* Fondo */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
         style={{ backgroundImage: `url("${bgUrl}")` }}
         aria-hidden
       />
 
-      {/* Botón de interrogación flotante (mismo diseño) */}
+      {/* Botón ayuda */}
       <div className="fixed top-8 right-8 z-50">
         <button
           onClick={() => setShowTooltip(!showTooltip)}
@@ -110,7 +135,6 @@ export default function AcercaPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4">
           {/* Izquierda */}
           <div className="space-y-4">
-            {/* Título */}
             <div
               className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000]`}
             >
@@ -119,7 +143,6 @@ export default function AcercaPage() {
               </h1>
             </div>
 
-            {/* Descripción */}
             <div
               className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-5`}
             >
@@ -184,36 +207,48 @@ export default function AcercaPage() {
             <div className="pt-2">
               <Link
                 href="/mapa"
-                className={`inline-block ${volverBtn} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-10 py-3 font-[PressStart] text-[16px] tracking-wide`}
+                className={`inline-block ${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-10 py-3 font-[PressStart] text-[16px] tracking-wide`}
               >
                 VOLVER
               </Link>
             </div>
           </div>
 
-          {/* Derecha */}
+          {/* Derecha: Avatar + flechas */}
           <aside className="space-y-4 lg:min-w-[400px]">
-            {/* Avatar + flechas */}
             <div
-              className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-6 flex items-center justify-center min-h-[320px]`}
+              className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-6 flex items-center justify-center min-h-[320px] relative`}
             >
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[40px] text-[#5fb5e8] font-bold select-none">
-                ◄
-              </div>
+              {/* Flecha izquierda (ver avatar) */}
+              <button
+                type="button"
+                aria-label="Mostrar avatar"
+                onClick={() => setShowPhoto(false)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000] hover:translate-y-0.5 active:translate-y-1 transition-transform"
+              >
+                {"<"}
+              </button>
 
+              {/* Imagen central */}
               <div className="relative z-10 animate-float">
                 <Image
-                  src="/assets/avatar-parado.png"
-                  alt="Avatar pixel art"
+                  src={currentImage}
+                  alt={currentAlt}
                   width={180}
                   height={180}
                   style={{ imageRendering: "pixelated" }}
                 />
               </div>
 
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[40px] text-[#5fb5e8] font-bold select-none">
-                ►
-              </div>
+              {/* Flecha derecha (ver foto) */}
+              <button
+                type="button"
+                aria-label="Mostrar foto"
+                onClick={() => setShowPhoto(true)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000] hover:translate-y-0.5 active:translate-y-1 transition-transform"
+              >
+                {">"}
+              </button>
             </div>
 
             {/* PASATIEMPOS */}
@@ -240,7 +275,7 @@ export default function AcercaPage() {
               </div>
             </div>
 
-            {/* ALIMENTOS QUE DISFRUTO */}
+            {/* ALIMENTOS */}
             <div>
               <div className="mb-3">
                 <button
@@ -287,7 +322,11 @@ export default function AcercaPage() {
       {/* ===== MODALES ===== */}
       {showHabilidadesModal && (
         <ModalBase onClose={() => setShowHabilidadesModal(false)}>
-          <ModalContent titulo="HABILIDADES">
+          <ModalContent
+            titulo="HABILIDADES"
+            isDark={isDark}
+            onClose={() => setShowHabilidadesModal(false)}
+          >
             <HabilidadBarraItem color="#35f5a6" titulo="Perseverancia" />
             <HabilidadBarraItem color="#22d3ee" titulo="Creatividad" />
             <HabilidadBarraItem color="#ffd200" titulo="Adaptibilidad" />
@@ -297,7 +336,11 @@ export default function AcercaPage() {
 
       {showDebilidadesModal && (
         <ModalBase onClose={() => setShowDebilidadesModal(false)}>
-          <ModalContent titulo="DEBILIDADES">
+          <ModalContent
+            titulo="DEBILIDADES"
+            isDark={isDark}
+            onClose={() => setShowDebilidadesModal(false)}
+          >
             <HabilidadBarraItem color="#ff6b6b" titulo="Impaciencia" />
             <HabilidadBarraItem color="#ff8c42" titulo="Perfeccionismo" />
             <HabilidadBarraItem color="#e63946" titulo="Autocrítica" />
@@ -307,7 +350,11 @@ export default function AcercaPage() {
 
       {showPasatiemposModal && (
         <ModalBase onClose={() => setShowPasatiemposModal(false)}>
-          <ModalContent titulo="PASATIEMPOS">
+          <ModalContent
+            titulo="PASATIEMPOS"
+            isDark={isDark}
+            onClose={() => setShowPasatiemposModal(false)}
+          >
             <HabilidadBarraItem color="#22d3ee" titulo="Videojuegos" />
             <HabilidadBarraItem color="#a78bfa" titulo="Programación" />
             <HabilidadBarraItem color="#34d399" titulo="Música" />
@@ -317,7 +364,11 @@ export default function AcercaPage() {
 
       {showAlimentosModal && (
         <ModalBase onClose={() => setShowAlimentosModal(false)}>
-          <ModalContent titulo="ALIMENTOS QUE DISFRUTO">
+          <ModalContent
+            titulo="ALIMENTOS QUE DISFRUTO"
+            isDark={isDark}
+            onClose={() => setShowAlimentosModal(false)}
+          >
             <HabilidadBarraItem color="#ffd200" titulo="Pizza" />
             <HabilidadBarraItem color="#ff6b9d" titulo="Sushi" />
             <HabilidadBarraItem color="#fb923c" titulo="Hamburguesas" />
@@ -357,7 +408,21 @@ function ModalBase({
   );
 }
 
-function ModalContent({ titulo, children }: { titulo: string; children: React.ReactNode }) {
+function ModalContent({
+  titulo,
+  children,
+  isDark,
+  onClose,
+}: {
+  titulo: string;
+  children: React.ReactNode;
+  isDark: boolean;
+  onClose: () => void;
+}) {
+  const volverBtnClasses = isDark
+    ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
+    : "bg-[#5a3921] hover:bg-[#6e4528] text-white";
+
   return (
     <>
       <div className="bg-[#2e1b6b] border-[6px] border-black rounded-md shadow-[0_8px_0_#000] mb-6">
@@ -368,8 +433,8 @@ function ModalContent({ titulo, children }: { titulo: string; children: React.Re
       <div className="space-y-6 mb-8">{children}</div>
       <div className="flex justify-center">
         <button
-          onClick={() => (document.activeElement as HTMLElement | null)?.blur()}
-          className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
+          onClick={onClose}
+          className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
         >
           VOLVER
         </button>
@@ -378,7 +443,7 @@ function ModalContent({ titulo, children }: { titulo: string; children: React.Re
   );
 }
 
-/* Barra de “habilidad” */
+/* Barras */
 function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }) {
   return (
     <div className="flex items-center gap-4">
@@ -411,3 +476,4 @@ function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }
     </div>
   );
 }
+
