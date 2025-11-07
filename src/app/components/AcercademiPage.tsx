@@ -19,7 +19,7 @@ export default function AcercaPage() {
   const [pasatiempos] = useState(88);
   const [alimentos] = useState(64);
 
-  // tema sincronizado con Home (sin optional-call para evitar parseos raros en SSR)
+  // tema sincronizado con Home (corrigiendo prefers-color-scheme)
   const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
     const saved = (typeof window !== "undefined"
@@ -30,22 +30,11 @@ export default function AcercaPage() {
       setTheme(saved);
       return;
     }
-
-    const prefersDark =
-      typeof window !== "undefined" &&
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(perfers-color-scheme: dark)").matches; // <-- typo intencional? NO
-    // Corrige el typo: "perfers" -> "prefers"
-  }, []);
-  // Corregido:
-  useEffect(() => {
     const prefersDark =
       typeof window !== "undefined" &&
       typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (!localStorage.getItem("theme")) {
-      setTheme(prefersDark ? "dark" : "light");
-    }
+    setTheme(prefersDark ? "dark" : "light");
   }, []);
 
   const isDark = theme === "dark";
@@ -57,7 +46,7 @@ export default function AcercaPage() {
   const [showPasatiemposModal, setShowPasatiemposModal] = useState(false);
   const [showAlimentosModal, setShowAlimentosModal] = useState(false);
 
-  // ----- NUEVO: alternar avatar/foto -----
+  // Alternar avatar/foto
   const [showPhoto, setShowPhoto] = useState(false);
   const currentImage = showPhoto ? "/assets/mi-foto.png" : "/assets/avatar-parado.png";
   const currentAlt = showPhoto ? "Foto de Deivid" : "Avatar pixel art";
@@ -100,9 +89,10 @@ export default function AcercaPage() {
         <button
           onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
-          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
+          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center overflow-hidden"
           title="Ayuda"
           aria-label="Ayuda"
+          type="button"
         >
           <Image
             src="/assets/question.png"
@@ -110,7 +100,6 @@ export default function AcercaPage() {
             width={70}
             height={70}
             style={{ imageRendering: "pixelated" }}
-            className="group-hover:scale-110 transition-transform"
             priority
           />
         </button>
@@ -156,7 +145,8 @@ export default function AcercaPage() {
               <div className="mb-3">
                 <button
                   onClick={() => setShowHabilidadesModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-all cursor-pointer`}
+                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  type="button"
                 >
                   HABILIDADES
                 </button>
@@ -182,7 +172,8 @@ export default function AcercaPage() {
               <div className="mb-3">
                 <button
                   onClick={() => setShowDebilidadesModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-all cursor-pointer`}
+                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  type="button"
                 >
                   DEBILIDADES
                 </button>
@@ -207,7 +198,7 @@ export default function AcercaPage() {
             <div className="pt-2">
               <Link
                 href="/mapa"
-                className={`inline-block ${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-10 py-3 font-[PressStart] text-[16px] tracking-wide`}
+                className={`inline-block ${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 py-3 font-[PressStart] text-[16px] tracking-wide`}
               >
                 VOLVER
               </Link>
@@ -219,18 +210,18 @@ export default function AcercaPage() {
             <div
               className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-6 flex items-center justify-center min-h-[320px] relative`}
             >
-              {/* Flecha izquierda (ver avatar) */}
+              {/* Flecha izquierda — con animación SOLO al presionar */}
               <button
                 type="button"
                 aria-label="Mostrar avatar"
                 onClick={() => setShowPhoto(false)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000] hover:translate-y-0.5 active:translate-y-1 transition-transform"
+                className="pressable absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
               >
                 {"<"}
               </button>
 
               {/* Imagen central */}
-              <div className="relative z-10 animate-float">
+              <div className="relative z-10">
                 <Image
                   src={currentImage}
                   alt={currentAlt}
@@ -240,15 +231,19 @@ export default function AcercaPage() {
                 />
               </div>
 
-              {/* Flecha derecha (ver foto) */}
+              {/* Flecha derecha — con animación SOLO al presionar */}
               <button
                 type="button"
                 aria-label="Mostrar foto"
                 onClick={() => setShowPhoto(true)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000] hover:translate-y-0.5 active:translate-y-1 transition-transform"
+                className="pressable absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
               >
                 {">"}
               </button>
+
+              {/* Precarga silenciosa */}
+              <img src="/assets/avatar-parado.png" alt="" style={{ display: "none" }} />
+              <img src="/assets/mi-foto.png" alt="" style={{ display: "none" }} />
             </div>
 
             {/* PASATIEMPOS */}
@@ -256,7 +251,8 @@ export default function AcercaPage() {
               <div className="mb-3">
                 <button
                   onClick={() => setShowPasatiemposModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-all cursor-pointer`}
+                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  type="button"
                 >
                   PASATIEMPOS
                 </button>
@@ -280,7 +276,8 @@ export default function AcercaPage() {
               <div className="mb-3">
                 <button
                   onClick={() => setShowAlimentosModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-all cursor-pointer`}
+                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  type="button"
                 >
                   ALIMENTOS QUE DISFRUTO
                 </button>
@@ -302,21 +299,15 @@ export default function AcercaPage() {
         </div>
       </div>
 
-      {/* Animaciones */}
+      {/* Animaciones locales: sólo para flechas (al presionar) */}
       <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-15px); }
+        .pressable {
+          transition: transform 120ms ease, box-shadow 120ms ease;
         }
-        .animate-float { animation: float 3s ease-in-out infinite; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes scaleIn {
-          from { transform: scale(0.9); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
+        .pressable:active {
+          transform: translateY(4px);
+          box-shadow: 0 4px 0 #000;
         }
-        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
-        .animate-scaleIn { animation: scaleIn 0.3s ease-out; }
       `}</style>
 
       {/* ===== MODALES ===== */}
@@ -390,11 +381,11 @@ function ModalBase({
 }) {
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 animate-fadeIn"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80"
       onClick={onClose}
     >
       <div
-        className="w-[90%] max-w-[950px] max-h-[85vh] overflow-hidden animate-scaleIn"
+        className="w-[90%] max-w-[950px] max-h-[85vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div
@@ -434,7 +425,8 @@ function ModalContent({
       <div className="flex justify-center">
         <button
           onClick={onClose}
-          className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
+          className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
+          type="button"
         >
           VOLVER
         </button>
@@ -443,7 +435,6 @@ function ModalContent({
   );
 }
 
-/* Barras */
 function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }) {
   return (
     <div className="flex items-center gap-4">
@@ -476,4 +467,3 @@ function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }
     </div>
   );
 }
-
