@@ -1,0 +1,19 @@
+{
+  "common": {
+    "themeLight": "Switch to light",
+    "themeDark": "Switch to dark",
+    "start": "Start",
+    "projects": "Projects",
+    "about": "About me",
+    "reviews": "Reviews",
+    "timeline": "Timeline",
+    "contactMe": "Contact me:",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "home": {
+    "greeting": "Hi! Welcome to my portfolio.",
+    "name1": "Deivid Julian",
+    "name2": "Alvarado Moran"
+  }
+}

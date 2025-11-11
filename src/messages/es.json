@@ -1,0 +1,19 @@
+{
+  "common": {
+    "themeLight": "Cambiar a claro",
+    "themeDark": "Cambiar a oscuro",
+    "start": "Iniciar",
+    "projects": "Proyectos",
+    "about": "Acerca de mí",
+    "reviews": "Opiniones",
+    "timeline": "Línea de tiempo",
+    "contactMe": "Contáctame:",
+    "phone": "Teléfono",
+    "email": "Correo"
+  },
+  "home": {
+    "greeting": "¡Hola! Bienvenido a mi portafolio.",
+    "name1": "Deivid Julian",
+    "name2": "Alvarado Moran"
+  }
+}

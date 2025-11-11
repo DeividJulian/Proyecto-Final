@@ -4,16 +4,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLang } from "./components/i18n/LangContext";
+import LanguageSwitcher from "./components/i18n/LanguageSwitcher";
 
 type Theme = "light" | "dark";
 
 export default function Home() {
+  // ✅ traducciones desde nuestro contexto
+  const { t } = useLang();
+
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const saved = (typeof window !== "undefined" ? localStorage.getItem("theme") : null) as
-      | Theme
-      | null;
+    const saved = (typeof window !== "undefined"
+      ? localStorage.getItem("theme")
+      : null) as Theme | null;
+
     if (saved === "light" || saved === "dark") {
       setTheme(saved);
       return;
@@ -43,13 +49,21 @@ export default function Home() {
         aria-hidden
       />
 
-      {/* Toggle compacto */}
-      <ThemeToggle isDark={isDark} onToggle={() => setTheme(isDark ? "light" : "dark")} />
+      {/* Selector de idioma global */}
+      <LanguageSwitcher />
 
-      {/* Contenido (compactado para evitar scroll) */}
+      {/* Toggle tema */}
+      <ThemeToggle
+        isDark={isDark}
+        onToggle={() => setTheme(isDark ? "light" : "dark")}
+        labelLight={t("common.themeLight")}
+        labelDark={t("common.themeDark")}
+      />
+
+      {/* Contenido */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 pb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(420px,540px)_1fr] items-start gap-4 lg:gap-8">
-          {/* Columna izquierda */}
+          {/* Izquierda */}
           <section className="w-full">
             <div
               className={`mx-auto w-[min(540px,92vw)] border-8 border-black shadow-[0_10px_0_#000] rounded-md ${
@@ -57,21 +71,21 @@ export default function Home() {
               }`}
             >
               <p className="px-4 py-3 text-[clamp(15px,1.9vw,20px)] leading-snug font-[PressStart]">
-                ¡Hola! ¿Listo para conocer mi portafolio personal?
+                {t("home.greeting")}
               </p>
             </div>
 
             {/* Botones */}
             <div className="mt-4 space-y-3 w-[min(540px,92vw)]">
-              <PixelButton href="/mapa" label="EMPEZAR" isDark={isDark} />
-              <PixelButton href="/proyectos" label="PROYECTOS" isDark={isDark} />
-              <PixelButton href="/acerca" label="ACERCA DE MI" isDark={isDark} />
-              <PixelButton href="/opiniones" label="OPINIONES" isDark={isDark} />
-              <PixelButton href="/timeline" label="LINEA DE TIEMPO" isDark={isDark} />
+              <PixelButton href="/mapa" label={t("common.start")} isDark={isDark} />
+              <PixelButton href="/proyectos" label={t("common.projects")} isDark={isDark} />
+              <PixelButton href="/acerca" label={t("common.about")} isDark={isDark} />
+              <PixelButton href="/opiniones" label={t("common.reviews")} isDark={isDark} />
+              <PixelButton href="/timeline" label={t("common.timeline")} isDark={isDark} />
             </div>
           </section>
 
-          {/* Columna derecha */}
+          {/* Derecha */}
           <section className="relative justify-self-center lg:justify-self-end mt-2 lg:mt-0 pt-10">
             {/* Cartel nombre */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-[min(300px,70vw)]">
@@ -81,13 +95,13 @@ export default function Home() {
                     isDark ? "bg-[#101b2a] text-[#e5ff7a]" : "bg-[#31256c] text-yellow-300"
                   }`}
                 >
-                  <span className="block">Deivid</span>
-                  <span className="block">Julian</span>
+                  <span className="block">{t("home.name1")}</span>
+                  <span className="block">{t("home.name2")}</span>
                 </div>
               </div>
             </div>
 
-            {/* Avatar (más pequeño) */}
+            {/* Avatar */}
             <Image
               src="/assets/avatar-parado.png"
               alt="Avatar"
@@ -100,20 +114,22 @@ export default function Home() {
                 imageRendering: "pixelated",
               }}
               priority
-              className="select-none mt-10 animate-bob"
+              className="select-none -mt-1 animate-bob"
             />
           </section>
         </div>
 
-        {/* Contacto (más compacto) */}
+        {/* Contacto */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 w-[min(860px,96vw)]">
           <ContactPanel isDark={isDark}>
-            <span className={isDark ? "text-[#e5ff7a]" : "text-yellow-300"}>Contáctame :</span>{" "}
-            <span className="text-white">316 895 7503</span>
+            <span className={isDark ? "text-[#e5ff7a]" : "text-yellow-300"}>
+              {t("common.contactMe")}
+            </span>{" "}
+            <span className="text-white">{t("common.phone")}</span>
           </ContactPanel>
 
           <ContactPanel isDark={isDark}>
-            <span className="text-white">deividjulianalvarado@gmail.com</span>
+            <span className="text-white">{t("common.email")}</span>
           </ContactPanel>
         </div>
       </div>
@@ -134,7 +150,6 @@ export default function Home() {
         .animate-bob {
           animation: bob 1.4s ease-in-out infinite;
         }
-
         @keyframes nameBob {
           0%,
           100% {
@@ -152,16 +167,18 @@ export default function Home() {
   );
 }
 
-/* ===== Toggle tema pixelado (aún más compacto) ===== */
 function ThemeToggle({
   isDark,
   onToggle,
+  labelLight,
+  labelDark,
 }: {
   isDark: boolean;
   onToggle: () => void;
+  labelLight: string;
+  labelDark: string;
 }) {
-  const label = isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
-
+  const label = isDark ? labelLight : labelDark;
   return (
     <button
       onClick={onToggle}
@@ -171,7 +188,6 @@ function ThemeToggle({
       title={label}
       type="button"
     >
-      {/* Rail 100×46 */}
       <div
         className={`
           relative w-[100px] h-[46px]
@@ -182,14 +198,12 @@ function ThemeToggle({
         `}
         style={{ imageRendering: "pixelated" }}
       >
-        {/* Segmentos */}
         <div className="absolute inset-0 grid grid-cols-6 opacity-20 pointer-events-none">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={`seg-${i}`} className="border-r-2 border-black/40" />
           ))}
         </div>
 
-        {/* Knob 34px */}
         <div
           className={`
             absolute top-[6px] w-[34px] h-[34px]
@@ -200,7 +214,10 @@ function ThemeToggle({
           `}
           style={{ imageRendering: "pixelated", boxShadow: "0 4px 0 #000" }}
         >
-          <span className="text-[16px] select-none" style={{ filter: "drop-shadow(2px 2px 0 #000)" }}>
+          <span
+            className="text-[16px] select-none"
+            style={{ filter: "drop-shadow(2px 2px 0 #000)" }}
+          >
             {isDark ? "🌙" : "☀️"}
           </span>
         </div>
@@ -209,7 +226,6 @@ function ThemeToggle({
   );
 }
 
-/* ========= Componentes auxiliares ========= */
 function PixelButton({
   href,
   label,
@@ -223,18 +239,12 @@ function PixelButton({
     "bg-[#2b93ff] text-yellow-300 shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
   const darkClasses =
     "bg-[#0ea5a8] text-[#e5ff7a] shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
-
   return (
     <Link
       href={href}
-      className={`
-        block w-full text-center
-        border-8 border-black rounded-md
-        px-5 py-3 text-[clamp(16px,1.9vw,22px)] font-[PressStart] tracking-wide
-        hover:translate-y-0.5 active:translate-y-1
-        transition-transform
-        ${isDark ? darkClasses : lightClasses}
-      `}
+      className={`block w-full text-center border-8 border-black rounded-md px-5 py-3 text-[clamp(16px,1.9vw,22px)] font-[PressStart] tracking-wide hover:translate-y-0.5 active:translate-y-1 transition-transform ${
+        isDark ? darkClasses : lightClasses
+      }`}
     >
       {label}
     </Link>
@@ -250,12 +260,9 @@ function ContactPanel({
 }) {
   return (
     <div
-      className={`
-        border-8 border-black rounded-md px-4 py-3
-        text-[clamp(12px,1.4vw,18px)] font-[PressStart] tracking-wide
-        shadow-[0_10px_0_#000]
-        ${isDark ? "bg-[#0a1622] text-white" : "bg-[#132533] text-white"}
-      `}
+      className={`border-8 border-black rounded-md px-4 py-3 text-[clamp(12px,1.4vw,18px)] font-[PressStart] tracking-wide shadow-[0_10px_0_#000] ${
+        isDark ? "bg-[#0a1622] text-white" : "bg-[#132533] text-white"
+      }`}
     >
       {children}
     </div>
