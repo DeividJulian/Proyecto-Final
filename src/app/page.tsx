@@ -1,25 +1,19 @@
-// src/app/page.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useLang } from "./components/i18n/LangContext";
 import LanguageSwitcher from "./components/i18n/LanguageSwitcher";
+import { useLang } from "./components/i18n/LangContext";
 
 type Theme = "light" | "dark";
 
 export default function Home() {
-  // ✅ traducciones desde nuestro contexto
   const { t } = useLang();
 
   const [theme, setTheme] = useState<Theme>("light");
-
   useEffect(() => {
-    const saved = (typeof window !== "undefined"
-      ? localStorage.getItem("theme")
-      : null) as Theme | null;
-
+    const saved = (typeof window !== "undefined" ? localStorage.getItem("theme") : null) as Theme | null;
     if (saved === "light" || saved === "dark") {
       setTheme(saved);
       return;
@@ -30,11 +24,8 @@ export default function Home() {
       window.matchMedia("(prefers-color-scheme: dark)").matches;
     setTheme(prefersDark ? "dark" : "light");
   }, []);
-
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", theme);
-    }
+    if (typeof window !== "undefined") localStorage.setItem("theme", theme);
   }, [theme]);
 
   const isDark = theme === "dark";
@@ -49,15 +40,15 @@ export default function Home() {
         aria-hidden
       />
 
-      {/* Selector de idioma global */}
+      {/* Idioma */}
       <LanguageSwitcher />
 
-      {/* Toggle tema */}
+      {/* Toggle de tema (igual que antes) */}
       <ThemeToggle
         isDark={isDark}
         onToggle={() => setTheme(isDark ? "light" : "dark")}
-        labelLight={t("common.themeLight")}
-        labelDark={t("common.themeDark")}
+        labelLight={isDark ? "Tema claro" : "Switch to dark"}
+        labelDark={isDark ? "Tema claro" : "Switch to dark"}
       />
 
       {/* Contenido */}
@@ -65,6 +56,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(420px,540px)_1fr] items-start gap-4 lg:gap-8">
           {/* Izquierda */}
           <section className="w-full">
+            {/* Cartel de saludo */}
             <div
               className={`mx-auto w-[min(540px,92vw)] border-8 border-black shadow-[0_10px_0_#000] rounded-md ${
                 isDark ? "bg-[#101b2a] text-[#e5ff7a]" : "bg-[#31256c] text-yellow-300"
@@ -87,7 +79,7 @@ export default function Home() {
 
           {/* Derecha */}
           <section className="relative justify-self-center lg:justify-self-end mt-2 lg:mt-0 pt-10">
-            {/* Cartel nombre */}
+            {/* Cartel nombre: SOLO una línea */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-[min(300px,70vw)]">
               <div className="animate-name-bob">
                 <div
@@ -95,89 +87,62 @@ export default function Home() {
                     isDark ? "bg-[#101b2a] text-[#e5ff7a]" : "bg-[#31256c] text-yellow-300"
                   }`}
                 >
-                  <span className="block">{t("home.name1")}</span>
-                  <span className="block">{t("home.name2")}</span>
+                  <span className="block">{t("home.name")}</span>
                 </div>
               </div>
             </div>
 
-            {/* Avatar */}
+            {/* Avatar MAS ABAJO: aumenté padding-top del section (pt-24) y un pequeño margen en la imagen */}
             <Image
               src="/assets/avatar-parado.png"
               alt="Avatar"
               width={0}
               height={0}
               sizes="(min-width:1024px) 300px, 40vw"
-              style={{
-                width: "clamp(200px,28vw,300px)",
-                height: "auto",
-                imageRendering: "pixelated",
-              }}
+              style={{ width: "clamp(200px,28vw,300px)", height: "auto", imageRendering: "pixelated" }}
               priority
-              className="select-none -mt-1 animate-bob"
+              className="select-none mt-4 animate-bob"
             />
           </section>
         </div>
 
-        {/* Contacto */}
+        {/* Contacto con valores desde los mensajes */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 w-[min(860px,96vw)]">
           <ContactPanel isDark={isDark}>
             <span className={isDark ? "text-[#e5ff7a]" : "text-yellow-300"}>
-              {t("common.contactMe")}
+              {t("contact.phoneLabel")}
             </span>{" "}
-            <span className="text-white">{t("common.phone")}</span>
+            <span className="text-white">{t("contact.phoneValue")}</span>
           </ContactPanel>
 
           <ContactPanel isDark={isDark}>
-            <span className="text-white">{t("common.email")}</span>
+            <span className={isDark ? "text-[#e5ff7a]" : "text-yellow-300"}>
+              {t("contact.emailLabel")}
+            </span>{" "}
+            <span className="text-white">{t("contact.emailValue")}</span>
           </ContactPanel>
         </div>
       </div>
 
       {/* Animaciones */}
       <style jsx>{`
-        @keyframes bob {
-          0% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-6px);
-          }
-          100% {
-            transform: translateY(0);
-          }
-        }
-        .animate-bob {
-          animation: bob 1.4s ease-in-out infinite;
-        }
-        @keyframes nameBob {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-4px);
-          }
-        }
-        .animate-name-bob {
-          animation: nameBob 2.2s ease-in-out infinite;
-        }
+        @keyframes bob { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
+        .animate-bob { animation: bob 1.4s ease-in-out infinite; }
+        @keyframes nameBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+        .animate-name-bob { animation: nameBob 2.2s ease-in-out infinite; }
       `}</style>
     </main>
   );
 }
 
+/* ====== UI helpers ====== */
+
 function ThemeToggle({
   isDark,
   onToggle,
   labelLight,
-  labelDark,
-}: {
-  isDark: boolean;
-  onToggle: () => void;
-  labelLight: string;
-  labelDark: string;
-}) {
+  labelDark
+}: { isDark: boolean; onToggle: () => void; labelLight: string; labelDark: string; }) {
   const label = isDark ? labelLight : labelDark;
   return (
     <button
@@ -214,10 +179,7 @@ function ThemeToggle({
           `}
           style={{ imageRendering: "pixelated", boxShadow: "0 4px 0 #000" }}
         >
-          <span
-            className="text-[16px] select-none"
-            style={{ filter: "drop-shadow(2px 2px 0 #000)" }}
-          >
+          <span className="text-[16px] select-none" style={{ filter: "drop-shadow(2px 2px 0 #000)" }}>
             {isDark ? "🌙" : "☀️"}
           </span>
         </div>
@@ -226,44 +188,22 @@ function ThemeToggle({
   );
 }
 
-function PixelButton({
-  href,
-  label,
-  isDark,
-}: {
-  href: string;
-  label: string;
-  isDark: boolean;
-}) {
-  const lightClasses =
-    "bg-[#2b93ff] text-yellow-300 shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
-  const darkClasses =
-    "bg-[#0ea5a8] text-[#e5ff7a] shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
+function PixelButton({ href, label, isDark }: { href: string; label: string; isDark: boolean; }) {
+  const lightClasses = "bg-[#2b93ff] text-yellow-300 shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
+  const darkClasses  = "bg-[#0ea5a8] text-[#e5ff7a] shadow-[0_10px_0_#000] hover:shadow-[0_8px_0_#000]";
   return (
     <Link
       href={href}
-      className={`block w-full text-center border-8 border-black rounded-md px-5 py-3 text-[clamp(16px,1.9vw,22px)] font-[PressStart] tracking-wide hover:translate-y-0.5 active:translate-y-1 transition-transform ${
-        isDark ? darkClasses : lightClasses
-      }`}
+      className={`block w-full text-center border-8 border-black rounded-md px-5 py-3 text-[clamp(16px,1.9vw,22px)] font-[PressStart] tracking-wide hover:translate-y-0.5 active:translate-y-1 transition-transform ${isDark ? darkClasses : lightClasses}`}
     >
       {label}
     </Link>
   );
 }
 
-function ContactPanel({
-  children,
-  isDark,
-}: {
-  children: React.ReactNode;
-  isDark: boolean;
-}) {
+function ContactPanel({ children, isDark }: { children: React.ReactNode; isDark: boolean; }) {
   return (
-    <div
-      className={`border-8 border-black rounded-md px-4 py-3 text-[clamp(12px,1.4vw,18px)] font-[PressStart] tracking-wide shadow-[0_10px_0_#000] ${
-        isDark ? "bg-[#0a1622] text-white" : "bg-[#132533] text-white"
-      }`}
-    >
+    <div className={`border-8 border-black rounded-md px-4 py-3 text-[clamp(12px,1.4vw,18px)] font-[PressStart] tracking-wide shadow-[0_10px_0_#000] ${isDark ? "bg-[#0a1622] text-white" : "bg-[#132533] text-white"}`}>
       {children}
     </div>
   );

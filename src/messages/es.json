@@ -1,19 +1,19 @@
 {
   "common": {
-    "themeLight": "Cambiar a claro",
-    "themeDark": "Cambiar a oscuro",
-    "start": "Iniciar",
-    "projects": "Proyectos",
-    "about": "Acerca de mí",
-    "reviews": "Opiniones",
-    "timeline": "Línea de tiempo",
-    "contactMe": "Contáctame:",
-    "phone": "Teléfono",
-    "email": "Correo"
+    "start": "EMPEZAR",
+    "projects": "PROYECTOS",
+    "about": "ACERCA DE MI",
+    "reviews": "OPINIONES",
+    "timeline": "LINEA DE TIEMPO"
   },
   "home": {
-    "greeting": "¡Hola! Bienvenido a mi portafolio.",
-    "name1": "Deivid Julian",
-    "name2": "Alvarado Moran"
+    "greeting": "¡Hola! Listo para Conocer Mi Portafolio Personal",
+    "name": "Deivid Julian"
+  },
+  "contact": {
+    "phoneLabel": "CONTACTAME :",
+    "phoneValue": "3233157103",
+    "emailLabel": "CORREO:",
+    "emailValue": "deividjulianalvarado@gmail.com"
   }
 }
