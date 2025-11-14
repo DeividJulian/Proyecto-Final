@@ -36,4 +36,50 @@
     "card3Title": "Project 3",
     "viewProject": "VIEW PROJECT"
   }
+,
+"about": {
+  "title": "ABOUT ME",
+  "description": "Hello! I'm Deivid Julian Alvarado Moran, a Software Engineering student passionate about web development and creative design. I enjoy building projects that combine technology with innovative ideas, applying different tools and programming languages.",
+  "helpTooltip": "You can click each section to learn more about me.",
+
+  "skillsTitle": "SKILLS",
+  "weaknessesTitle": "WEAKNESSES",
+  "hobbiesTitle": "HOBBIES",
+  "foodsTitle": "FOODS I ENJOY",
+  "back": "BACK",
+
+  "skill1": "Perseverance",
+  "skill2": "Creativity",
+  "skill3": "Adaptability",
+
+  "weak1": "Impatience",
+  "weak2": "Perfectionism",
+  "weak3": "Self-criticism",
+
+  "hobby1": "Video games",
+  "hobby2": "Programming",
+  "hobby3": "Music",
+
+  "food1": "Pizza",
+  "food2": "Sushi",
+  "food3": "Burgers"
+}
+
+,
+"opiniones": {
+  "title": "REVIEWS",
+  "helpAria": "Help for reviews section",
+  "helpText": "In this section you can watch video reviews.",
+  "helpTail": "to go back to the map when you finish.",
+  "bubble": "Here you can find feedback and opinions about my work and projects.",
+
+  "video1": "Review 1",
+  "video2": "Review 2",
+  "video3": "Review 3",
+  "video4": "Review 4",
+  "playPrefix": "Play"
+}
+
+
+
 }

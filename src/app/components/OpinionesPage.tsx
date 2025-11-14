@@ -13,10 +13,10 @@ export default function OpinionesPage() {
   const { t } = useLang();
 
   const videos = [
-    { id: 1, videoId: "dQw4w9WgXcQ", titulo: "Video 1" },
-    { id: 2, videoId: "dQw4w9WgXcQ", titulo: "Video 2" },
-    { id: 3, videoId: "dQw4w9WgXcQ", titulo: "Video 3" },
-    { id: 4, videoId: "dQw4w9WgXcQ", titulo: "Video 4" },
+    { id: 1, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video1" },
+    { id: 2, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video2" },
+    { id: 3, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video3" },
+    { id: 4, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video4" }
   ];
 
   // === Tema sincronizado con Home ===
@@ -42,8 +42,13 @@ export default function OpinionesPage() {
     ? "/assets/sala-cine.png"        // fondo de cine noche (modo oscuro)
     : "/assets/modo-light-cine.png"; // fondo de cine con gente (modo claro)
 
-  // Tooltip del botón de interrogación (igual que en /acerca)
+  // Tooltip del botón de interrogación
   const [showTooltip, setShowTooltip] = useState(false);
+
+  // Clases para el botón VOLVER según tema (opcional, puedes dejarlas fijas)
+  const backBtnClasses = isDark
+    ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
+    : "bg-[#5a3921] hover:bg-[#6e4528] text-white";
 
   return (
     <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
@@ -57,13 +62,14 @@ export default function OpinionesPage() {
       {/* Conmutador de idioma (arriba a la izquierda como en Home) */}
       <LanguageSwitcher />
 
-      {/* Botón de interrogación flotante (mismo estilo que /acerca) */}
+      {/* Botón de interrogación flotante */}
       <div className="fixed top-8 right-8 z-50">
         <button
           onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
           className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
           aria-label={t("opiniones.helpAria")}
+          type="button"
         >
           <Image
             src="/assets/question.png"
@@ -108,7 +114,11 @@ export default function OpinionesPage() {
           {/* Columna izquierda: Grid de videos */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {videos.map((video) => (
-              <VideoCard key={video.id} videoId={video.videoId} titulo={video.titulo} />
+              <VideoCard
+                key={video.id}
+                videoId={video.videoId}
+                titleKey={video.titleKey}
+              />
             ))}
           </div>
 
@@ -145,14 +155,14 @@ export default function OpinionesPage() {
         <div className="flex justify-center mt-8">
           <Link
             href="/mapa"
-            className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
+            className={`${backBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
           >
             {t("common.back").toUpperCase()}
           </Link>
         </div>
       </div>
 
-      {/* Animación de flotación y estilos específicos */}
+      {/* Animaciones y estilos específicos */}
       <style jsx>{`
         @keyframes float {
           0%,
@@ -167,14 +177,13 @@ export default function OpinionesPage() {
           animation: float 3s ease-in-out infinite;
         }
 
-        /* Estilo del botón play retro dentro de cada tarjeta */
         .play-button-frame {
           width: 110px;
           height: 72px;
           display: grid;
           place-items: center;
-          border: 6px solid #23181b; /* borde oscuro tipo pixel */
-          background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%); /* amarillo -> dorado */
+          border: 6px solid #23181b;
+          background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%);
           box-shadow: 0 6px 0 #000, inset 0 2px 0 rgba(255, 255, 255, 0.25),
             0 6px 12px rgba(0, 0, 0, 0.4);
           border-radius: 6px;
@@ -223,7 +232,11 @@ export default function OpinionesPage() {
 }
 
 /* Componente de tarjeta de video */
-function VideoCard({ videoId, titulo }: { videoId: string; titulo: string }) {
+function VideoCard({ videoId, titleKey }: { videoId: string; titleKey: string }) {
+  const { t } = useLang();
+  const titulo = t(titleKey);
+  const playPrefix = t("opiniones.playPrefix");
+
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -233,7 +246,8 @@ function VideoCard({ videoId, titulo }: { videoId: string; titulo: string }) {
           <button
             onClick={() => setIsPlaying(true)}
             className="relative w-full h-full flex items-center justify-center group play-wrap"
-            aria-label={`Reproducir ${titulo}`}
+            aria-label={`${playPrefix} ${titulo}`}
+            type="button"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black" />
             <div className="absolute inset-2 border-4 border-white rounded-md pointer-events-none" />

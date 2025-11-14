@@ -36,4 +36,50 @@
     "card3Title": "Proyecto 3",
     "viewProject": "VER PROYECTO"
   }
+,
+
+"about": {
+  "title": "ACERCA DE MI",
+  "description": "¡Hola! Soy Deivid Julian Alvarado Moran. Soy un estudiante de Ingeniería de Software apasionado por el desarrollo web y el diseño creativo. Me gusta construir proyectos que combinen tecnología con ideas innovadoras, aplicando diferentes lenguajes y herramientas.",
+  "helpTooltip": "Puedes dar clic en cada sección para conocer más de mí.",
+
+  "skillsTitle": "HABILIDADES",
+  "weaknessesTitle": "DEBILIDADES",
+  "hobbiesTitle": "PASATIEMPOS",
+  "foodsTitle": "ALIMENTOS QUE DISFRUTO",
+  "back": "VOLVER",
+
+  "skill1": "Perseverancia",
+  "skill2": "Creatividad",
+  "skill3": "Adaptabilidad",
+
+  "weak1": "Impaciencia",
+  "weak2": "Perfeccionismo",
+  "weak3": "Autocrítica",
+
+  "hobby1": "Videojuegos",
+  "hobby2": "Programación",
+  "hobby3": "Música",
+
+  "food1": "Pizza",
+  "food2": "Sushi",
+  "food3": "Hamburguesas"
+}
+
+,
+"opiniones": {
+  "title": "OPINIONES",
+  "helpAria": "Ayuda de la sección opiniones",
+  "helpText": "En esta sección puedes ver opiniones en formato de video.",
+  "helpTail": "para regresar al mapa cuando termines.",
+  "bubble": "Aquí podrás encontrar opiniones sobre mis trabajos y proyectos.",
+
+  "video1": "Opinión 1",
+  "video2": "Opinión 2",
+  "video3": "Opinión 3",
+  "video4": "Opinión 4",
+  "playPrefix": "Reproducir"
+}
+
+
 }

@@ -4,14 +4,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import LanguageSwitcher from "../components/i18n/LanguageSwitcher";
+import { useLang } from "../components/i18n/LangContext";
 
 type Theme = "light" | "dark";
 
 export default function AcercaPage() {
-  const aboutText =
-    "¡Hola! Soy Deivid Julian Alvarado Moran. " +
-    "Soy un estudiante de Ingeniería de Software apasionado por el desarrollo web y el diseño creativo. " +
-    "Me gusta construir proyectos que combinen tecnología con ideas innovadoras, aplicando diferentes lenguajes y herramientas.";
+  const { lang } = useLang();
+
+  // cargamos los textos según el idioma
+  const messages = require("../../messages/" + lang + ".json");
 
   // barras
   const [habilidades] = useState(78);
@@ -19,7 +21,7 @@ export default function AcercaPage() {
   const [pasatiempos] = useState(88);
   const [alimentos] = useState(64);
 
-  // tema sincronizado con Home (corrigiendo prefers-color-scheme)
+  // tema sincronizado con Home
   const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
     const saved = (typeof window !== "undefined"
@@ -75,6 +77,8 @@ export default function AcercaPage() {
     ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
     : "bg-[#5a3921] hover:bg-[#6e4528] text-white";
 
+  const aboutText = messages.about.description;
+
   return (
     <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
       {/* Fondo */}
@@ -83,6 +87,9 @@ export default function AcercaPage() {
         style={{ backgroundImage: `url("${bgUrl}")` }}
         aria-hidden
       />
+
+      {/* Botón idioma sincronizado con Home */}
+      <LanguageSwitcher />
 
       {/* Botón ayuda */}
       <div className="fixed top-8 right-8 z-50">
@@ -111,7 +118,7 @@ export default function AcercaPage() {
                 className="text-black text-[15px] leading-relaxed"
                 style={{ fontFamily: "Arial, sans-serif" }}
               >
-                Puedes dar click en cada sección para conocer más de mí.
+                {messages.about.helpTooltip}
               </p>
             </div>
             <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
@@ -128,7 +135,7 @@ export default function AcercaPage() {
               className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000]`}
             >
               <h1 className="text-center font-[PressStart] text-[22px] py-5 tracking-wider">
-                ACERCA DE MI
+                {messages.about.title}
               </h1>
             </div>
 
@@ -148,7 +155,7 @@ export default function AcercaPage() {
                   className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
-                  HABILIDADES
+                  {messages.about.skillsTitle}
                 </button>
               </div>
               <div
@@ -175,7 +182,7 @@ export default function AcercaPage() {
                   className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
-                  DEBILIDADES
+                  {messages.about.weaknessesTitle}
                 </button>
               </div>
               <div
@@ -200,7 +207,7 @@ export default function AcercaPage() {
                 href="/mapa"
                 className={`inline-block ${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 py-3 font-[PressStart] text-[16px] tracking-wide`}
               >
-                VOLVER
+                {messages.about.back}
               </Link>
             </div>
           </div>
@@ -210,7 +217,7 @@ export default function AcercaPage() {
             <div
               className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-6 flex items-center justify-center min-h-[320px] relative`}
             >
-              {/* Flecha izquierda — con animación SOLO al presionar */}
+              {/* Flecha izquierda */}
               <button
                 type="button"
                 aria-label="Mostrar avatar"
@@ -231,7 +238,7 @@ export default function AcercaPage() {
                 />
               </div>
 
-              {/* Flecha derecha — con animación SOLO al presionar */}
+              {/* Flecha derecha */}
               <button
                 type="button"
                 aria-label="Mostrar foto"
@@ -254,7 +261,7 @@ export default function AcercaPage() {
                   className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
-                  PASATIEMPOS
+                  {messages.about.hobbiesTitle}
                 </button>
               </div>
               <div className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}>
@@ -279,7 +286,7 @@ export default function AcercaPage() {
                   className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
-                  ALIMENTOS QUE DISFRUTO
+                  {messages.about.foodsTitle}
                 </button>
               </div>
               <div className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}>
@@ -314,13 +321,14 @@ export default function AcercaPage() {
       {showHabilidadesModal && (
         <ModalBase onClose={() => setShowHabilidadesModal(false)}>
           <ModalContent
-            titulo="HABILIDADES"
+            titulo={messages.about.skillsTitle}
+            backLabel={messages.about.back}
             isDark={isDark}
             onClose={() => setShowHabilidadesModal(false)}
           >
-            <HabilidadBarraItem color="#35f5a6" titulo="Perseverancia" />
-            <HabilidadBarraItem color="#22d3ee" titulo="Creatividad" />
-            <HabilidadBarraItem color="#ffd200" titulo="Adaptibilidad" />
+            <HabilidadBarraItem color="#35f5a6" titulo={messages.about.skill1} />
+            <HabilidadBarraItem color="#22d3ee" titulo={messages.about.skill2} />
+            <HabilidadBarraItem color="#ffd200" titulo={messages.about.skill3} />
           </ModalContent>
         </ModalBase>
       )}
@@ -328,13 +336,14 @@ export default function AcercaPage() {
       {showDebilidadesModal && (
         <ModalBase onClose={() => setShowDebilidadesModal(false)}>
           <ModalContent
-            titulo="DEBILIDADES"
+            titulo={messages.about.weaknessesTitle}
+            backLabel={messages.about.back}
             isDark={isDark}
             onClose={() => setShowDebilidadesModal(false)}
           >
-            <HabilidadBarraItem color="#ff6b6b" titulo="Impaciencia" />
-            <HabilidadBarraItem color="#ff8c42" titulo="Perfeccionismo" />
-            <HabilidadBarraItem color="#e63946" titulo="Autocrítica" />
+            <HabilidadBarraItem color="#ff6b6b" titulo={messages.about.weak1} />
+            <HabilidadBarraItem color="#ff8c42" titulo={messages.about.weak2} />
+            <HabilidadBarraItem color="#e63946" titulo={messages.about.weak3} />
           </ModalContent>
         </ModalBase>
       )}
@@ -342,13 +351,14 @@ export default function AcercaPage() {
       {showPasatiemposModal && (
         <ModalBase onClose={() => setShowPasatiemposModal(false)}>
           <ModalContent
-            titulo="PASATIEMPOS"
+            titulo={messages.about.hobbiesTitle}
+            backLabel={messages.about.back}
             isDark={isDark}
             onClose={() => setShowPasatiemposModal(false)}
           >
-            <HabilidadBarraItem color="#22d3ee" titulo="Videojuegos" />
-            <HabilidadBarraItem color="#a78bfa" titulo="Programación" />
-            <HabilidadBarraItem color="#34d399" titulo="Música" />
+            <HabilidadBarraItem color="#22d3ee" titulo={messages.about.hobby1} />
+            <HabilidadBarraItem color="#a78bfa" titulo={messages.about.hobby2} />
+            <HabilidadBarraItem color="#34d399" titulo={messages.about.hobby3} />
           </ModalContent>
         </ModalBase>
       )}
@@ -356,13 +366,14 @@ export default function AcercaPage() {
       {showAlimentosModal && (
         <ModalBase onClose={() => setShowAlimentosModal(false)}>
           <ModalContent
-            titulo="ALIMENTOS QUE DISFRUTO"
+            titulo={messages.about.foodsTitle}
+            backLabel={messages.about.back}
             isDark={isDark}
             onClose={() => setShowAlimentosModal(false)}
           >
-            <HabilidadBarraItem color="#ffd200" titulo="Pizza" />
-            <HabilidadBarraItem color="#ff6b9d" titulo="Sushi" />
-            <HabilidadBarraItem color="#fb923c" titulo="Hamburguesas" />
+            <HabilidadBarraItem color="#ffd200" titulo={messages.about.food1} />
+            <HabilidadBarraItem color="#ff6b9d" titulo={messages.about.food2} />
+            <HabilidadBarraItem color="#fb923c" titulo={messages.about.food3} />
           </ModalContent>
         </ModalBase>
       )}
@@ -404,11 +415,13 @@ function ModalContent({
   children,
   isDark,
   onClose,
+  backLabel,
 }: {
   titulo: string;
   children: React.ReactNode;
   isDark: boolean;
   onClose: () => void;
+  backLabel: string;
 }) {
   const volverBtnClasses = isDark
     ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
@@ -428,7 +441,7 @@ function ModalContent({
           className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
           type="button"
         >
-          VOLVER
+          {backLabel}
         </button>
       </div>
     </>
