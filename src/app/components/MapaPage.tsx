@@ -1,12 +1,12 @@
-// src/app/components/MapaPage.tsx
+// src/app/mapa/page.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import LanguageSwitcher from "./i18n/LanguageSwitcher";
-import { useLang } from "./i18n/LangContext";
+import LanguageSwitcher from "../components/i18n/LanguageSwitcher";
+import { useLang } from "../components/i18n/LangContext";
 
 type Dir = "up" | "right" | "down" | "left";
 type KeyMap = Record<"ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight", boolean>;
@@ -45,6 +45,9 @@ export default function MapaPage() {
   const router = useRouter();
   const redirectedRef = useRef(false);
 
+  // ref del contenedor del mapa para táctil
+  const mapRef = useRef<HTMLDivElement | null>(null);
+
   const proyectosPoint = useMemo(() => ({ x: 23, y: 10 }), []);
   const acercaPoint = useMemo(() => ({ x: 73, y: 13 }), []);
   const opinionesPoint = useMemo(() => ({ x: 18, y: 83 }), []);
@@ -60,6 +63,7 @@ export default function MapaPage() {
     };
   }, []);
 
+  // --- Movimiento con teclado ---
   useEffect(() => {
     let raf: number | null = null;
     const speed = 0.45;
@@ -119,6 +123,32 @@ export default function MapaPage() {
     };
   }, []);
 
+  // --- Movimiento táctil: tocar/arrastrar para mover el avatar ---
+  const handleTouch = (e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    if (!touch || !mapRef.current) return;
+
+    const rect = mapRef.current.getBoundingClientRect();
+    const relativeX = ((touch.clientX - rect.left) / rect.width) * 100;
+    const relativeY = ((touch.clientY - rect.top) / rect.height) * 100;
+
+    const x = Math.max(0, Math.min(100, relativeX));
+    const y = Math.max(0, Math.min(100, relativeY));
+
+    setPos({ x, y });
+    setMoving(true);
+
+    if (!hasMovedRef.current) {
+      hasMovedRef.current = true;
+      setShowIntro(false);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setMoving(false);
+  };
+
+  // --- Detección de proximidad para rutas ---
   useEffect(() => {
     if (redirectedRef.current) return;
     const dist = (a: { x: number; y: number }, b: { x: number; y: number }) =>
@@ -141,15 +171,24 @@ export default function MapaPage() {
 
   return (
     <main className="h-screen w-full overflow-hidden flex items-center justify-center bg-[#072130]">
-      {/* Selector de idioma (mismo que en Home y Proyectos) */}
+      {/* Selector de idioma */}
       <LanguageSwitcher />
 
-      {/* Botón de ayuda */}
+      {/* Botón de ayuda (más pequeño en móvil) */}
       <div className="fixed top-6 right-6 z-50">
         <button
           onClick={() => setShowTooltip((v) => !v)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
-          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden animate-float"
+          className={`
+            relative
+            w-14 h-14
+            sm:w-20 sm:h-20
+            bg-white border-[6px] border-black rounded-full
+            shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000]
+            active:translate-y-1
+            transition-all flex items-center justify-center
+            group overflow-hidden animate-float
+          `}
           aria-label={t("map.helpTitle")}
           title={t("map.helpTitle")}
         >
@@ -160,7 +199,7 @@ export default function MapaPage() {
             height={70}
             priority
             style={{ imageRendering: "pixelated" }}
-            className="group-hover:scale-110 transition-transform"
+            className="group-hover:scale-110 transition-transform w-9 h-9 sm:w-[70px] sm:h-[70px]"
           />
         </button>
 
@@ -178,8 +217,12 @@ export default function MapaPage() {
 
       {/* Lienzo cuadrado del mapa */}
       <div
-        className="relative overflow-hidden"
+        ref={mapRef}
+        className="relative overflow-hidden touch-none"
         style={{ width: "min(90vw, 90vh, 850px)", height: "min(90vw, 90vh, 850px)" }}
+        onTouchStart={handleTouch}
+        onTouchMove={handleTouch}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Fondo del mapa por tema */}
         <div
@@ -188,7 +231,7 @@ export default function MapaPage() {
           aria-hidden
         />
 
-        {/* VOLVER con estilo de PixelButton (compacto) */}
+        {/* VOLVER */}
         <Link
           href="/"
           className={`absolute top-3 left-3 z-30 border-8 border-black rounded-md px-3 py-[6px] font-[PressStart] text-[10px] hover:translate-y-0.5 active:translate-y-1 transition-transform shadow-[0_8px_0_#000] ${
@@ -200,12 +243,12 @@ export default function MapaPage() {
           {t("map.back")}
         </Link>
 
-        {/* Letreros del mapa con el mismo estilo (versión mini) */}
+        {/* Letreros del mapa */}
         <MapLabel
           isDark={isDark}
           text={t("common.projects")}
           top="9%"
-          left="25%"
+          left="35%"
           href="/proyectos"
         />
         <MapLabel
@@ -303,6 +346,7 @@ export default function MapaPage() {
 }
 
 /* ---------- Auxiliares ---------- */
+
 function MapLabel({
   text,
   top,
@@ -325,7 +369,6 @@ function MapLabel({
     }
   };
 
-  // Mismo estilo de PixelButton, tamaño mini
   const base =
     "border-8 border-black rounded-md shadow-[0_8px_0_#000] px-3 py-[6px] font-[PressStart] text-[clamp(9px,1vw,12px)] hover:translate-y-0.5 active:translate-y-1 transition-transform";
   const themeClass = isDark
