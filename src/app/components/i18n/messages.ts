@@ -9,15 +9,19 @@ export const MESSAGES = {
   en,
 } as const;
 
-// Utilidad para obtener valores por clave anidada ("a.b.c")
-export function getByPath(obj: any, path: string) {
-  return path.split(".").reduce((acc, k) => (acc ? acc[k] : undefined), obj);
+export function getByPath(obj: unknown, path: string): unknown {
+  return path.split(".").reduce((acc: any, key) => {
+    if (acc && typeof acc === "object" && key in acc) return acc[key];
+    return undefined;
+  }, obj);
 }
 
-// Interpolación simple: "Hola {nombre}" + { nombre: "Deivid" }
-export function interpolate(input: string, vars?: Record<string, string | number>) {
-  if (!vars) return input;
-  return input.replace(/\{(\w+)\}/g, (_, k) =>
-    Object.prototype.hasOwnProperty.call(vars, k) ? String(vars[k]) : `{${k}}`
+export function interpolate(
+  text: string,
+  vars?: Record<string, string | number>
+): string {
+  if (!vars) return text;
+  return text.replace(/\{(\w+)\}/g, (_, k) =>
+    vars[k] !== undefined ? String(vars[k]) : `{${k}}`
   );
 }

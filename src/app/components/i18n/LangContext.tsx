@@ -1,3 +1,4 @@
+// src/app/components/i18n/LangContext.tsx
 "use client";
 
 import React, {
@@ -21,34 +22,29 @@ const LangContext = createContext<LangContextValue | null>(null);
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Locale>("es");
 
-  // cargar idioma guardado o preferencia del navegador
   useEffect(() => {
-    const saved = (typeof window !== "undefined"
-      ? localStorage.getItem("lang")
-      : null) as Locale | null;
+    const saved = localStorage.getItem("lang") as Locale | null;
 
     if (saved === "es" || saved === "en") {
       setLangState(saved);
       return;
     }
 
-    const nav = typeof navigator !== "undefined" ? navigator.language : "es";
-    setLangState(nav.toLowerCase().startsWith("en") ? "en" : "es");
+    const nav = navigator.language.startsWith("en") ? "en" : "es";
+    setLangState(nav);
   }, []);
 
-  // guardar cambios
-  const setLang = useCallback((l: Locale) => {
-    setLangState(l);
-    if (typeof window !== "undefined") localStorage.setItem("lang", l);
+  const setLang = useCallback((value: Locale) => {
+    setLangState(value);
+    localStorage.setItem("lang", value);
   }, []);
 
-  // función de traducción
   const t = useCallback(
     (key: string, vars?: Record<string, string | number>) => {
-      const dict = MESSAGES[lang] as any;
+      const dict = MESSAGES[lang];
       const raw = getByPath(dict, key);
       if (typeof raw === "string") return interpolate(raw, vars);
-      return key; // si no existe, devolvemos la clave (útil para detectar faltantes)
+      return key;
     },
     [lang]
   );
