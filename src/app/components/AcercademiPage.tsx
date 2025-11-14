@@ -3,17 +3,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LanguageSwitcher from "../components/i18n/LanguageSwitcher";
 import { useLang } from "../components/i18n/LangContext";
+import { MESSAGES } from "../components/i18n/messages";
 
 type Theme = "light" | "dark";
 
 export default function AcercaPage() {
   const { lang } = useLang();
-
-  // cargamos los textos según el idioma
-  const messages = require("../../messages/" + lang + ".json");
+  const messages = MESSAGES[lang];
 
   // barras
   const [habilidades] = useState(78);
