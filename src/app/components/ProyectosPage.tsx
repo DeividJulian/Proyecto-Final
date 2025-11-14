@@ -52,13 +52,13 @@ export default function ProyectosPage() {
           onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
           className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden animate-float"
-          aria-label={t("common.help")}
-          title={t("common.help")}
+          aria-label={t("projects.help")}
+          title={t("projects.help")}
           type="button"
         >
           <Image
             src="/assets/question.png"
-            alt={t("common.help")}
+            alt={t("projects.help")}
             width={70}
             height={70}
             style={{ imageRendering: "pixelated" }}

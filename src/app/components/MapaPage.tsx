@@ -205,7 +205,7 @@ export default function MapaPage() {
           isDark={isDark}
           text={t("common.projects")}
           top="9%"
-          left="23%"
+          left="25%"
           href="/proyectos"
         />
         <MapLabel

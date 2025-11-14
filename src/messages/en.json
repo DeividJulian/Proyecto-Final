@@ -26,16 +26,17 @@
     "reviews": "Reviews",
     "timeline": "Timeline",
     "intro": "Explore the map to discover my portfolio.",
-    "helpText": "Click each button on the map to visit the different sections of my portfolio."
+    "helpText": "Use the arrows and hover over each sign to enter each section of my portfolio."
   },
 
-  "projects": {
+"projects": {
   "title": "MY PROJECTS",
   "card1Title": "Project 1",
   "card2Title": "Project 2",
   "card3Title": "Project 3",
   "viewProject": "VIEW PROJECT",
-  "back": "BACK"
+  "back": "BACK",
+  "help": "Here you can see some of my projects. Click on \"VIEW PROJECT\" to open them in a new tab."
 }
 
 ,

@@ -26,17 +26,19 @@
     "reviews": "Opiniones",
     "timeline": "Línea de tiempo",
     "intro": "Explora el mapa para conocer mi portafolio.",
-    "helpText": "Haz clic en cada botón del mapa para visitar las diferentes secciones de mi portafolio."
+    "helpText": "Usa las flechas y colocate encima de cada letrero para entrar en cada seccion de mi portafolio."
   },
 
-  "projects": {
+ "projects": {
   "title": "MIS PROYECTOS",
   "card1Title": "Proyecto 1",
   "card2Title": "Proyecto 2",
   "card3Title": "Proyecto 3",
   "viewProject": "VER PROYECTO",
-  "back": "VOLVER"
+  "back": "VOLVER",
+  "help": "Aquí puedes ver algunos de mis proyectos. Haz clic en \"VER PROYECTO\" para abrirlos en una nueva pestaña."
 }
+
 ,
 
 "about": {

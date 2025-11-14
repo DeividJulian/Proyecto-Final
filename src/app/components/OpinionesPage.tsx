@@ -91,7 +91,7 @@ export default function OpinionesPage() {
                 style={{ fontFamily: "Arial, sans-serif" }}
               >
                 {t("opiniones.helpText")}{" "}
-                <strong>{t("common.back").toUpperCase()}</strong>{" "}
+                <strong>{t("opiniones.back").toUpperCase()}</strong>{" "}
                 {t("opiniones.helpTail")}
               </p>
             </div>
