@@ -12,11 +12,11 @@
   },
 
   "common": {
-    "start": "Start",
-    "projects": "Projects",
-    "about": "About me",
-    "reviews": "Reviews",
-    "timeline": "Timeline"
+    "start": "START",
+    "projects": "PROJECTS",
+    "about": "ABOUT ME",
+    "reviews": "REVIEWS",
+    "timeline": "TIMELINE"
   },
 
   "map": {
