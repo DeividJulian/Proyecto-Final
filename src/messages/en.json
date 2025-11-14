@@ -89,8 +89,9 @@
 "timeline": {
   "title": "TIMELINE",
   "helpText": "Explore my story: each frame is a moment. Use",
-  "helpTail": "to see it better.",
-  "fullscreen": "FULLSCREEN"
+  "helpTail": "to view it better.",
+  "fullscreen": "FULLSCREEN",
+  "back": "BACK"
 }
 
 

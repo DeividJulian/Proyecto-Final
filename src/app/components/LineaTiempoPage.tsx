@@ -81,7 +81,7 @@ export default function LineaTiempoPage() {
         <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500" />
       </div>
 
-      {/* 🔁 Selector de idioma (sincronizado con el de la pantalla principal) */}
+      {/* 🔁 Selector de idioma */}
       <LanguageSwitcher />
 
       {/* Botón de interrogación */}
@@ -252,7 +252,7 @@ export default function LineaTiempoPage() {
               backgroundColor: "#9a3412",
             }}
           >
-            {t("common.back").toUpperCase()}
+            {t("timeline.back").toUpperCase()}
           </Link>
         </div>
       </div>
