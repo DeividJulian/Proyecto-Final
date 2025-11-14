@@ -30,12 +30,14 @@
   },
 
   "projects": {
-    "title": "MY PROJECTS",
-    "card1Title": "Project 1",
-    "card2Title": "Project 2",
-    "card3Title": "Project 3",
-    "viewProject": "VIEW PROJECT"
-  }
+  "title": "MY PROJECTS",
+  "card1Title": "Project 1",
+  "card2Title": "Project 2",
+  "card3Title": "Project 3",
+  "viewProject": "VIEW PROJECT",
+  "back": "BACK"
+}
+
 ,
 "about": {
   "title": "ABOUT ME",
@@ -77,8 +79,11 @@
   "video2": "Review 2",
   "video3": "Review 3",
   "video4": "Review 4",
-  "playPrefix": "Play"
+  "playPrefix": "Play",
+
+  "back": "BACK"
 }
+
 
 ,
 "timeline": {

@@ -123,7 +123,7 @@ export default function ProyectosPage() {
         {/* Botón VOLVER */}
         <div className="mt-10 flex items-center justify-center">
           <PixelBrownLinkBtn href="/mapa">
-            {t("common.back")}
+            {t("projects.back")}
           </PixelBrownLinkBtn>
         </div>
       </section>

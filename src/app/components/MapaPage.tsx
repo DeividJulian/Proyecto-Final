@@ -197,7 +197,7 @@ export default function MapaPage() {
               : "bg-[#2b93ff] text-yellow-300 hover:shadow-[0_6px_0_#000]"
           }`}
         >
-          {t("common.back")}
+          {t("map.back")}
         </Link>
 
         {/* Letreros del mapa con el mismo estilo (versión mini) */}

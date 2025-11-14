@@ -30,12 +30,13 @@
   },
 
   "projects": {
-    "title": "MIS PROYECTOS",
-    "card1Title": "Proyecto 1",
-    "card2Title": "Proyecto 2",
-    "card3Title": "Proyecto 3",
-    "viewProject": "VER PROYECTO"
-  }
+  "title": "MIS PROYECTOS",
+  "card1Title": "Proyecto 1",
+  "card2Title": "Proyecto 2",
+  "card3Title": "Proyecto 3",
+  "viewProject": "VER PROYECTO",
+  "back": "VOLVER"
+}
 ,
 
 "about": {
@@ -69,18 +70,20 @@
 ,
 "opiniones": {
   "title": "OPINIONES",
-  "helpAria": "Ayuda de la sección opiniones",
-  "helpText": "En esta sección puedes ver opiniones en formato de video.",
-  "helpTail": "para regresar al mapa cuando termines.",
-  "bubble": "Aquí podrás encontrar opiniones sobre mis trabajos y proyectos.",
+  "helpAria": "Ayuda para la sección de opiniones",
+  "helpText": "En esta sección puedes ver opiniones en video.",
+  "helpTail": "para volver al mapa cuando termines.",
+  "bubble": "Aquí puedes encontrar comentarios y opiniones sobre mi trabajo y proyectos.",
 
   "video1": "Opinión 1",
   "video2": "Opinión 2",
   "video3": "Opinión 3",
   "video4": "Opinión 4",
-  "playPrefix": "Reproducir"
-  
+  "playPrefix": "Reproducir",
+
+  "back": "VOLVER"
 }
+
 ,
 "timeline": {
   "title": "LINEA DE TIEMPO",

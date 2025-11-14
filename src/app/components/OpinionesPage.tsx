@@ -157,7 +157,7 @@ export default function OpinionesPage() {
             href="/mapa"
             className={`${backBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
           >
-            {t("common.back").toUpperCase()}
+            {t("opiniones.back").toUpperCase()}
           </Link>
         </div>
       </div>
