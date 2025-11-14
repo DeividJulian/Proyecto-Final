@@ -3,10 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import LanguageSwitcher from "./i18n/LanguageSwitcher";
+import { useLang } from "./i18n/LangContext";
 
 type Theme = "light" | "dark";
 
 export default function ProyectosPage() {
+  const { t } = useLang();
+
   const [theme, setTheme] = useState<Theme>("light");
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -39,18 +43,22 @@ export default function ProyectosPage() {
         aria-hidden
       />
 
-      {/* Botón de ayuda — diseño de la página Acerca de mí */}
+      {/* Selector de idioma */}
+      <LanguageSwitcher />
+
+      {/* Botón de ayuda */}
       <div className="fixed top-8 right-8 z-50">
         <button
           onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
           className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden animate-float"
-          aria-label="Ayuda"
-          title="Ayuda"
+          aria-label={t("common.help")}
+          title={t("common.help")}
+          type="button"
         >
           <Image
             src="/assets/question.png"
-            alt="Ayuda"
+            alt={t("common.help")}
             width={70}
             height={70}
             style={{ imageRendering: "pixelated" }}
@@ -66,12 +74,10 @@ export default function ProyectosPage() {
                 className="text-black text-[15px] leading-relaxed"
                 style={{ fontFamily: "Arial, sans-serif" }}
               >
-                Aquí verás mis proyectos. Haz clic en{" "}
-                <strong>VER PROYECTO</strong> para abrirlos en una pestaña
-                nueva. Usa <strong>VOLVER</strong> para regresar al mapa.
+                {t("projects.help")}
               </p>
             </div>
-            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45"></div>
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
           </div>
         )}
       </div>
@@ -85,7 +91,7 @@ export default function ProyectosPage() {
             }`}
           >
             <h1 className="text-center text-white font-[PressStart] text-[28px] py-6 tracking-wide">
-              MIS PROYECTOS
+              {t("projects.title")}
             </h1>
           </div>
         </div>
@@ -95,19 +101,19 @@ export default function ProyectosPage() {
       <section className="mx-auto max-w-6xl px-4 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 place-items-center">
           <ProjectCard
-            title="Proyecto 1"
+            title={t("projects.card1Title")}
             img="/assets/mapas.png"
             link="https://taller-maps.vercel.app/"
             isDark={isDark}
           />
           <ProjectCard
-            title="Proyecto 2"
+            title={t("projects.card2Title")}
             img="/assets/porta.png"
             link="https://example-portfolio-xi.vercel.app/"
             isDark={isDark}
           />
           <ProjectCard
-            title="Proyecto 3"
+            title={t("projects.card3Title")}
             img="/assets/tiquete.png"
             link="https://taller-tiquete.vercel.app/"
             isDark={isDark}
@@ -116,19 +122,30 @@ export default function ProyectosPage() {
 
         {/* Botón VOLVER */}
         <div className="mt-10 flex items-center justify-center">
-          <PixelBrownLinkBtn href="/mapa">VOLVER</PixelBrownLinkBtn>
+          <PixelBrownLinkBtn href="/mapa">
+            {t("common.back")}
+          </PixelBrownLinkBtn>
         </div>
       </section>
 
       {/* Estilos locales */}
       <style jsx>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-8px);
+          }
         }
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
         .animate-fadeIn {
           animation: fadeIn 0.25s ease-out;
@@ -154,6 +171,7 @@ function ProjectCard({
   link: string;
   isDark: boolean;
 }) {
+  const { t } = useLang();
   const btnClass = isDark ? "bg-[#1c4f82] text-white" : "bg-[#2a6f97] text-white";
 
   return (
@@ -193,7 +211,7 @@ function ProjectCard({
             rel="noopener noreferrer"
             className={`inline-block ${btnClass} border-4 border-black rounded-md px-4 py-2 font-[PressStart] text-[10px] shadow-[0_6px_0_#000] hover:translate-y-0.5 hover:shadow-[0_4px_0_#000] active:translate-y-1 active:shadow-[0_2px_0_#000] transition-transform`}
           >
-            VER PROYECTO
+            {t("projects.viewProject")}
           </a>
         </div>
       </div>

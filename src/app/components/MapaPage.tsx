@@ -1,9 +1,12 @@
+// src/app/components/MapaPage.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import LanguageSwitcher from "./i18n/LanguageSwitcher";
+import { useLang } from "./i18n/LangContext";
 
 type Dir = "up" | "right" | "down" | "left";
 type KeyMap = Record<"ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight", boolean>;
@@ -12,6 +15,8 @@ type Theme = "light" | "dark";
 const PROXIMITY_THRESHOLD = 6;
 
 export default function MapaPage() {
+  const { t } = useLang();
+
   // --- Tema sincronizado con Home ---
   const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
@@ -136,18 +141,21 @@ export default function MapaPage() {
 
   return (
     <main className="h-screen w-full overflow-hidden flex items-center justify-center bg-[#072130]">
-      {/* Ayuda (mismo diseño que Acerca) */}
+      {/* Selector de idioma (mismo que en Home y Proyectos) */}
+      <LanguageSwitcher />
+
+      {/* Botón de ayuda */}
       <div className="fixed top-6 right-6 z-50">
         <button
           onClick={() => setShowTooltip((v) => !v)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
           className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden animate-float"
-          aria-label="Ayuda"
-          title="Ayuda"
+          aria-label={t("map.helpTitle")}
+          title={t("map.helpTitle")}
         >
           <Image
             src="/assets/question.png"
-            alt="Ayuda"
+            alt={t("map.helpTitle")}
             width={70}
             height={70}
             priority
@@ -160,9 +168,7 @@ export default function MapaPage() {
           <div className="absolute top-24 right-0 w-[340px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
               <p className="text-black text-[15px] leading-relaxed font-sans">
-                Usa las flechas para moverte. Acércate a <strong>Proyectos</strong>,{" "}
-                <strong>Acerca de Mi</strong>, <strong>Opiniones</strong> o{" "}
-                <strong>Línea de tiempo</strong> para entrar.
+                {t("map.helpText")}
               </p>
             </div>
             <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
@@ -191,19 +197,43 @@ export default function MapaPage() {
               : "bg-[#2b93ff] text-yellow-300 hover:shadow-[0_6px_0_#000]"
           }`}
         >
-          VOLVER
+          {t("common.back")}
         </Link>
 
         {/* Letreros del mapa con el mismo estilo (versión mini) */}
-        <MapLabel isDark={isDark} text="Proyectos" top="9%" left="23%" href="/proyectos" />
-        <MapLabel isDark={isDark} text="Acerca de Mi" top="12%" left="73%" href="/acerca" />
-        <MapLabel isDark={isDark} text="Opiniones" top="83%" left="18%" href="/opiniones" />
-        <MapLabel isDark={isDark} text="Línea de tiempo" top="73%" left="76%" href="/timeline" />
+        <MapLabel
+          isDark={isDark}
+          text={t("common.projects")}
+          top="9%"
+          left="23%"
+          href="/proyectos"
+        />
+        <MapLabel
+          isDark={isDark}
+          text={t("common.about")}
+          top="12%"
+          left="73%"
+          href="/acerca"
+        />
+        <MapLabel
+          isDark={isDark}
+          text={t("common.reviews")}
+          top="83%"
+          left="18%"
+          href="/opiniones"
+        />
+        <MapLabel
+          isDark={isDark}
+          text={t("common.timeline")}
+          top="73%"
+          left="76%"
+          href="/timeline"
+        />
 
         {/* Globo inicial (se oculta al mover) */}
         {showIntro && (
           <SpeechBubble top="47%" left="49%">
-            Explora el mapa para <br /> conocer mi portafolio
+            {t("map.intro")}
           </SpeechBubble>
         )}
 
@@ -231,22 +261,42 @@ export default function MapaPage() {
       {/* Animaciones */}
       <style jsx>{`
         @keyframes bob {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
         }
-        .animate-bob { animation: bob 1.4s ease-in-out infinite; }
+        .animate-bob {
+          animation: bob 1.4s ease-in-out infinite;
+        }
 
         @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
         }
-        .animate-float { animation: float 2.5s ease-in-out infinite; }
+        .animate-float {
+          animation: float 2.5s ease-in-out infinite;
+        }
 
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
-        .animate-fadeIn { animation: fadeIn 0.25s ease-out; }
+        .animate-fadeIn {
+          animation: fadeIn 0.25s ease-out;
+        }
       `}</style>
     </main>
   );

@@ -1,132 +1,132 @@
-'use client';
+// src/app/components/OpinionesPage.tsx
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import {useEffect, useState} from 'react';
-import LanguageSwitcher from './LanguageSwitcher';
-import {useLang} from './i18n/LangContext';
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import LanguageSwitcher from "./i18n/LanguageSwitcher";
+import { useLang } from "./i18n/LangContext";
 
-type Theme = 'light' | 'dark';
+type Theme = "light" | "dark";
 
 export default function OpinionesPage() {
+  const { t } = useLang();
+
   const videos = [
-    {id: 1, videoId: 'dQw4w9WgXcQ', titulo: 'Video 1'},
-    {id: 2, videoId: 'dQw4w9WgXcQ', titulo: 'Video 2'},
-    {id: 3, videoId: 'dQw4w9WgXcQ', titulo: 'Video 3'},
-    {id: 4, videoId: 'dQw4w9WgXcQ', titulo: 'Video 4'}
+    { id: 1, videoId: "dQw4w9WgXcQ", titulo: "Video 1" },
+    { id: 2, videoId: "dQw4w9WgXcQ", titulo: "Video 2" },
+    { id: 3, videoId: "dQw4w9WgXcQ", titulo: "Video 3" },
+    { id: 4, videoId: "dQw4w9WgXcQ", titulo: "Video 4" },
   ];
 
-  const {t, useT} = useLang();
-  const tc = useT('common');
-  const to = useT('opinions');
-  const tv = useT('videos');
-
   // === Tema sincronizado con Home ===
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
-    const saved =
-      (typeof window !== 'undefined'
-        ? localStorage.getItem('theme')
-        : null) as Theme | null;
+    const saved = (typeof window !== "undefined"
+      ? localStorage.getItem("theme")
+      : null) as Theme | null;
 
-    if (saved === 'light' || saved === 'dark') {
+    if (saved === "light" || saved === "dark") {
       setTheme(saved);
       return;
     }
     const prefersDark =
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(prefersDark ? 'dark' : 'light');
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(prefersDark ? "dark" : "light");
   }, []);
 
-  const isDark = theme === 'dark';
-  const bgUrl = isDark ? '/assets/sala-cine.png' : '/assets/modo-light-cine.png';
+  const isDark = theme === "dark";
+  const bgUrl = isDark
+    ? "/assets/sala-cine.png"        // fondo de cine noche (modo oscuro)
+    : "/assets/modo-light-cine.png"; // fondo de cine con gente (modo claro)
 
+  // Tooltip del botón de interrogación (igual que en /acerca)
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
-      {/* Fondo */}
+      {/* Fondo de cine/teatro según tema */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
-        style={{backgroundImage: `url("${bgUrl}")`}}
+        style={{ backgroundImage: `url("${bgUrl}")` }}
         aria-hidden
       />
 
-      {/* Switcher global */}
+      {/* Conmutador de idioma (arriba a la izquierda como en Home) */}
       <LanguageSwitcher />
 
-      {/* Botón de interrogación */}
+      {/* Botón de interrogación flotante (mismo estilo que /acerca) */}
       <div className="fixed top-8 right-8 z-50">
         <button
           onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
           className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center group overflow-hidden"
-          aria-label={tc('help')}
-          title={tc('help')}
+          aria-label={t("opiniones.helpAria")}
         >
           <Image
             src="/assets/question.png"
             alt="Ayuda"
             width={70}
             height={70}
-            style={{imageRendering: 'pixelated'}}
+            style={{ imageRendering: "pixelated" }}
             className="group-hover:scale-110 transition-transform"
             priority
           />
         </button>
 
+        {/* Tooltip mensaje */}
         {showTooltip && (
           <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
               <p
                 className="text-black text-[15px] leading-relaxed"
-                style={{fontFamily: 'Arial, sans-serif'}}
+                style={{ fontFamily: "Arial, sans-serif" }}
               >
-                {/* Puedes traducir este párrafo si quieres, por simplicidad lo dejamos fijo */}
-                Da clic en cualquier tarjeta para reproducir el video. Cuando termines, usa el botón <strong>{tc('back')}</strong> para regresar al mapa.
+                {t("opiniones.helpText")}{" "}
+                <strong>{t("common.back").toUpperCase()}</strong>{" "}
+                {t("opiniones.helpTail")}
               </p>
             </div>
+            {/* Flecha apuntando al botón */}
             <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45"></div>
           </div>
         )}
       </div>
 
-      {/* Contenido */}
+      {/* Contenedor principal */}
       <div className="w-full max-w-[1100px] mx-auto px-4 py-8">
-        {/* Título (azul ajustado que pediste) */}
-        <div className="bg-[#251a5e] border-[6px] border-black rounded-md shadow-[0_8px_0_#000] mb-8">
+        {/* Título OPINIONES */}
+        <div className="bg-[#1b2b3b] border-[6px] border-black rounded-md shadow-[0_8px_0_#000] mb-8">
           <h1 className="text-center text-yellow-300 font-[PressStart] text-[22px] py-5 tracking-wider">
-            {to('title')}
+            {t("opiniones.title")}
           </h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-start">
-          {/* Grid de videos */}
+          {/* Columna izquierda: Grid de videos */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {videos.map((video) => (
-              <VideoCard
-                key={video.id}
-                videoId={video.videoId}
-                titulo={video.titulo}
-                ariaLabel={tv('play', {title: video.titulo})}
-              />
+              <VideoCard key={video.id} videoId={video.videoId} titulo={video.titulo} />
             ))}
           </div>
 
-          {/* Globo y avatar */}
+          {/* Columna derecha: Globo de diálogo y avatar */}
           <aside className="flex flex-col items-center gap-6 lg:min-w-[320px]">
+            {/* Globo de diálogo */}
             <div className="relative bg-white border-[6px] border-black rounded-xl shadow-[0_8px_0_#000] p-5 max-w-[300px]">
               <p
                 className="text-black text-[13px] leading-relaxed"
-                style={{fontFamily: 'Arial, sans-serif'}}
+                style={{ fontFamily: "Arial, sans-serif" }}
               >
-                {to('bubble')}
+                {t("opiniones.bubble")}
               </p>
+              {/* Flecha del globo apuntando hacia abajo */}
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-b-[6px] border-r-[6px] border-black transform rotate-45"></div>
             </div>
 
+            {/* Avatar flotante - espejado para que mire hacia los videos */}
             <div className="relative">
               <div className="animate-float">
                 <Image
@@ -134,29 +134,25 @@ export default function OpinionesPage() {
                   alt="Avatar"
                   width={180}
                   height={180}
-                  style={{imageRendering: 'pixelated', transform: 'scaleX(-1)'}}
+                  style={{ imageRendering: "pixelated", transform: "scaleX(-1)" }}
                 />
               </div>
             </div>
           </aside>
         </div>
 
-        {/* VOLVER */}
+        {/* Botón VOLVER centrado */}
         <div className="flex justify-center mt-8">
           <Link
             href="/mapa"
-            className={`${
-              isDark
-                ? 'bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]'
-                : 'bg-[#5a3921] hover:bg-[#6e4528] text-white'
-            } border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
+            className="bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide"
           >
-            {tc('back')}
+            {t("common.back").toUpperCase()}
           </Link>
         </div>
       </div>
 
-      {/* Animaciones / estilos locales */}
+      {/* Animación de flotación y estilos específicos */}
       <style jsx>{`
         @keyframes float {
           0%,
@@ -171,13 +167,14 @@ export default function OpinionesPage() {
           animation: float 3s ease-in-out infinite;
         }
 
+        /* Estilo del botón play retro dentro de cada tarjeta */
         .play-button-frame {
           width: 110px;
           height: 72px;
           display: grid;
           place-items: center;
-          border: 6px solid #23181b;
-          background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%);
+          border: 6px solid #23181b; /* borde oscuro tipo pixel */
+          background: linear-gradient(180deg, #ffd24d 0%, #f0a500 100%); /* amarillo -> dorado */
           box-shadow: 0 6px 0 #000, inset 0 2px 0 rgba(255, 255, 255, 0.25),
             0 6px 12px rgba(0, 0, 0, 0.4);
           border-radius: 6px;
@@ -225,15 +222,8 @@ export default function OpinionesPage() {
   );
 }
 
-function VideoCard({
-  videoId,
-  titulo,
-  ariaLabel
-}: {
-  videoId: string;
-  titulo: string;
-  ariaLabel: string;
-}) {
+/* Componente de tarjeta de video */
+function VideoCard({ videoId, titulo }: { videoId: string; titulo: string }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -243,7 +233,7 @@ function VideoCard({
           <button
             onClick={() => setIsPlaying(true)}
             className="relative w-full h-full flex items-center justify-center group play-wrap"
-            aria-label={ariaLabel}
+            aria-label={`Reproducir ${titulo}`}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black" />
             <div className="absolute inset-2 border-4 border-white rounded-md pointer-events-none" />
@@ -253,7 +243,7 @@ function VideoCard({
                 alt="Play retro"
                 width={72}
                 height={72}
-                style={{imageRendering: 'pixelated'}}
+                style={{ imageRendering: "pixelated" }}
                 className="play-triangle"
               />
             </div>

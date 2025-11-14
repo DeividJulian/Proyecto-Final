@@ -1,19 +1,39 @@
 {
-  "common": {
-    "start": "START",
-    "projects": "PROJECTS",
-    "about": "ABOUT ME",
-    "reviews": "REVIEWS",
-    "timeline": "TIMELINE"
-  },
   "home": {
-    "greeting": "Hello! Ready to see my personal portfolio.",
+    "greeting": "Hi! Welcome to my portfolio.",
     "name": "Deivid Julian"
   },
+
   "contact": {
-    "phoneLabel": "CONTACT ME:",
+    "phoneLabel": "Contact me:",
     "phoneValue": "3233157103",
-    "emailLabel": "EMAIL:",
-    "emailValue": "deividjulianalvarado@gmail.com"
+    "emailLabel": "Email:",
+    "emailValue": "deividjulianalvarado30@gmail.com"
+  },
+
+  "common": {
+    "start": "Start",
+    "projects": "Projects",
+    "about": "About me",
+    "reviews": "Reviews",
+    "timeline": "Timeline"
+  },
+
+  "map": {
+    "back": "Back",
+    "projects": "Projects",
+    "about": "About me",
+    "reviews": "Reviews",
+    "timeline": "Timeline",
+    "intro": "Explore the map to discover my portfolio.",
+    "helpText": "Click each button on the map to visit the different sections of my portfolio."
+  },
+
+  "projects": {
+    "title": "MY PROJECTS",
+    "card1Title": "Project 1",
+    "card2Title": "Project 2",
+    "card3Title": "Project 3",
+    "viewProject": "VIEW PROJECT"
   }
 }

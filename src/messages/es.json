@@ -1,4 +1,16 @@
 {
+  "home": {
+    "greeting": "¡Hola! Listo para conocer mi portafolio personal.",
+    "name": "Deivid Julian"
+  },
+
+  "contact": {
+    "phoneLabel": "Contáctame:",
+    "phoneValue": "32331571033",
+    "emailLabel": "Correo:",
+    "emailValue": "deividjulianalvarado30@gmail.com"
+  },
+
   "common": {
     "start": "EMPEZAR",
     "projects": "PROYECTOS",
@@ -6,14 +18,22 @@
     "reviews": "OPINIONES",
     "timeline": "LINEA DE TIEMPO"
   },
-  "home": {
-    "greeting": "¡Hola! Listo para Conocer Mi Portafolio Personal",
-    "name": "Deivid Julian"
+
+  "map": {
+    "back": "VOLVER",
+    "projects": "Proyectos",
+    "about": "Acerca de mi",
+    "reviews": "Opiniones",
+    "timeline": "Línea de tiempo",
+    "intro": "Explora el mapa para conocer mi portafolio.",
+    "helpText": "Haz clic en cada botón del mapa para visitar las diferentes secciones de mi portafolio."
   },
-  "contact": {
-    "phoneLabel": "CONTACTAME :",
-    "phoneValue": "3233157103",
-    "emailLabel": "CORREO:",
-    "emailValue": "deividjulianalvarado@gmail.com"
+
+  "projects": {
+    "title": "MIS PROYECTOS",
+    "card1Title": "Proyecto 1",
+    "card2Title": "Proyecto 2",
+    "card3Title": "Proyecto 3",
+    "viewProject": "VER PROYECTO"
   }
 }
