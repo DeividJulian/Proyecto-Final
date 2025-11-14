@@ -11,28 +11,25 @@ type NodeItem = {
   id: number;
   image: string;
   alt: string;
-  /** posición horizontal en % a lo largo de la línea principal (0–100) */
-  x: number;
-  /** posición vertical del cuadro (porcentaje del alto del contenedor). */
-  y: number;
+  x: number; // posición horizontal en % (solo escritorio)
+  y: number; // posición vertical en % (solo escritorio)
 };
 
 export default function LineaTiempoPage() {
   const { t } = useLang();
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Ref para pantalla completa
   const frameRef = useRef<HTMLDivElement | null>(null);
 
-  /** Línea principal (horizontal) en % de la altura del contenedor */
+  // Línea principal (para escritorio)
   const yMain = 38;
 
-  /** 👉 AÑADE / QUITA nodos aquí. */
+  // Nodos usados en ESCRITORIO
   const timelineNodes: NodeItem[] = useMemo(
     () => [
-      { id: 1, image: "/assets/sala-cine.png",  alt: "Excursión en montaña", x: 32, y: 18 },
-      { id: 2, image: "/assets/mapas.png",      alt: "Playa al atardecer",   x: 50, y: 62 },
-      { id: 3, image: "/assets/reproducir.png", alt: "Ciudad al atardecer",  x: 78, y: 18 },
+      { id: 1, image: "/assets/sala-cine.png", alt: "Sala de cine", x: 32, y: 18 },
+      { id: 2, image: "/assets/tiquete.png", alt: "Tiquete", x: 68, y: 18 },
+      { id: 3, image: "/assets/mapas.png", alt: "Proyecto mapa", x: 50, y: 62 },
     ],
     []
   );
@@ -45,7 +42,7 @@ export default function LineaTiempoPage() {
         await document.exitFullscreen();
       }
     } catch {
-      // sin bloquear si no está soportado
+      // ignorar si no está soportado
     }
   };
 
@@ -63,15 +60,16 @@ export default function LineaTiempoPage() {
         />
       </div>
 
-      {/* Degradado oscuro para contraste */}
+      {/* Degradado oscuro */}
       <div className="absolute inset-0 bg-gradient-to-b from-cyan-950/40 via-slate-950/60 to-slate-950/80 z-[1]" />
 
-      {/* Marco/Frame “tech” */}
+      {/* Marco “tech” */}
       <div className="absolute inset-0 pointer-events-none z-[2]">
         <div
           className="absolute inset-4 border-8 border-cyan-600 rounded-3xl"
           style={{
-            boxShadow: "0 0 40px rgba(6, 182, 212, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.8)",
+            boxShadow:
+              "0 0 40px rgba(6, 182, 212, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.8)",
             imageRendering: "pixelated",
           }}
         />
@@ -81,10 +79,10 @@ export default function LineaTiempoPage() {
         <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500" />
       </div>
 
-      {/* 🔁 Selector de idioma */}
+      {/* Botón de idioma (ya es fixed dentro del componente) */}
       <LanguageSwitcher />
 
-      {/* Botón de interrogación */}
+      {/* Botón de ayuda fijo */}
       <div className="fixed top-8 right-8 z-[60]">
         <button
           onClick={() => setShowTooltip((v) => !v)}
@@ -106,7 +104,7 @@ export default function LineaTiempoPage() {
         </button>
 
         {showTooltip && (
-          <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
+          <div className="absolute top-24 right-0 w-[320px] md:w-[380px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
               <p
                 className="text-black text-[15px] leading-relaxed"
@@ -122,12 +120,15 @@ export default function LineaTiempoPage() {
         )}
       </div>
 
-      {/* Contenido principal dentro del marco */}
-      <div className="container mx-auto px-6 py-10 relative z-10" ref={frameRef}>
-        {/* Título en pastilla morada */}
-        <div className="flex justify-center mb-10 mt-6">
+      {/* CONTENIDO */}
+      <div
+        className="relative z-10 flex flex-col items-center justify-start min-h-screen pt-10 pb-32 px-4 md:px-6"
+        ref={frameRef}
+      >
+        {/* Título */}
+        <div className="flex justify-center mb-8 md:mb-10 mt-4">
           <div
-            className="px-10 py-4 rounded-2xl border-4 border-black"
+            className="px-6 md:px-10 py-3 md:py-4 rounded-2xl border-4 border-black"
             style={{
               boxShadow: "0 8px 0px rgba(0,0,0,0.8)",
               imageRendering: "pixelated",
@@ -135,18 +136,25 @@ export default function LineaTiempoPage() {
             }}
           >
             <h1
-              className="text-3xl md:text-4xl font-bold text-yellow-400 tracking-widest"
-              style={{ textShadow: "2px 2px 0px rgba(0,0,0,0.8)", fontFamily: "monospace" }}
+              className="text-2xl md:text-4xl font-bold text-yellow-400 tracking-widest"
+              style={{
+                textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
+                fontFamily: "monospace",
+              }}
             >
               {t("timeline.title")}
             </h1>
           </div>
         </div>
 
-        <div className="relative max-w-[1200px] mx-auto">
-          {/* Avatar izquierdo */}
+        {/* ===== VISTA ESCRITORIO (LG+) ===== */}
+        <div className="relative max-w-[1200px] mx-auto hidden lg:block">
+          {/* Avatar grande a la izquierda */}
           <div className="absolute left-2 top-[36%] -translate-y-1/2 z-20">
-            <div className="p-2 rounded-xl shadow-2xl bg-transparent" style={{ imageRendering: "pixelated" }}>
+            <div
+              className="p-2 rounded-xl shadow-2xl bg-transparent"
+              style={{ imageRendering: "pixelated" }}
+            >
               <div className="w-[140px] h-[140px] rounded-xl overflow-hidden border-4 border-cyan-700 bg-slate-900 grid place-items-center">
                 <Image
                   src="/assets/avatar-primera-persona.png"
@@ -163,9 +171,9 @@ export default function LineaTiempoPage() {
 
           {/* Contenedor de la línea de tiempo */}
           <div className="ml-[170px] mr-6 relative min-h-[520px]">
-            {/* SVG de líneas */}
+            {/* Líneas (SVG) */}
             <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-              {/* Línea principal */}
+              {/* Línea principal horizontal */}
               <line
                 x1="-3%"
                 y1={`${yMain}%`}
@@ -176,7 +184,7 @@ export default function LineaTiempoPage() {
                 style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
               />
 
-              {/* Conectores verticales */}
+              {/* Conectores verticales hacia cada nodo */}
               {timelineNodes.map((n) => (
                 <line
                   key={`v-${n.id}`}
@@ -191,7 +199,7 @@ export default function LineaTiempoPage() {
               ))}
             </svg>
 
-            {/* Cuadros/imágenes de los nodos */}
+            {/* Nodos (cuadros de imagen) */}
             {timelineNodes.map((n) => (
               <div
                 key={n.id}
@@ -200,9 +208,10 @@ export default function LineaTiempoPage() {
                 title={n.alt}
               >
                 <div
-                  className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden shadow-2xl bg-slate-900 relative"
+                  className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden bg-slate-900 relative"
                   style={{
-                    boxShadow: "0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)",
+                    boxShadow:
+                      "0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)",
                     imageRendering: "pixelated",
                   }}
                 >
@@ -214,21 +223,103 @@ export default function LineaTiempoPage() {
                     className="w-full h-full object-cover"
                     style={{ imageRendering: "pixelated" }}
                   />
-                  <div
-                    className="absolute inset-0 rounded-xl opacity-0 hover:opacity-70 transition-opacity pointer-events-none"
-                    style={{ boxShadow: "0 0 30px rgba(6, 182, 212, 1)" }}
-                  />
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Botones inferiores */}
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex gap-6 z-[50]">
+        {/* ===== VISTA MOBILE / TABLET (HASTA LG) ===== */}
+        <div className="w-full max-w-[480px] mx-auto lg:hidden mt-2 mb-6">
+          {/* Avatar centrado arriba */}
+          <div className="flex justify-center mb-6">
+            <div
+              className="p-2 rounded-xl shadow-2xl bg-transparent"
+              style={{ imageRendering: "pixelated" }}
+            >
+              <div className="w-[120px] h-[120px] rounded-xl overflow-hidden border-4 border-cyan-700 bg-slate-900 grid place-items-center">
+                <Image
+                  src="/assets/avatar-primera-persona.png"
+                  alt="Avatar pixel"
+                  width={120}
+                  height={120}
+                  className="object-contain"
+                  style={{ imageRendering: "pixelated" }}
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Contenedor líneas + nodos (árbol vertical) */}
+          <div className="relative min-h-[420px]">
+            <svg className="absolute inset-0 w-full h-full">
+              {/* Línea vertical principal */}
+              <line
+                x1="50%"
+                y1="18%"
+                x2="50%"
+                y2="78%"
+                stroke="#22c55e"
+                strokeWidth="6"
+                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
+              />
+              {/* Ramas izquierda y derecha (nodos superiores) */}
+              <line
+                x1="50%"
+                y1="36%"
+                x2="22%"
+                y2="36%"
+                stroke="#22c55e"
+                strokeWidth="6"
+                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
+              />
+              <line
+                x1="50%"
+                y1="36%"
+                x2="78%"
+                y2="36%"
+                stroke="#22c55e"
+                strokeWidth="6"
+                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
+              />
+              {/* Ramita hacia el nodo inferior */}
+              <line
+                x1="50%"
+                y1="60%"
+                x2="50%"
+                y2="72%"
+                stroke="#22c55e"
+                strokeWidth="6"
+                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
+              />
+            </svg>
+
+            {/* Nodo superior izquierdo (cine) */}
+            <div className="absolute z-10" style={{ left: "6%", top: "26%" }}>
+              <NodeBox image="/assets/sala-cine.png" alt="Sala de cine" />
+            </div>
+
+            {/* Nodo superior derecho (tiquete) */}
+            <div className="absolute z-10" style={{ right: "6%", top: "26%" }}>
+              <NodeBox image="/assets/tiquete.png" alt="Tiquete" />
+            </div>
+
+            {/* Nodo inferior (mapa / proyecto) */}
+            <div
+              className="absolute z-10 left-1/2"
+              style={{ top: "66%", transform: "translateX(-50%)" }}
+            >
+              <NodeBox image="/assets/mapas.png" alt="Proyecto mapa" />
+            </div>
+          </div>
+        </div>
+
+        {/* Botones inferiores fijos (PC y mobile) */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4 md:gap-6 z-[50]">
           <button
             onClick={handleFullscreen}
-            className="bg-amber-900 hover:bg-amber-800 text-yellow-400 font-bold text-xl md:text-2xl px-10 md:px-16 py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
+            className="bg-amber-900 hover:bg-amber-800 text-yellow-400 font-bold text-base md:text-xl px-6 md:px-10 py-3 md:py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{
               textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
               fontFamily: "monospace",
@@ -243,7 +334,7 @@ export default function LineaTiempoPage() {
 
           <Link
             href="/mapa"
-            className="bg-orange-900 hover:bg-orange-800 text-yellow-400 font-bold text-xl md:text-2xl px-10 md:px-16 py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
+            className="bg-orange-900 hover:bg-orange-800 text-yellow-400 font-bold text-base md:text-xl px-6 md:px-10 py-3 md:py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
             style={{
               textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
               fontFamily: "monospace",
@@ -257,14 +348,43 @@ export default function LineaTiempoPage() {
         </div>
       </div>
 
-      {/* Animaciones */}
+      {/* Animación fadeIn para el tooltip */}
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
-        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
       `}</style>
+    </div>
+  );
+}
+
+/* --- Caja reutilizable para los nodos en mobile --- */
+function NodeBox({ image, alt }: { image: string; alt: string }) {
+  return (
+    <div
+      className="w-28 h-28 border-4 border-cyan-500 rounded-xl overflow-hidden bg-slate-900"
+      style={{
+        boxShadow:
+          "0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)",
+        imageRendering: "pixelated",
+      }}
+    >
+      <Image
+        src={image}
+        alt={alt}
+        width={112}
+        height={112}
+        className="w-full h-full object-cover"
+        style={{ imageRendering: "pixelated" }}
+      />
     </div>
   );
 }

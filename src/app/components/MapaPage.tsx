@@ -171,8 +171,11 @@ export default function MapaPage() {
 
   return (
     <main className="h-screen w-full overflow-hidden flex items-center justify-center bg-[#072130]">
-      {/* Selector de idioma */}
-      <LanguageSwitcher />
+     {/* Selector de idioma FIXED solo en página de mapa */}
+<div className="fixed top-6 left-6 sm:top-6 sm:left-6 z-50">
+  <LanguageSwitcher />
+</div>
+
 
       {/* Botón de ayuda (más pequeño en móvil) */}
       <div className="fixed top-6 right-6 z-50">

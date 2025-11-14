@@ -79,7 +79,7 @@ export default function AcercaPage() {
   const aboutText = messages.about.description;
 
   return (
-    <main className="min-h-screen w-full relative overflow-hidden flex items-center justify-center">
+    <main className="min-h-screen w-full relative overflow-hidden flex items-start justify-center">
       {/* Fondo */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
@@ -87,15 +87,17 @@ export default function AcercaPage() {
         aria-hidden
       />
 
-      {/* Botón idioma sincronizado con Home */}
-      <LanguageSwitcher />
+      {/* Botón idioma */}
+      <div className="fixed top-4 left-4 z-50">
+        <LanguageSwitcher />
+      </div>
 
       {/* Botón ayuda */}
-      <div className="fixed top-8 right-8 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <button
           onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}
-          className="relative w-20 h-20 bg-white border-[6px] border-black rounded-full shadow-[0_8px_0_#000] hover:shadow-[0_6px_0_#000] active:translate-y-1 transition-all flex items-center justify-center overflow-hidden"
+          className="relative w-16 h-16 sm:w-20 sm:h-20 bg-white border-[6px] border-black rounded-full shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-all flex items-center justify-center overflow-hidden"
           title="Ayuda"
           aria-label="Ayuda"
           type="button"
@@ -103,18 +105,18 @@ export default function AcercaPage() {
           <Image
             src="/assets/question.png"
             alt="Ayuda"
-            width={70}
-            height={70}
+            width={60}
+            height={60}
             style={{ imageRendering: "pixelated" }}
             priority
           />
         </button>
 
         {showTooltip && (
-          <div className="absolute top-24 right-0 w-[380px]">
-            <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
+          <div className="absolute top-20 right-0 w-[300px] sm:w-[380px]">
+            <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-4 sm:p-6">
               <p
-                className="text-black text-[15px] leading-relaxed"
+                className="text-black text-[13px] sm:text-[15px] leading-relaxed"
                 style={{ fontFamily: "Arial, sans-serif" }}
               >
                 {messages.about.helpTooltip}
@@ -126,39 +128,42 @@ export default function AcercaPage() {
       </div>
 
       {/* Contenido */}
-      <div className="w-full max-w-[1100px] mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4">
-          {/* Izquierda */}
+      <div className="w-full max-w-[1100px] mx-auto px-4 pt-24 pb-8">
+        {/* Layout responsive: columna en móvil, 2 columnas en desktop */}
+        <div className="flex flex-col gap-6 md:grid md:grid-cols-[1.6fr_1fr] md:gap-6">
+          {/* Columna izquierda: título, descripción, habilidades, debilidades */}
           <div className="space-y-4">
+            {/* Título */}
             <div
-              className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000]`}
+              className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] w-full max-w-[520px] mx-auto md:mx-0`}
             >
-              <h1 className="text-center font-[PressStart] text-[22px] py-5 tracking-wider">
+              <h1 className="text-center font-[PressStart] text-[20px] sm:text-[22px] py-4 sm:py-5 tracking-wider">
                 {messages.about.title}
               </h1>
             </div>
 
+            {/* Descripción (debajo del título en móvil) */}
             <div
-              className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-5`}
+              className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-4 sm:p-5 w-full max-w-[520px] mx-auto md:mx-0`}
             >
-              <p className="text-[13px] leading-loose text-white font-[PressStart]">
+              <p className="text-[12px] sm:text-[13px] leading-relaxed sm:leading-loose text-white font-[PressStart]">
                 {aboutText}
               </p>
             </div>
 
             {/* HABILIDADES */}
-            <div>
+            <div className="w-full max-w-[520px] mx-auto md:mx-0">
               <div className="mb-3">
                 <button
                   onClick={() => setShowHabilidadesModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
                   {messages.about.skillsTitle}
                 </button>
               </div>
               <div
-                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] max-w-[75%]`}
+                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
               >
                 <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
@@ -174,18 +179,18 @@ export default function AcercaPage() {
             </div>
 
             {/* DEBILIDADES */}
-            <div>
+            <div className="w-full max-w-[520px] mx-auto md:mx-0">
               <div className="mb-3">
                 <button
                   onClick={() => setShowDebilidadesModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
                   {messages.about.weaknessesTitle}
                 </button>
               </div>
               <div
-                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] max-w-[75%]`}
+                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
               >
                 <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
@@ -199,29 +204,20 @@ export default function AcercaPage() {
                 </div>
               </div>
             </div>
-
-            {/* VOLVER */}
-            <div className="pt-2">
-              <Link
-                href="/mapa"
-                className={`inline-block ${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 py-3 font-[PressStart] text-[16px] tracking-wide`}
-              >
-                {messages.about.back}
-              </Link>
-            </div>
           </div>
 
-          {/* Derecha: Avatar + flechas */}
-          <aside className="space-y-4 lg:min-w-[400px]">
+          {/* Columna derecha: avatar + pasatiempos + alimentos */}
+          <aside className="space-y-4 md:pt-10">
+            {/* Avatar / Foto (debajo de la descripción en móvil) */}
             <div
-              className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-6 flex items-center justify-center min-h-[320px] relative`}
+              className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-4 sm:p-6 flex items-center justify-center min-h-[260px] sm:min-h-[320px] relative w-full max-w-[420px] mx-auto`}
             >
               {/* Flecha izquierda */}
               <button
                 type="button"
                 aria-label="Mostrar avatar"
                 onClick={() => setShowPhoto(false)}
-                className="pressable absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
+                className="pressable absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
               >
                 {"<"}
               </button>
@@ -242,7 +238,7 @@ export default function AcercaPage() {
                 type="button"
                 aria-label="Mostrar foto"
                 onClick={() => setShowPhoto(true)}
-                className="pressable absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
+                className="pressable absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
               >
                 {">"}
               </button>
@@ -253,17 +249,19 @@ export default function AcercaPage() {
             </div>
 
             {/* PASATIEMPOS */}
-            <div>
+            <div className="w-full max-w-[520px] mx-auto md:mx-0">
               <div className="mb-3">
                 <button
                   onClick={() => setShowPasatiemposModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
                   {messages.about.hobbiesTitle}
                 </button>
               </div>
-              <div className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}>
+              <div
+                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+              >
                 <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
                     className="h-full transition-all duration-700"
@@ -278,17 +276,19 @@ export default function AcercaPage() {
             </div>
 
             {/* ALIMENTOS */}
-            <div>
+            <div className="w-full max-w-[520px] mx-auto md:mx-0">
               <div className="mb-3">
                 <button
                   onClick={() => setShowAlimentosModal(true)}
-                  className={`inline-block ${chipBtn} px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
                   type="button"
                 >
                   {messages.about.foodsTitle}
                 </button>
               </div>
-              <div className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}>
+              <div
+                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+              >
                 <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
                     className="h-full transition-all duration-700"
@@ -302,6 +302,16 @@ export default function AcercaPage() {
               </div>
             </div>
           </aside>
+        </div>
+
+        {/* VOLVER grande y centrado al final (móvil y desktop) */}
+        <div className="mt-8 flex justify-center">
+          <Link
+            href="/mapa"
+            className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 sm:px-16 py-3 font-[PressStart] text-[16px] tracking-wide`}
+          >
+            {messages.about.back}
+          </Link>
         </div>
       </div>
 
@@ -402,7 +412,7 @@ function ModalBase({
           className="relative bg-cover bg-center border-[8px] border-black rounded-lg shadow-[0_12px_0_#000]"
           style={{ backgroundImage: 'url("/assets/dojo-clasico.png")' }}
         >
-          <div className="relative z-10 p-8">{children}</div>
+          <div className="relative z-10 p-6 sm:p-8">{children}</div>
         </div>
       </div>
     </div>
@@ -429,7 +439,7 @@ function ModalContent({
   return (
     <>
       <div className="bg-[#2e1b6b] border-[6px] border-black rounded-md shadow-[0_8px_0_#000] mb-6">
-        <h2 className="text-center text-yellow-300 font-[PressStart] text-[22px] py-5 tracking-wider">
+        <h2 className="text-center text-yellow-300 font-[PressStart] text-[20px] sm:text-[22px] py-4 sm:py-5 tracking-wider">
           {titulo}
         </h2>
       </div>
@@ -437,7 +447,7 @@ function ModalContent({
       <div className="flex justify-center">
         <button
           onClick={onClose}
-          className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
+          className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 sm:px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
           type="button"
         >
           {backLabel}
@@ -450,7 +460,7 @@ function ModalContent({
 function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }) {
   return (
     <div className="flex items-center gap-4">
-      <div className="flex-shrink-0 w-12 h-12 relative">
+      <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 relative">
         <div
           className="absolute inset-0 bg-gradient-to-b from-[#5fb5e8] to-[#2d5f8d] border-4 border-black"
           style={{
@@ -461,10 +471,10 @@ function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }
       </div>
 
       <div className="flex-1">
-        <div className="bg-[#1e0f3e] border-[6px] border-black rounded-md shadow-[0_6px_0_#000] p-3">
+        <div className="bg-[#1e0f3e] border-[6px] border-black rounded-md shadow-[0_6px_0_#000] p-2 sm:p-3">
           <div className="bg-[#0d1821] border-4 border-black rounded-sm overflow-hidden">
             <div
-              className="h-12 flex items-center justify-center text-black font-bold text-[18px]"
+              className="h-10 sm:h-12 flex items-center justify-center text-black font-bold text-[14px] sm:text-[18px]"
               style={{
                 background: color,
                 boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",

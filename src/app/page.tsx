@@ -75,7 +75,7 @@ export default function Home() {
 
             {/* ===== CONTROLES DE IDIOMA / TEMA SOLO EN MÓVIL (debajo del cartel) ===== */}
             <div className="mt-4 flex items-center justify-center gap-4 lg:hidden">
-              <div className="scale-[0.85] origin-center -mt-17">
+              <div className="scale-[0.85] origin-center -mt--15">
                 <LanguageSwitcher />
               </div>
               <ThemeToggle

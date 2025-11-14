@@ -43,11 +43,13 @@ export default function ProyectosPage() {
         aria-hidden
       />
 
-      {/* Selector de idioma */}
-      <LanguageSwitcher />
+      {/* Selector de idioma (bajado en la pantalla) */}
+      <div className="fixed top-[165px] left-4 sm:top-10 sm:right-4 sm:left-auto z-50">
+        <LanguageSwitcher />
+      </div>
 
-      {/* Botón de ayuda */}
-      <div className="fixed top-8 right-8 z-50">
+      {/* Botón de ayuda (también más abajo) */}
+      <div className="fixed top-45 sm:top-10 right-4 z-50">
         <button
           onClick={() => setShowTooltip(!showTooltip)}
           onBlur={() => setTimeout(() => setShowTooltip(false), 200)}

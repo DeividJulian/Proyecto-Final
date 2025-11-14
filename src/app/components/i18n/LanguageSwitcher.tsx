@@ -17,7 +17,7 @@ export default function LanguageSwitcher() {
       title={title}
       aria-label={title}
       className="
-        fixed top-4 left-4 z-50
+         top-4 left-4 z-50
         px-4 py-2 text-sm font-[PressStart]
         bg-[#2b2367] text-[#ffd54a]
         border-[6px] border-black rounded-md
