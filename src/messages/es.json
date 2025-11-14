@@ -79,7 +79,16 @@
   "video3": "Opinión 3",
   "video4": "Opinión 4",
   "playPrefix": "Reproducir"
+  
 }
+,
+"timeline": {
+  "title": "LINEA DE TIEMPO",
+  "helpText": "Explora mi historia: cada cuadro es un momento. Usa",
+  "helpTail": "para verlo mejor.",
+  "fullscreen": "PANTALLA COMPLETA"
+}
+
 
 
 }

@@ -1,8 +1,11 @@
+// src/app/timeline/page.tsx
 "use client";
 
 import React, { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import LanguageSwitcher from "../components/i18n/LanguageSwitcher";
+import { useLang } from "../components/i18n/LangContext";
 
 type NodeItem = {
   id: number;
@@ -15,6 +18,7 @@ type NodeItem = {
 };
 
 export default function LineaTiempoPage() {
+  const { t } = useLang();
   const [showTooltip, setShowTooltip] = useState(false);
 
   // Ref para pantalla completa
@@ -47,7 +51,7 @@ export default function LineaTiempoPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950">
-      {/* Fondo (usa %20 para el espacio del nombre) */}
+      {/* Fondo */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/assets/linea-de-tiempo.png"
@@ -77,7 +81,10 @@ export default function LineaTiempoPage() {
         <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500" />
       </div>
 
-      {/* Botón de interrogación (igual que en /acerca) */}
+      {/* 🔁 Selector de idioma (sincronizado con el de la pantalla principal) */}
+      <LanguageSwitcher />
+
+      {/* Botón de interrogación */}
       <div className="fixed top-8 right-8 z-[60]">
         <button
           onClick={() => setShowTooltip((v) => !v)}
@@ -101,9 +108,13 @@ export default function LineaTiempoPage() {
         {showTooltip && (
           <div className="absolute top-24 right-0 w-[380px] animate-fadeIn">
             <div className="bg-white border-[8px] border-black rounded-xl shadow-[0_8px_0_#000] p-6">
-              <p className="text-black text-[15px] leading-relaxed" style={{ fontFamily: "Arial, sans-serif" }}>
-                Explora mi historia: cada cuadro es un momento. Usa
-                <strong> PANTALLA COMPLETA</strong> para verlo mejor.
+              <p
+                className="text-black text-[15px] leading-relaxed"
+                style={{ fontFamily: "Arial, sans-serif" }}
+              >
+                {t("timeline.helpText")}{" "}
+                <strong>{t("timeline.fullscreen")}</strong>{" "}
+                {t("timeline.helpTail")}
               </p>
             </div>
             <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black rotate-45" />
@@ -127,7 +138,7 @@ export default function LineaTiempoPage() {
               className="text-3xl md:text-4xl font-bold text-yellow-400 tracking-widest"
               style={{ textShadow: "2px 2px 0px rgba(0,0,0,0.8)", fontFamily: "monospace" }}
             >
-              LINEA DE TIEMPO
+              {t("timeline.title")}
             </h1>
           </div>
         </div>
@@ -165,7 +176,7 @@ export default function LineaTiempoPage() {
                 style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
               />
 
-              {/* Conectores verticales por cada nodo */}
+              {/* Conectores verticales */}
               {timelineNodes.map((n) => (
                 <line
                   key={`v-${n.id}`}
@@ -190,7 +201,10 @@ export default function LineaTiempoPage() {
               >
                 <div
                   className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden shadow-2xl bg-slate-900 relative"
-                  style={{ boxShadow: "0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)", imageRendering: "pixelated" }}
+                  style={{
+                    boxShadow: "0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)",
+                    imageRendering: "pixelated",
+                  }}
                 >
                   <Image
                     src={n.image}
@@ -200,7 +214,6 @@ export default function LineaTiempoPage() {
                     className="w-full h-full object-cover"
                     style={{ imageRendering: "pixelated" }}
                   />
-                  {/* Glow exterior al pasar el mouse */}
                   <div
                     className="absolute inset-0 rounded-xl opacity-0 hover:opacity-70 transition-opacity pointer-events-none"
                     style={{ boxShadow: "0 0 30px rgba(6, 182, 212, 1)" }}
@@ -211,7 +224,7 @@ export default function LineaTiempoPage() {
           </div>
         </div>
 
-        {/* Botones inferiores (sin “Descargar”) */}
+        {/* Botones inferiores */}
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex gap-6 z-[50]">
           <button
             onClick={handleFullscreen}
@@ -225,7 +238,7 @@ export default function LineaTiempoPage() {
             }}
             type="button"
           >
-            PANTALLA COMPLETA
+            {t("timeline.fullscreen")}
           </button>
 
           <Link
@@ -239,7 +252,7 @@ export default function LineaTiempoPage() {
               backgroundColor: "#9a3412",
             }}
           >
-            VOLVER
+            {t("common.back").toUpperCase()}
           </Link>
         </div>
       </div>

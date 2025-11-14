@@ -80,6 +80,14 @@
   "playPrefix": "Play"
 }
 
+,
+"timeline": {
+  "title": "TIMELINE",
+  "helpText": "Explore my story: each frame is a moment. Use",
+  "helpTail": "to see it better.",
+  "fullscreen": "FULLSCREEN"
+}
+
 
 
 }
