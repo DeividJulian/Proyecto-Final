@@ -44,22 +44,23 @@ export default function Home() {
         aria-hidden
       />
 
-      {/* Idioma */}
-      <LanguageSwitcher />
-
-      {/* Toggle de tema */}
+      {/* ===== CONTROLES FIJOS SOLO EN DESKTOP ===== */}
+      <div className="hidden lg:block fixed top-3 left-3 z-40">
+        <LanguageSwitcher />
+      </div>
       <ThemeToggle
         isDark={isDark}
         onToggle={() => setTheme(isDark ? "light" : "dark")}
         labelLight={isDark ? "Tema claro" : "Switch to dark"}
         labelDark={isDark ? "Tema claro" : "Switch to dark"}
+        className="hidden lg:block fixed top-3 right-3 z-50"
       />
 
       {/* Contenido */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 pb-8">
         {/* En móvil es columna centrada; en desktop se convierte en grid */}
         <div className="flex flex-col items-center gap-6 lg:grid lg:grid-cols-[minmax(420px,540px)_1fr] lg:items-start lg:gap-8">
-          {/* Columna izquierda (greeting + avatar móvil + botones) */}
+          {/* Columna izquierda (greeting + controles mobile + avatar mobile + botones) */}
           <section className="w-full flex flex-col items-center lg:items-start">
             {/* Cartel de saludo */}
             <div
@@ -70,6 +71,20 @@ export default function Home() {
               <p className="px-4 py-3 text-[12px] sm:text-[14px] md:text-[16px] leading-snug font-[PressStart] text-center sm:text-left">
                 {t("home.greeting")}
               </p>
+            </div>
+
+            {/* ===== CONTROLES DE IDIOMA / TEMA SOLO EN MÓVIL (debajo del cartel) ===== */}
+            <div className="mt-4 flex items-center justify-center gap-4 lg:hidden">
+              <div className="scale-[0.85] origin-center -mt-17">
+                <LanguageSwitcher />
+              </div>
+              <ThemeToggle
+                isDark={isDark}
+                onToggle={() => setTheme(isDark ? "light" : "dark")}
+                labelLight={isDark ? "Tema claro" : "Switch to dark"}
+                labelDark={isDark ? "Tema claro" : "Switch to dark"}
+                className="scale-[0.85] ml-80"
+              />
             </div>
 
             {/* Avatar centrado SOLO en móvil */}
@@ -186,11 +201,13 @@ function ThemeToggle({
   onToggle,
   labelLight,
   labelDark,
+  className = "",
 }: {
   isDark: boolean;
   onToggle: () => void;
   labelLight: string;
   labelDark: string;
+  className?: string;
 }) {
   const label = isDark ? labelLight : labelDark;
   return (
@@ -198,7 +215,7 @@ function ThemeToggle({
       onClick={onToggle}
       aria-label={label}
       aria-pressed={isDark}
-      className="fixed top-3 right-3 z-50 select-none"
+      className={`select-none ${className}`}
       title={label}
       type="button"
     >
