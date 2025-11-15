@@ -49,31 +49,21 @@ export default function AcercaPage() {
 
   // Alternar avatar/foto
   const [showPhoto, setShowPhoto] = useState(false);
-  const currentImage = showPhoto
-    ? "/assets/mi-foto.png"
-    : "/assets/avatar-parado.png";
+  const currentImage = showPhoto ? "/assets/mi-foto.png" : "/assets/avatar-parado.png";
   const currentAlt = showPhoto ? "Foto de Deivid" : "Avatar pixel art";
 
   // fondos
-  const bgUrl = isDark
-    ? "/assets/habitacion-gamer.png" // noche
-    : "/assets/modo-light-habitacion.png"; // día
+  const bgUrl = isDark ? "/assets/habitacion-gamer.png" : "/assets/modo-light-habitacion.png";
 
   // paletas
-  const titleCard = isDark
-    ? "bg-[#101b2a] text-[#e5ff7a]"
-    : "bg-[#31256c] text-yellow-300";
-
+  const titleCard = isDark ? "bg-[#101b2a] text-[#e5ff7a]" : "bg-[#31256c] text-yellow-300";
   const panelCard = isDark ? "bg-[#0f1c2a]" : "bg-[#1b2b3b]";
-
   const chipBtn = isDark
     ? "bg-[#0ea5a8] hover:bg-[#0c9294] text-[#e5ff7a]"
     : "bg-[#31256c] hover:bg-[#3a2e79] text-yellow-300";
-
   const meterShell = "bg-[#0d1821]";
   const meterTrack = "bg-[#1a2530]";
   const avatarPanel = isDark ? "bg-[#0f1c2a]" : "bg-[#1b2b3b]";
-
   const volverBtnClasses = isDark
     ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
     : "bg-[#5a3921] hover:bg-[#6e4528] text-white";
@@ -81,7 +71,7 @@ export default function AcercaPage() {
   const aboutText = messages.about.description;
 
   return (
-    <main className="h-screen w-full relative overflow-hidden flex items-center justify-center">
+    <main className="h-screen w-full relative overflow-y-auto md:overflow-hidden flex items-center justify-center">
       {/* Fondo */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
@@ -131,11 +121,170 @@ export default function AcercaPage() {
 
       {/* Contenedor principal (todo el alto de la pantalla) */}
       <div className="w-full max-w-[1100px] mx-auto px-4 py-4 h-full flex flex-col">
-        {/* Parte superior e intermedia */}
-        <div className="flex-1 flex flex-col md:grid md:grid-cols-[1.6fr_1fr] gap-4 md:gap-6 items-start pt-16 md:pt-20">
-          {/* Columna izquierda: título, descripción, habilidades, debilidades */}
+        {/* ====== LAYOUT MOBILE (columna) ====== */}
+        <div className="flex-1 block md:hidden pt-16 pb-6 space-y-4">
+          {/* Título */}
+          <div
+            className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] w-full max-w-[520px] mx-auto`}
+          >
+            <h1 className="text-center font-[PressStart] text-[16px] py-3 tracking-wider">
+              {messages.about.title}
+            </h1>
+          </div>
+
+          {/* Descripción */}
+          <div
+            className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] px-4 py-3 w-full max-w-[520px] mx-auto`}
+          >
+            <p className="text-[11px] leading-relaxed text-white font-[PressStart]">{aboutText}</p>
+          </div>
+
+          {/* Avatar centrado */}
+          <div
+            className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] px-4 py-4 flex items-center justify-center min-h-[210px] relative w-full max-w-[520px] mx-auto`}
+          >
+            <button
+              type="button"
+              aria-label="Mostrar avatar"
+              onClick={() => setShowPhoto(false)}
+              className="pressable absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
+            >
+              {"<"}
+            </button>
+
+            <div className="relative z-10">
+              <Image
+                src={currentImage}
+                alt={currentAlt}
+                width={150}
+                height={150}
+                style={{ imageRendering: "pixelated" }}
+              />
+            </div>
+
+            <button
+              type="button"
+              aria-label="Mostrar foto"
+              onClick={() => setShowPhoto(true)}
+              className="pressable absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
+            >
+              {">"}
+            </button>
+          </div>
+
+          {/* HABILIDADES */}
+          <div className="w-full max-w-[520px] mx-auto">
+            <div className="mb-2">
+              <button
+                onClick={() => setShowHabilidadesModal(true)}
+                className={`inline-block ${chipBtn} px-4 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[11px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                type="button"
+              >
+                {messages.about.skillsTitle}
+              </button>
+            </div>
+            <div
+              className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+            >
+              <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
+                <div
+                  className="h-full transition-all duration-700"
+                  style={{
+                    width: `${habilidades}%`,
+                    background: "#35f5a6",
+                    boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* DEBILIDADES */}
+          <div className="w-full max-w-[520px] mx-auto">
+            <div className="mb-2">
+              <button
+                onClick={() => setShowDebilidadesModal(true)}
+                className={`inline-block ${chipBtn} px-4 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[11px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                type="button"
+              >
+                {messages.about.weaknessesTitle}
+              </button>
+            </div>
+            <div
+              className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+            >
+              <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
+                <div
+                  className="h-full transition-all duration-700"
+                  style={{
+                    width: `${debilidades}%`,
+                    background: "#ff6b6b",
+                    boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* PASATIEMPOS */}
+          <div className="w-full max-w-[520px] mx-auto">
+            <div className="mb-2">
+              <button
+                onClick={() => setShowPasatiemposModal(true)}
+                className={`inline-block ${chipBtn} px-4 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[11px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                type="button"
+              >
+                {messages.about.hobbiesTitle}
+              </button>
+            </div>
+            <div
+              className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+            >
+              <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
+                <div
+                  className="h-full transition-all duration-700"
+                  style={{
+                    width: `${pasatiempos}%`,
+                    background: "#22d3ee",
+                    boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ALIMENTOS */}
+          <div className="w-full max-w-[520px] mx-auto">
+            <div className="mb-2">
+              <button
+                onClick={() => setShowAlimentosModal(true)}
+                className={`inline-block ${chipBtn} px-4 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[11px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                type="button"
+              >
+                {messages.about.foodsTitle}
+              </button>
+            </div>
+            <div
+              className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+            >
+              <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
+                <div
+                  className="h-full transition-all duration-700"
+                  style={{
+                    width: `${alimentos}%`,
+                    background: "#ffd200",
+                    boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ====== LAYOUT DESKTOP (igual que antes) ====== */}
+        <div className="flex-1 hidden md:grid md:grid-cols-[1.6fr_1fr] gap-4 md:gap-6 items-start pt-20">
+          {/* Columna izquierda */}
           <div className="space-y-3 md:space-y-4">
-            {/* Título */}
             <div
               className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] w-full max-w-[520px] mx-auto md:mx-0`}
             >
@@ -144,7 +293,6 @@ export default function AcercaPage() {
               </h1>
             </div>
 
-            {/* Descripción */}
             <div
               className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] px-4 py-3 sm:px-5 sm:py-4 w-full max-w-[520px] mx-auto md:mx-0`}
             >
@@ -167,9 +315,7 @@ export default function AcercaPage() {
               <div
                 className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
               >
-                <div
-                  className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
-                >
+                <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
                     className="h-full transition-all duration-700"
                     style={{
@@ -196,9 +342,7 @@ export default function AcercaPage() {
               <div
                 className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
               >
-                <div
-                  className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
-                >
+                <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
                     className="h-full transition-all duration-700"
                     style={{
@@ -212,13 +356,11 @@ export default function AcercaPage() {
             </div>
           </div>
 
-          {/* Columna derecha: avatar + pasatiempos + alimentos */}
+          {/* Columna derecha */}
           <aside className="space-y-3 md:space-y-4 md:pt-4 flex flex-col items-center md:items-stretch">
-            {/* Avatar / Foto */}
             <div
               className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] px-4 py-4 sm:px-6 sm:py-6 flex items-center justify-center min-h-[230px] sm:min-h-[260px] relative w-full max-w-[420px]`}
             >
-              {/* Flecha izquierda */}
               <button
                 type="button"
                 aria-label="Mostrar avatar"
@@ -228,7 +370,6 @@ export default function AcercaPage() {
                 {"<"}
               </button>
 
-              {/* Imagen central */}
               <div className="relative z-10">
                 <Image
                   src={currentImage}
@@ -239,7 +380,6 @@ export default function AcercaPage() {
                 />
               </div>
 
-              {/* Flecha derecha */}
               <button
                 type="button"
                 aria-label="Mostrar foto"
@@ -249,12 +389,7 @@ export default function AcercaPage() {
                 {">"}
               </button>
 
-              {/* Precarga silenciosa */}
-              <img
-                src="/assets/avatar-parado.png"
-                alt=""
-                style={{ display: "none" }}
-              />
+              <img src="/assets/avatar-parado.png" alt="" style={{ display: "none" }} />
               <img src="/assets/mi-foto.png" alt="" style={{ display: "none" }} />
             </div>
 
@@ -272,9 +407,7 @@ export default function AcercaPage() {
               <div
                 className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
               >
-                <div
-                  className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
-                >
+                <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
                     className="h-full transition-all duration-700"
                     style={{
@@ -301,9 +434,7 @@ export default function AcercaPage() {
               <div
                 className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
               >
-                <div
-                  className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
-                >
+                <div className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
                     className="h-full transition-all duration-700"
                     style={{
@@ -319,7 +450,7 @@ export default function AcercaPage() {
         </div>
 
         {/* Franja inferior: VOLVER siempre visible */}
-        <div className="fixed bottom-25 left-83 -translate-x-1/2 z-40">
+        <div className="flex justify-center items-center pb-3">
           <Link
             href="/mapa"
             className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 sm:px-16 py-3 font-[PressStart] text-[16px] tracking-wide`}
@@ -471,13 +602,7 @@ function ModalContent({
   );
 }
 
-function HabilidadBarraItem({
-  color,
-  titulo,
-}: {
-  color: string;
-  titulo: string;
-}) {
+function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }) {
   return (
     <div className="flex items-center gap-4">
       <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 relative">
