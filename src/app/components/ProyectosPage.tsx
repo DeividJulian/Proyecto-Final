@@ -43,10 +43,9 @@ export default function ProyectosPage() {
         aria-hidden
       />
 
-      {/* Selector de idioma (bajado en la pantalla) */}
-      <div className="fixed top-[165px] left-4 sm:top-10 sm:right-4 sm:left-auto z-50">
-        <LanguageSwitcher />
-      </div>
+     <div className="fixed top-[165px] right-4 sm:top-15 sm:right-350 z-50">
+  <LanguageSwitcher />
+</div>
 
       {/* Botón de ayuda (también más abajo) */}
       <div className="fixed top-45 sm:top-10 right-4 z-50">

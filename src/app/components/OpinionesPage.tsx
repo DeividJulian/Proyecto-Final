@@ -59,8 +59,10 @@ export default function OpinionesPage() {
         aria-hidden
       />
 
-      {/* Conmutador de idioma (arriba a la izquierda como en Home) */}
-      <LanguageSwitcher />
+     {/* Conmutador de idioma (arriba a la izquierda, estilo Home) */}
+<div className="fixed top-1 left-8 z-50">
+  <LanguageSwitcher />
+</div>
 
       {/* Botón de interrogación flotante */}
       <div className="fixed top-8 right-8 z-50">

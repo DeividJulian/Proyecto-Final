@@ -11,8 +11,8 @@ type NodeItem = {
   id: number;
   image: string;
   alt: string;
-  x: number; // posición horizontal en % (solo escritorio)
-  y: number; // posición vertical en % (solo escritorio)
+  x: number; // posición horizontal en %
+  y: number; // posición vertical en %
 };
 
 export default function LineaTiempoPage() {
@@ -21,10 +21,10 @@ export default function LineaTiempoPage() {
 
   const frameRef = useRef<HTMLDivElement | null>(null);
 
-  // Línea principal (para escritorio)
+  // Línea principal horizontal (porcentaje sobre el alto del contenedor)
   const yMain = 38;
 
-  // Nodos usados en ESCRITORIO
+  // Nodos (misma composición que tu referencia)
   const timelineNodes: NodeItem[] = useMemo(
     () => [
       { id: 1, image: "/assets/sala-cine.png", alt: "Sala de cine", x: 32, y: 18 },
@@ -47,7 +47,7 @@ export default function LineaTiempoPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-slate-950">
+    <div className="h-screen relative overflow-hidden bg-slate-950">
       {/* Fondo */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -79,8 +79,10 @@ export default function LineaTiempoPage() {
         <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500" />
       </div>
 
-      {/* Botón de idioma (ya es fixed dentro del componente) */}
-      <LanguageSwitcher />
+      {/* Botón de idioma, sincronizado (fijo arriba a la izquierda) */}
+      <div className="fixed top-8 left-8 z-[60]">
+        <LanguageSwitcher />
+      </div>
 
       {/* Botón de ayuda fijo */}
       <div className="fixed top-8 right-8 z-[60]">
@@ -120,13 +122,13 @@ export default function LineaTiempoPage() {
         )}
       </div>
 
-      {/* CONTENIDO */}
+      {/* CONTENIDO PRINCIPAL: centrado verticalmente, sin scroll */}
       <div
-        className="relative z-10 flex flex-col items-center justify-start min-h-screen pt-10 pb-32 px-4 md:px-6"
+        className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:px-6"
         ref={frameRef}
       >
         {/* Título */}
-        <div className="flex justify-center mb-8 md:mb-10 mt-4">
+        <div className="flex justify-center mb-8">
           <div
             className="px-6 md:px-10 py-3 md:py-4 rounded-2xl border-4 border-black"
             style={{
@@ -147,8 +149,8 @@ export default function LineaTiempoPage() {
           </div>
         </div>
 
-        {/* ===== VISTA ESCRITORIO (LG+) ===== */}
-        <div className="relative max-w-[1200px] mx-auto hidden lg:block">
+        {/* Contenedor de línea de tiempo (horizontal, como en la referencia) */}
+        <div className="relative max-w-[1200px] w-full mx-auto">
           {/* Avatar grande a la izquierda */}
           <div className="absolute left-2 top-[36%] -translate-y-1/2 z-20">
             <div
@@ -169,7 +171,7 @@ export default function LineaTiempoPage() {
             </div>
           </div>
 
-          {/* Contenedor de la línea de tiempo */}
+          {/* Área de líneas y nodos */}
           <div className="ml-[170px] mr-6 relative min-h-[520px]">
             {/* Líneas (SVG) */}
             <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
@@ -184,7 +186,7 @@ export default function LineaTiempoPage() {
                 style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
               />
 
-              {/* Conectores verticales hacia cada nodo */}
+              {/* Conectores verticales a cada nodo */}
               {timelineNodes.map((n) => (
                 <line
                   key={`v-${n.id}`}
@@ -228,124 +230,38 @@ export default function LineaTiempoPage() {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* ===== VISTA MOBILE / TABLET (HASTA LG) ===== */}
-        <div className="w-full max-w-[480px] mx-auto lg:hidden mt-2 mb-6">
-          {/* Avatar centrado arriba */}
-          <div className="flex justify-center mb-6">
-            <div
-              className="p-2 rounded-xl shadow-2xl bg-transparent"
-              style={{ imageRendering: "pixelated" }}
-            >
-              <div className="w-[120px] h-[120px] rounded-xl overflow-hidden border-4 border-cyan-700 bg-slate-900 grid place-items-center">
-                <Image
-                  src="/assets/avatar-primera-persona.png"
-                  alt="Avatar pixel"
-                  width={120}
-                  height={120}
-                  className="object-contain"
-                  style={{ imageRendering: "pixelated" }}
-                  priority
-                />
-              </div>
-            </div>
-          </div>
+      {/* Botones inferiores fijos (no afectan el scroll) */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4 md:gap-6 z-[60]">
+        <button
+          onClick={handleFullscreen}
+          className="bg-amber-900 hover:bg-amber-800 text-yellow-400 font-bold text-base md:text-xl px-6 md:px-10 py-3 md:py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
+          style={{
+            textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
+            fontFamily: "monospace",
+            imageRendering: "pixelated",
+            boxShadow: "0 8px 0px rgba(0,0,0,0.6)",
+            backgroundColor: "#78350f",
+          }}
+          type="button"
+        >
+          {t("timeline.fullscreen")}
+        </button>
 
-          {/* Contenedor líneas + nodos (árbol vertical) */}
-          <div className="relative min-h-[420px]">
-            <svg className="absolute inset-0 w-full h-full">
-              {/* Línea vertical principal */}
-              <line
-                x1="50%"
-                y1="18%"
-                x2="50%"
-                y2="78%"
-                stroke="#22c55e"
-                strokeWidth="6"
-                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
-              />
-              {/* Ramas izquierda y derecha (nodos superiores) */}
-              <line
-                x1="50%"
-                y1="36%"
-                x2="22%"
-                y2="36%"
-                stroke="#22c55e"
-                strokeWidth="6"
-                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
-              />
-              <line
-                x1="50%"
-                y1="36%"
-                x2="78%"
-                y2="36%"
-                stroke="#22c55e"
-                strokeWidth="6"
-                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
-              />
-              {/* Ramita hacia el nodo inferior */}
-              <line
-                x1="50%"
-                y1="60%"
-                x2="50%"
-                y2="72%"
-                stroke="#22c55e"
-                strokeWidth="6"
-                style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
-              />
-            </svg>
-
-            {/* Nodo superior izquierdo (cine) */}
-            <div className="absolute z-10" style={{ left: "6%", top: "26%" }}>
-              <NodeBox image="/assets/sala-cine.png" alt="Sala de cine" />
-            </div>
-
-            {/* Nodo superior derecho (tiquete) */}
-            <div className="absolute z-10" style={{ right: "6%", top: "26%" }}>
-              <NodeBox image="/assets/tiquete.png" alt="Tiquete" />
-            </div>
-
-            {/* Nodo inferior (mapa / proyecto) */}
-            <div
-              className="absolute z-10 left-1/2"
-              style={{ top: "66%", transform: "translateX(-50%)" }}
-            >
-              <NodeBox image="/assets/mapas.png" alt="Proyecto mapa" />
-            </div>
-          </div>
-        </div>
-
-        {/* Botones inferiores fijos (PC y mobile) */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4 md:gap-6 z-[50]">
-          <button
-            onClick={handleFullscreen}
-            className="bg-amber-900 hover:bg-amber-800 text-yellow-400 font-bold text-base md:text-xl px-6 md:px-10 py-3 md:py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
-            style={{
-              textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
-              fontFamily: "monospace",
-              imageRendering: "pixelated",
-              boxShadow: "0 8px 0px rgba(0,0,0,0.6)",
-              backgroundColor: "#78350f",
-            }}
-            type="button"
-          >
-            {t("timeline.fullscreen")}
-          </button>
-
-          <Link
-            href="/mapa"
-            className="bg-orange-900 hover:bg-orange-800 text-yellow-400 font-bold text-base md:text-xl px-6 md:px-10 py-3 md:py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
-            style={{
-              textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
-              fontFamily: "monospace",
-              imageRendering: "pixelated",
-              boxShadow: "0 8px 0px rgba(0, 0, 0, 0.6)",
-              backgroundColor: "#9a3412",
-            }}
-          >
-            {t("timeline.back").toUpperCase()}
-          </Link>
-        </div>
+        <Link
+          href="/mapa"
+          className="bg-orange-900 hover:bg-orange-800 text-yellow-400 font-bold text-base md:text-xl px-6 md:px-10 py-3 md:py-4 rounded-xl border-4 border-black shadow-2xl transition-all hover:scale-105"
+          style={{
+            textShadow: "2px 2px 0px rgba(0,0,0,0.8)",
+            fontFamily: "monospace",
+            imageRendering: "pixelated",
+            boxShadow: "0 8px 0px rgba(0, 0, 0, 0.6)",
+            backgroundColor: "#9a3412",
+          }}
+        >
+          {t("timeline.back").toUpperCase()}
+        </Link>
       </div>
 
       {/* Animación fadeIn para el tooltip */}
@@ -362,29 +278,6 @@ export default function LineaTiempoPage() {
           animation: fadeIn 0.2s ease-out;
         }
       `}</style>
-    </div>
-  );
-}
-
-/* --- Caja reutilizable para los nodos en mobile --- */
-function NodeBox({ image, alt }: { image: string; alt: string }) {
-  return (
-    <div
-      className="w-28 h-28 border-4 border-cyan-500 rounded-xl overflow-hidden bg-slate-900"
-      style={{
-        boxShadow:
-          "0 0 25px rgba(6,182,212,0.6), inset 0 0 20px rgba(0,0,0,0.5)",
-        imageRendering: "pixelated",
-      }}
-    >
-      <Image
-        src={image}
-        alt={alt}
-        width={112}
-        height={112}
-        className="w-full h-full object-cover"
-        style={{ imageRendering: "pixelated" }}
-      />
     </div>
   );
 }

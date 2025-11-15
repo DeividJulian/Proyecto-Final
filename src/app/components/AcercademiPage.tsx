@@ -49,7 +49,9 @@ export default function AcercaPage() {
 
   // Alternar avatar/foto
   const [showPhoto, setShowPhoto] = useState(false);
-  const currentImage = showPhoto ? "/assets/mi-foto.png" : "/assets/avatar-parado.png";
+  const currentImage = showPhoto
+    ? "/assets/mi-foto.png"
+    : "/assets/avatar-parado.png";
   const currentAlt = showPhoto ? "Foto de Deivid" : "Avatar pixel art";
 
   // fondos
@@ -79,7 +81,7 @@ export default function AcercaPage() {
   const aboutText = messages.about.description;
 
   return (
-    <main className="min-h-screen w-full relative overflow-hidden flex items-start justify-center">
+    <main className="h-screen w-full relative overflow-hidden flex items-center justify-center">
       {/* Fondo */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
@@ -127,97 +129,163 @@ export default function AcercaPage() {
         )}
       </div>
 
-      {/* Contenido */}
-      <div className="w-full max-w-[1100px] mx-auto px-4 pt-24 pb-8">
-        {/* Layout responsive: columna en móvil, 2 columnas en desktop */}
-        <div className="flex flex-col gap-6 md:grid md:grid-cols-[1.6fr_1fr] md:gap-6">
-          {/* Columna izquierda: título, descripción, habilidades, debilidades */}
-          <div className="space-y-4">
-            {/* Título */}
-            <div
-              className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] w-full max-w-[520px] mx-auto md:mx-0`}
-            >
-              <h1 className="text-center font-[PressStart] text-[20px] sm:text-[22px] py-4 sm:py-5 tracking-wider">
-                {messages.about.title}
-              </h1>
-            </div>
+      {/* Contenedor principal (ocupa todo el alto) */}
+      <div className="w-full max-w-[1150px] mx-auto px-4 py-4 h-full flex flex-col">
+        {/* Título centrado arriba */}
+        <div className="pt-16 md:pt-18 mb-4 flex justify-center">
+          <div
+            className={`${titleCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] w-full max-w-[540px]`}
+          >
+            <h1 className="text-center font-[PressStart] text-[18px] sm:text-[20px] py-3 sm:py-4 tracking-wider">
+              {messages.about.title}
+            </h1>
+          </div>
+        </div>
 
-            {/* Descripción (debajo del título en móvil) */}
+        {/* Zona central: descripción + barras + avatar */}
+        <div className="flex-1 flex flex-col md:grid md:grid-cols-[1.3fr_0.9fr] gap-4 md:gap-6 items-start">
+          {/* Columna izquierda */}
+          <section className="space-y-4">
+            {/* Descripción */}
             <div
-              className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-4 sm:p-5 w-full max-w-[520px] mx-auto md:mx-0`}
+              className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] px-4 py-3 sm:px-5 sm:py-4 w-full max-w-[540px]`}
             >
-              <p className="text-[12px] sm:text-[13px] leading-relaxed sm:leading-loose text-white font-[PressStart]">
+              <p className="text-[11px] sm:text-[12px] leading-relaxed text-white font-[PressStart]">
                 {aboutText}
               </p>
             </div>
 
-            {/* HABILIDADES */}
-            <div className="w-full max-w-[520px] mx-auto md:mx-0">
-              <div className="mb-3">
-                <button
-                  onClick={() => setShowHabilidadesModal(true)}
-                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
-                  type="button"
+            {/* Cuatro barras en 2 columnas (como en la referencia) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+              {/* HABILIDADES */}
+              <div className="w-full">
+                <div className="mb-2">
+                  <button
+                    onClick={() => setShowHabilidadesModal(true)}
+                    className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[12px] sm:text-[14px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                    type="button"
+                  >
+                    {messages.about.skillsTitle}
+                  </button>
+                </div>
+                <div
+                  className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
                 >
-                  {messages.about.skillsTitle}
-                </button>
-              </div>
-              <div
-                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
-              >
-                <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
                   <div
-                    className="h-full transition-all duration-700"
-                    style={{
-                      width: `${habilidades}%`,
-                      background: "#35f5a6",
-                      boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
-                    }}
-                  />
+                    className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
+                  >
+                    <div
+                      className="h-full transition-all duration-700"
+                      style={{
+                        width: `${habilidades}%`,
+                        background: "#35f5a6",
+                        boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* PASATIEMPOS */}
+              <div className="w-full">
+                <div className="mb-2">
+                  <button
+                    onClick={() => setShowPasatiemposModal(true)}
+                    className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[12px] sm:text-[14px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                    type="button"
+                  >
+                    {messages.about.hobbiesTitle}
+                  </button>
+                </div>
+                <div
+                  className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+                >
+                  <div
+                    className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
+                  >
+                    <div
+                      className="h-full transition-all duration-700"
+                      style={{
+                        width: `${pasatiempos}%`,
+                        background: "#22d3ee",
+                        boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* DEBILIDADES */}
+              <div className="w-full">
+                <div className="mb-2">
+                  <button
+                    onClick={() => setShowDebilidadesModal(true)}
+                    className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[12px] sm:text-[14px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                    type="button"
+                  >
+                    {messages.about.weaknessesTitle}
+                  </button>
+                </div>
+                <div
+                  className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+                >
+                  <div
+                    className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
+                  >
+                    <div
+                      className="h-full transition-all duration-700"
+                      style={{
+                        width: `${debilidades}%`,
+                        background: "#ff6b6b",
+                        boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* ALIMENTOS */}
+              <div className="w-full">
+                <div className="mb-2">
+                  <button
+                    onClick={() => setShowAlimentosModal(true)}
+                    className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[12px] sm:text-[14px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
+                    type="button"
+                  >
+                    {messages.about.foodsTitle}
+                  </button>
+                </div>
+                <div
+                  className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
+                >
+                  <div
+                    className={`${meterTrack} w-full h-6 rounded-sm overflow-hidden border-2 border-black`}
+                  >
+                    <div
+                      className="h-full transition-all duration-700"
+                      style={{
+                        width: `${alimentos}%`,
+                        background: "#ffd200",
+                        boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+          </section>
 
-            {/* DEBILIDADES */}
-            <div className="w-full max-w-[520px] mx-auto md:mx-0">
-              <div className="mb-3">
-                <button
-                  onClick={() => setShowDebilidadesModal(true)}
-                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
-                  type="button"
-                >
-                  {messages.about.weaknessesTitle}
-                </button>
-              </div>
-              <div
-                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
-              >
-                <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
-                  <div
-                    className="h-full transition-all duration-700"
-                    style={{
-                      width: `${debilidades}%`,
-                      background: "#ff6b6b",
-                      boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Columna derecha: avatar + pasatiempos + alimentos */}
-          <aside className="space-y-4 md:pt-10">
-            {/* Avatar / Foto (debajo de la descripción en móvil) */}
+          {/* Columna derecha: avatar centrado verticalmente */}
+          <aside className="flex justify-center md:justify-end items-center">
             <div
-              className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] p-4 sm:p-6 flex items-center justify-center min-h-[260px] sm:min-h-[320px] relative w-full max-w-[420px] mx-auto`}
+              className={`${avatarPanel} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] px-4 py-4 sm:px-6 sm:py-6 flex items-center justify-center min-h-[260px] sm:min-h-[300px] relative w-full max-w-[420px]`}
             >
               {/* Flecha izquierda */}
               <button
                 type="button"
                 aria-label="Mostrar avatar"
                 onClick={() => setShowPhoto(false)}
-                className="pressable absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
+                className="pressable absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
               >
                 {"<"}
               </button>
@@ -238,74 +306,24 @@ export default function AcercaPage() {
                 type="button"
                 aria-label="Mostrar foto"
                 onClick={() => setShowPhoto(true)}
-                className="pressable absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
+                className="pressable absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 grid place-items-center bg-[#2b2367] text-[#ffd54a] border-[6px] border-black rounded-md shadow-[0_6px_0_#000]"
               >
                 {">"}
               </button>
 
               {/* Precarga silenciosa */}
-              <img src="/assets/avatar-parado.png" alt="" style={{ display: "none" }} />
+              <img
+                src="/assets/avatar-parado.png"
+                alt=""
+                style={{ display: "none" }}
+              />
               <img src="/assets/mi-foto.png" alt="" style={{ display: "none" }} />
-            </div>
-
-            {/* PASATIEMPOS */}
-            <div className="w-full max-w-[520px] mx-auto md:mx-0">
-              <div className="mb-3">
-                <button
-                  onClick={() => setShowPasatiemposModal(true)}
-                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
-                  type="button"
-                >
-                  {messages.about.hobbiesTitle}
-                </button>
-              </div>
-              <div
-                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
-              >
-                <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
-                  <div
-                    className="h-full transition-all duration-700"
-                    style={{
-                      width: `${pasatiempos}%`,
-                      background: "#22d3ee",
-                      boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* ALIMENTOS */}
-            <div className="w-full max-w-[520px] mx-auto md:mx-0">
-              <div className="mb-3">
-                <button
-                  onClick={() => setShowAlimentosModal(true)}
-                  className={`inline-block ${chipBtn} px-4 sm:px-5 py-2 border-[6px] border-black rounded-md font-[PressStart] text-[13px] sm:text-[15px] shadow-[0_6px_0_#000] hover:shadow-[0_4px_0_#000] active:translate-y-1 transition-transform`}
-                  type="button"
-                >
-                  {messages.about.foodsTitle}
-                </button>
-              </div>
-              <div
-                className={`${meterShell} border-[6px] border-black rounded-md p-2 shadow-[0_6px_0_#000] w-full`}
-              >
-                <div className={`${meterTrack} w-full h-7 rounded-sm overflow-hidden border-2 border-black`}>
-                  <div
-                    className="h-full transition-all duration-700"
-                    style={{
-                      width: `${alimentos}%`,
-                      background: "#ffd200",
-                      boxShadow: "inset 0 -4px 0 rgba(0,0,0,0.3)",
-                    }}
-                  />
-                </div>
-              </div>
             </div>
           </aside>
         </div>
 
-        {/* VOLVER grande y centrado al final (móvil y desktop) */}
-        <div className="mt-8 flex justify-center">
+        {/* Franja inferior: botón VOLVER centrado (siempre visible) */}
+        <div className="pb-3 flex justify-center items-center">
           <Link
             href="/mapa"
             className={`${volverBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 sm:px-16 py-3 font-[PressStart] text-[16px] tracking-wide`}
@@ -315,7 +333,7 @@ export default function AcercaPage() {
         </div>
       </div>
 
-      {/* Animaciones locales: sólo para flechas (al presionar) */}
+      {/* Animación de botones de flecha */}
       <style jsx>{`
         .pressable {
           transition: transform 120ms ease, box-shadow 120ms ease;
@@ -457,7 +475,13 @@ function ModalContent({
   );
 }
 
-function HabilidadBarraItem({ color, titulo }: { color: string; titulo: string }) {
+function HabilidadBarraItem({
+  color,
+  titulo,
+}: {
+  color: string;
+  titulo: string;
+}) {
   return (
     <div className="flex items-center gap-4">
       <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 relative">
