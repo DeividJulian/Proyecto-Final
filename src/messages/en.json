@@ -90,10 +90,18 @@
 "timeline": {
   "title": "TIMELINE",
   "helpText": "Explore my story: each frame is a moment. Use",
-  "helpTail": "to view it better.",
+  "helpTail": "to see it better.",
   "fullscreen": "FULLSCREEN",
-  "back": "BACK"
+  "back": "BACK",
+
+  "photo1Title": "Timeline photo 1",
+  "photo1Desc": "Description of moment 1. Here you can tell what happened at this stage.",
+  "photo2Title": "Timeline photo 2",
+  "photo2Desc": "Description of moment 2. Replace this text with your own story.",
+  "photo3Title": "Timeline photo 3",
+  "photo3Desc": "Description of moment 3. Talk here about this important stage."
 }
+
 
 
 

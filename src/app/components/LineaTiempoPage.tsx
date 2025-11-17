@@ -10,10 +10,10 @@ import { useLang } from "../components/i18n/LangContext";
 type NodeItem = {
   id: number;
   image: string;
-  alt: string;
-  x: number; // posición horizontal en %
-  y: number; // posición vertical en %
-  description: string;
+  altKey: string;   // clave de i18n para el título
+  descKey: string;  // clave de i18n para la descripción
+  x: number;        // posición horizontal en %
+  y: number;        // posición vertical en %
 };
 
 export default function LineaTiempoPage() {
@@ -26,35 +26,33 @@ export default function LineaTiempoPage() {
   // Línea principal horizontal (porcentaje sobre el alto del contenedor)
   const yMain = 38;
 
-  // Nodos con tus fotos de línea de tiempo
+  // ⚠️ IMPORTANTE:
+  // Aquí NO guardamos textos, solo las CLAVES de traducción.
   const timelineNodes: NodeItem[] = useMemo(
     () => [
       {
         id: 1,
         image: "/assets/linea-tiempo-1.jpg",
-        alt: "Foto línea de tiempo 1",
+        altKey: "timeline.photo1Title",
+        descKey: "timeline.photo1Desc",
         x: 32,
         y: 18,
-        description:
-          "Descripción del momento 1. Aquí puedes contar qué pasó en esta etapa.",
       },
       {
         id: 2,
         image: "/assets/linea-tiempo-2.jpg",
-        alt: "Foto línea de tiempo 2",
+        altKey: "timeline.photo2Title",
+        descKey: "timeline.photo2Desc",
         x: 68,
         y: 18,
-        description:
-          "Descripción del momento 2. Cambia este texto por la historia que quieras.",
       },
       {
         id: 3,
         image: "/assets/linea-tiempo-3.jpg",
-        alt: "Foto línea de tiempo 3",
+        altKey: "timeline.photo3Title",
+        descKey: "timeline.photo3Desc",
         x: 50,
         y: 62,
-        description:
-          "Descripción del momento 3. Aquí puedes hablar de esta etapa importante.",
       },
     ],
     []
@@ -105,12 +103,12 @@ export default function LineaTiempoPage() {
         <div className="absolute bottom-8 right-8 w-32 h-32 border-r-4 border-b-4 border-cyan-500" />
       </div>
 
-      {/* Botón de idioma, sincronizado (fijo arriba a la izquierda) */}
+      {/* Botón de idioma */}
       <div className="fixed top-8 left-8 z-[60]">
         <LanguageSwitcher />
       </div>
 
-      {/* Botón de ayuda fijo */}
+      {/* Botón de ayuda */}
       <div className="fixed top-8 right-8 z-[60]">
         <button
           onClick={() => setShowTooltip((v) => !v)}
@@ -233,7 +231,7 @@ export default function LineaTiempoPage() {
                 key={n.id}
                 className="absolute z-10 cursor-pointer transition-transform hover:scale-110"
                 style={{ left: `calc(${n.x}% - 64px)`, top: `calc(${n.y}% - 64px)` }}
-                title={n.alt}
+                title={t(n.altKey)}
                 onClick={() => setSelectedNode(n)}
               >
                 <div
@@ -246,10 +244,10 @@ export default function LineaTiempoPage() {
                 >
                   <Image
                     src={n.image}
-                    alt={n.alt}
+                    alt={t(n.altKey)}
                     width={128}
                     height={128}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                     style={{ imageRendering: "pixelated" }}
                   />
                 </div>
@@ -305,7 +303,7 @@ export default function LineaTiempoPage() {
             {/* cabecera */}
             <div className="bg-[#2e1b6b] px-6 py-4 border-b-[6px] border-black flex items-center justify-between">
               <h2 className="text-yellow-300 font-[PressStart] text-xs md:text-sm tracking-wider">
-                {selectedNode.alt.toUpperCase()}
+                {t(selectedNode.altKey).toUpperCase()}
               </h2>
               <button
                 className="text-white font-[PressStart] text-xs px-3 py-1 border-[3px] border-black rounded-md bg-red-700 hover:bg-red-600 active:translate-y-[2px]"
@@ -318,13 +316,13 @@ export default function LineaTiempoPage() {
 
             {/* contenido */}
             <div className="p-6 flex flex-col gap-4 items-center">
-              <div className="w-full max-h-[420px] bg-black border-[6px] border-cyan-500 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="w-full h-[60vh] max-h-[520px] bg-black border-[6px] border-cyan-500 rounded-xl flex items-center justify-center overflow-hidden">
                 <Image
                   src={selectedNode.image}
-                  alt={selectedNode.alt}
-                  width={700}
-                  height={420}
-                  className="w-full h-auto object-contain"
+                  alt={t(selectedNode.altKey)}
+                  width={900}
+                  height={600}
+                  className="h-full w-auto object-contain"
                   style={{ imageRendering: "pixelated" }}
                 />
               </div>
@@ -332,7 +330,7 @@ export default function LineaTiempoPage() {
                 className="text-white text-sm md:text-base leading-relaxed text-center"
                 style={{ fontFamily: "Arial, sans-serif" }}
               >
-                {selectedNode.description}
+                {t(selectedNode.descKey)}
               </p>
               <button
                 type="button"

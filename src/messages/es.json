@@ -87,13 +87,22 @@
 }
 
 ,
+
 "timeline": {
   "title": "LINEA DE TIEMPO",
   "helpText": "Explora mi historia: cada cuadro es un momento. Usa",
   "helpTail": "para verlo mejor.",
   "fullscreen": "PANTALLA COMPLETA",
-  "back": "VOLVER"
+  "back": "VOLVER",
+
+  "photo1Title": "Foto línea de tiempo 1",
+  "photo1Desc": "Descripción del momento 1. Aquí puedes contar qué pasó en esta etapa.",
+  "photo2Title": "Foto línea de tiempo 2",
+  "photo2Desc": "Descripción del momento 2. Cambia este texto por la historia que quieras.",
+  "photo3Title": "Foto línea de tiempo 3",
+  "photo3Desc": "Descripción del momento 3. Aquí puedes hablar de esta etapa importante."
 }
+
 
 
 
