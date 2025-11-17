@@ -13,23 +13,49 @@ type NodeItem = {
   alt: string;
   x: number; // posición horizontal en %
   y: number; // posición vertical en %
+  description: string;
 };
 
 export default function LineaTiempoPage() {
   const { t } = useLang();
   const [showTooltip, setShowTooltip] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<NodeItem | null>(null);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
 
   // Línea principal horizontal (porcentaje sobre el alto del contenedor)
   const yMain = 38;
 
-  // Nodos (misma composición que tu referencia)
+  // Nodos con tus fotos de línea de tiempo
   const timelineNodes: NodeItem[] = useMemo(
     () => [
-      { id: 1, image: "/assets/sala-cine.png", alt: "Sala de cine", x: 32, y: 18 },
-      { id: 2, image: "/assets/tiquete.png", alt: "Tiquete", x: 68, y: 18 },
-      { id: 3, image: "/assets/mapas.png", alt: "Proyecto mapa", x: 50, y: 62 },
+      {
+        id: 1,
+        image: "/assets/linea-tiempo-1.jpg",
+        alt: "Foto línea de tiempo 1",
+        x: 32,
+        y: 18,
+        description:
+          "Descripción del momento 1. Aquí puedes contar qué pasó en esta etapa.",
+      },
+      {
+        id: 2,
+        image: "/assets/linea-tiempo-2.jpg",
+        alt: "Foto línea de tiempo 2",
+        x: 68,
+        y: 18,
+        description:
+          "Descripción del momento 2. Cambia este texto por la historia que quieras.",
+      },
+      {
+        id: 3,
+        image: "/assets/linea-tiempo-3.jpg",
+        alt: "Foto línea de tiempo 3",
+        x: 50,
+        y: 62,
+        description:
+          "Descripción del momento 3. Aquí puedes hablar de esta etapa importante.",
+      },
     ],
     []
   );
@@ -122,7 +148,7 @@ export default function LineaTiempoPage() {
         )}
       </div>
 
-      {/* CONTENIDO PRINCIPAL: centrado verticalmente, sin scroll */}
+      {/* CONTENIDO PRINCIPAL */}
       <div
         className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:px-6"
         ref={frameRef}
@@ -149,9 +175,9 @@ export default function LineaTiempoPage() {
           </div>
         </div>
 
-        {/* Contenedor de línea de tiempo (horizontal, como en la referencia) */}
+        {/* Contenedor de línea de tiempo */}
         <div className="relative max-w-[1200px] w-full mx-auto">
-          {/* Avatar grande a la izquierda */}
+          {/* Avatar a la izquierda */}
           <div className="absolute left-2 top-[36%] -translate-y-1/2 z-20">
             <div
               className="p-2 rounded-xl shadow-2xl bg-transparent"
@@ -208,6 +234,7 @@ export default function LineaTiempoPage() {
                 className="absolute z-10 cursor-pointer transition-transform hover:scale-110"
                 style={{ left: `calc(${n.x}% - 64px)`, top: `calc(${n.y}% - 64px)` }}
                 title={n.alt}
+                onClick={() => setSelectedNode(n)}
               >
                 <div
                   className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden bg-slate-900 relative"
@@ -222,7 +249,7 @@ export default function LineaTiempoPage() {
                     alt={n.alt}
                     width={128}
                     height={128}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     style={{ imageRendering: "pixelated" }}
                   />
                 </div>
@@ -232,7 +259,7 @@ export default function LineaTiempoPage() {
         </div>
       </div>
 
-      {/* Botones inferiores fijos (no afectan el scroll) */}
+      {/* Botones inferiores fijos */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4 md:gap-6 z-[60]">
         <button
           onClick={handleFullscreen}
@@ -263,6 +290,61 @@ export default function LineaTiempoPage() {
           {t("timeline.back").toUpperCase()}
         </Link>
       </div>
+
+      {/* MODAL de foto grande */}
+      {selectedNode && (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80"
+          onClick={() => setSelectedNode(null)}
+        >
+          <div
+            className="w-[90%] max-w-[800px] bg-[#0b1220] border-[8px] border-black rounded-2xl shadow-[0_12px_0_#000] relative overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            style={{ imageRendering: "pixelated" }}
+          >
+            {/* cabecera */}
+            <div className="bg-[#2e1b6b] px-6 py-4 border-b-[6px] border-black flex items-center justify-between">
+              <h2 className="text-yellow-300 font-[PressStart] text-xs md:text-sm tracking-wider">
+                {selectedNode.alt.toUpperCase()}
+              </h2>
+              <button
+                className="text-white font-[PressStart] text-xs px-3 py-1 border-[3px] border-black rounded-md bg-red-700 hover:bg-red-600 active:translate-y-[2px]"
+                type="button"
+                onClick={() => setSelectedNode(null)}
+              >
+                X
+              </button>
+            </div>
+
+            {/* contenido */}
+            <div className="p-6 flex flex-col gap-4 items-center">
+              <div className="w-full max-h-[420px] bg-black border-[6px] border-cyan-500 rounded-xl flex items-center justify-center overflow-hidden">
+                <Image
+                  src={selectedNode.image}
+                  alt={selectedNode.alt}
+                  width={700}
+                  height={420}
+                  className="w-full h-auto object-contain"
+                  style={{ imageRendering: "pixelated" }}
+                />
+              </div>
+              <p
+                className="text-white text-sm md:text-base leading-relaxed text-center"
+                style={{ fontFamily: "Arial, sans-serif" }}
+              >
+                {selectedNode.description}
+              </p>
+              <button
+                type="button"
+                onClick={() => setSelectedNode(null)}
+                className="mt-2 bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 py-3 font-[PressStart] text-[12px] md:text-[14px] tracking-wide"
+              >
+                {t("timeline.back").toUpperCase()}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Animación fadeIn para el tooltip */}
       <style jsx>{`
