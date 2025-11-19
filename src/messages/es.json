@@ -87,20 +87,22 @@
 }
 
 ,
-
-"timeline": {
-  "title": "LINEA DE TIEMPO",
+"timeline":
+{
+  "title": "LÍNEA DE TIEMPO",
   "helpText": "Explora mi historia: cada cuadro es un momento. Usa",
   "helpTail": "para verlo mejor.",
   "fullscreen": "PANTALLA COMPLETA",
   "back": "VOLVER",
 
   "photo1Title": "Foto línea de tiempo 1",
-  "photo1Desc": "Esta foto es especial para mi ya que fue el primer dia de clases que tuve en mi vida recuerdo que estaba nervioso porque no sabia que pasaria.",
+  "photo1Desc": "Esta foto fue tomada en mi primer día de clases, un momento que recuerdo con mucha claridad. Era la primera vez que entraba a un salón lleno de desconocidos y, aunque me sentía nervioso, también había una sensación de emoción que no puedo olvidar. No sabía qué esperar, pero ese día marcó el inicio de una etapa importante en mi vida: hacer amigos, aprender nuevas cosas y comenzar a descubrir quién quería ser.",
+
   "photo2Title": "Foto línea de tiempo 2",
-  "photo2Desc": "En esta foto recuerdo que teniamos que hacer una obra y yo estaba molesto porque me habian dado el papel de bufon me disgustaba mucho hacer ese papel.",
+  "photo2Desc": "En esta foto estábamos preparando una obra escolar y, aunque yo quería un papel más serio, me asignaron el de bufón. En ese momento me molesté porque sentía que no encajaba conmigo, pero con el paso del tiempo aprendí a ver ese momento con humor. Esta experiencia me enseñó que a veces los papeles inesperados pueden ayudarnos a crecer y a tomar las cosas con más ligereza.",
+
   "photo3Title": "Foto línea de tiempo 3",
-  "photo3Desc": "Esta ultima foto fue hace unos pocos años es mi cumpleños nuemro 17 y fue un momento especial porque despues de mucho tiempo toda la familia tanto de papa y mama estaba reunida."
+  "photo3Desc": "Esta foto fue tomada en mi cumpleaños número 17, un día que se volvió muy especial para mí. No solo por celebrar un año más de vida, sino porque después de mucho tiempo toda mi familia, tanto del lado de mi mamá como de mi papá, estaba reunida de nuevo. Fue un momento lleno de risas, recuerdos y una sensación de unión que no había sentido en años."
 }
 
 

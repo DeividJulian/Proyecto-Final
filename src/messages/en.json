@@ -87,21 +87,22 @@
 
 
 ,
-"timeline": {
+"timeline":
+{
   "title": "TIMELINE",
   "helpText": "Explore my story: each frame is a moment. Use",
-  "helpTail": "to see it better.",
+  "helpTail": "to view it better.",
   "fullscreen": "FULLSCREEN",
   "back": "BACK",
 
   "photo1Title": "Timeline Photo 1",
-  "photo1Desc": "This photo is very special to me because it was my first day of school ever. I remember feeling nervous because I didn’t know what to expect.",
-  
+  "photo1Desc": "This picture was taken on my very first day of school, a moment I remember very clearly. It was the first time I walked into a classroom full of people I didn’t know, and although I was nervous, there was also an excitement I’ll never forget. I had no idea what to expect, but that day marked the beginning of an important chapter in my life: making friends, learning new things, and starting to discover who I wanted to become.",
+
   "photo2Title": "Timeline Photo 2",
-  "photo2Desc": "In this photo I remember we had to perform a play, and I was upset because they gave me the role of the jester. I really disliked having to play that character.",
-  
+  "photo2Desc": "In this photo, we were preparing for a school play and, although I wanted a more serious role, I was assigned the jester. At the time, I was upset because I felt it didn’t fit me, but over time I learned to look back at it with humor. This experience taught me that sometimes unexpected roles help us grow and take things more lightly.",
+
   "photo3Title": "Timeline Photo 3",
-  "photo3Desc": "This last photo was taken just a few years ago, on my 17th birthday. It was a special moment because after a long time, both my mom’s and dad’s sides of the family were reunited."
+  "photo3Desc": "This picture was taken on my 17th birthday, a day that became very special to me. Not only because I was celebrating another year of life, but because after a long time my whole family, from both my mom’s and dad’s side, came together again. It was a moment full of laughter, memories, and a sense of unity I hadn’t felt in years."
 }
 
 
