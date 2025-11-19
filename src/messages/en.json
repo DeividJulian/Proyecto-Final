@@ -94,14 +94,15 @@
   "fullscreen": "FULLSCREEN",
   "back": "BACK",
 
-  "photo1Title": "Timeline photo 1",
-  "photo1Desc": "Description of moment 1. Here you can tell what happened at this stage.",
-  "photo2Title": "Timeline photo 2",
-  "photo2Desc": "Description of moment 2. Replace this text with your own story.",
-  "photo3Title": "Timeline photo 3",
-  "photo3Desc": "Description of moment 3. Talk here about this important stage."
+  "photo1Title": "Timeline Photo 1",
+  "photo1Desc": "This photo is very special to me because it was my first day of school ever. I remember feeling nervous because I didn’t know what to expect.",
+  
+  "photo2Title": "Timeline Photo 2",
+  "photo2Desc": "In this photo I remember we had to perform a play, and I was upset because they gave me the role of the jester. I really disliked having to play that character.",
+  
+  "photo3Title": "Timeline Photo 3",
+  "photo3Desc": "This last photo was taken just a few years ago, on my 17th birthday. It was a special moment because after a long time, both my mom’s and dad’s sides of the family were reunited."
 }
-
 
 
 
