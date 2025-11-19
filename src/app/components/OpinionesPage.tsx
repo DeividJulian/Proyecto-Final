@@ -9,14 +9,22 @@ import { useLang } from "./i18n/LangContext";
 
 type Theme = "light" | "dark";
 
+type OpinionVideo = {
+  id: number;
+  src: string;
+  titleKey: string;
+};
+
 export default function OpinionesPage() {
   const { t } = useLang();
 
-  const videos = [
-    { id: 1, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video1" },
-    { id: 2, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video2" },
-    { id: 3, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video3" },
-    { id: 4, videoId: "dQw4w9WgXcQ", titleKey: "opiniones.video4" }
+  // 🔁 Tus videos locales (en /public/videos/...)
+  const videos: OpinionVideo[] = [
+    { id: 1, src: "/videos/opinion1.mp4", titleKey: "opiniones.video1" },
+    { id: 2, src: "/videos/opinon2.mp4", titleKey: "opiniones.video2" },
+    { id: 3, src: "/videos/opinion3.mp4", titleKey: "opiniones.video3" },
+    // si luego grabas un 4to, solo lo agregas aquí
+    // { id: 4, src: "/videos/opinion4.mp4", titleKey: "opiniones.video4" },
   ];
 
   // === Tema sincronizado con Home ===
@@ -39,13 +47,13 @@ export default function OpinionesPage() {
 
   const isDark = theme === "dark";
   const bgUrl = isDark
-    ? "/assets/sala-cine.png"        // fondo de cine noche (modo oscuro)
+    ? "/assets/sala-cine.png" // fondo de cine noche (modo oscuro)
     : "/assets/modo-light-cine.png"; // fondo de cine con gente (modo claro)
 
   // Tooltip del botón de interrogación
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Clases para el botón VOLVER según tema (opcional, puedes dejarlas fijas)
+  // Clases para el botón VOLVER según tema
   const backBtnClasses = isDark
     ? "bg-[#0e2a3a] hover:bg-[#12384d] text-[#e5ff7a]"
     : "bg-[#5a3921] hover:bg-[#6e4528] text-white";
@@ -59,10 +67,10 @@ export default function OpinionesPage() {
         aria-hidden
       />
 
-     {/* Conmutador de idioma (arriba a la izquierda, estilo Home) */}
-<div className="fixed top-1 left-8 z-50">
-  <LanguageSwitcher />
-</div>
+      {/* Conmutador de idioma (arriba a la izquierda, estilo Home) */}
+      <div className="fixed top-1 left-8 z-50">
+        <LanguageSwitcher />
+      </div>
 
       {/* Botón de interrogación flotante */}
       <div className="fixed top-8 right-8 z-50">
@@ -98,7 +106,7 @@ export default function OpinionesPage() {
               </p>
             </div>
             {/* Flecha apuntando al botón */}
-            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45"></div>
+            <div className="absolute -top-4 right-6 w-8 h-8 bg-white border-l-[8px] border-t-[8px] border-black transform rotate-45" />
           </div>
         )}
       </div>
@@ -118,7 +126,7 @@ export default function OpinionesPage() {
             {videos.map((video) => (
               <VideoCard
                 key={video.id}
-                videoId={video.videoId}
+                src={video.src}
                 titleKey={video.titleKey}
               />
             ))}
@@ -135,7 +143,7 @@ export default function OpinionesPage() {
                 {t("opiniones.bubble")}
               </p>
               {/* Flecha del globo apuntando hacia abajo */}
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-b-[6px] border-r-[6px] border-black transform rotate-45"></div>
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white border-b-[6px] border-r-[6px] border-black transform rotate-45" />
             </div>
 
             {/* Avatar flotante - espejado para que mire hacia los videos */}
@@ -157,7 +165,7 @@ export default function OpinionesPage() {
         <div className="flex justify-center mt-8">
           <Link
             href="/mapa"
-            className={`${backBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-all px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
+            className={`${backBtnClasses} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-12 py-3 font-[PressStart] text-[16px] tracking-wide`}
           >
             {t("opiniones.back").toUpperCase()}
           </Link>
@@ -233,8 +241,8 @@ export default function OpinionesPage() {
   );
 }
 
-/* Componente de tarjeta de video */
-function VideoCard({ videoId, titleKey }: { videoId: string; titleKey: string }) {
+/* Componente de tarjeta de video con archivo local */
+function VideoCard({ src, titleKey }: { src: string; titleKey: string }) {
   const { t } = useLang();
   const titulo = t(titleKey);
   const playPrefix = t("opiniones.playPrefix");
@@ -265,15 +273,16 @@ function VideoCard({ videoId, titleKey }: { videoId: string; titleKey: string })
             </div>
           </button>
         ) : (
-          <iframe
-            width="100%"
-            height="100%"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-            title={titulo}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          <video
+            className="w-full h-full rounded-md"
+            controls
+            autoPlay
+            playsInline
+            onEnded={() => setIsPlaying(false)}
+          >
+            <source src={src} type="video/mp4" />
+            Tu navegador no soporta video HTML5.
+          </video>
         )}
       </div>
     </div>
