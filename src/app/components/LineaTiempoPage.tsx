@@ -19,15 +19,14 @@ type NodeItem = {
 export default function LineaTiempoPage() {
   const { t } = useLang();
   const [showTooltip, setShowTooltip] = useState(false);
-  const [selectedNode, setSelectedNode] = useState<NodeItem | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
 
   // Línea principal horizontal (porcentaje sobre el alto del contenedor)
   const yMain = 38;
 
-  // ⚠️ IMPORTANTE:
-  // Aquí NO guardamos textos, solo las CLAVES de traducción.
+  // Nodos de la línea de tiempo (solo claves de traducción)
   const timelineNodes: NodeItem[] = useMemo(
     () => [
       {
@@ -58,6 +57,10 @@ export default function LineaTiempoPage() {
     []
   );
 
+  // AHORA sí podemos usar timelineNodes
+  const selectedNode =
+    selectedIndex !== null ? timelineNodes[selectedIndex] : null;
+
   const handleFullscreen = async () => {
     try {
       if (!document.fullscreenElement) {
@@ -68,6 +71,27 @@ export default function LineaTiempoPage() {
     } catch {
       // ignorar si no está soportado
     }
+  };
+
+  const openNode = (id: number) => {
+    const idx = timelineNodes.findIndex((n) => n.id === id);
+    if (idx !== -1) setSelectedIndex(idx);
+  };
+
+  const closeModal = () => setSelectedIndex(null);
+
+  const goNext = () => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return prev;
+      return (prev + 1) % timelineNodes.length;
+    });
+  };
+
+  const goPrev = () => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return prev;
+      return (prev - 1 + timelineNodes.length) % timelineNodes.length;
+    });
   };
 
   return (
@@ -210,7 +234,7 @@ export default function LineaTiempoPage() {
                 style={{ filter: "drop-shadow(0 0 8px rgba(34,197,94,0.9))" }}
               />
 
-              {/* Conectores verticales a cada nodo */}
+              {/* Conectores verticales */}
               {timelineNodes.map((n) => (
                 <line
                   key={`v-${n.id}`}
@@ -225,14 +249,14 @@ export default function LineaTiempoPage() {
               ))}
             </svg>
 
-            {/* Nodos (cuadros de imagen) */}
-            {timelineNodes.map((n) => (
+            {/* Nodos */}
+            {timelineNodes.map((n, idx) => (
               <div
                 key={n.id}
                 className="absolute z-10 cursor-pointer transition-transform hover:scale-110"
                 style={{ left: `calc(${n.x}% - 64px)`, top: `calc(${n.y}% - 64px)` }}
                 title={t(n.altKey)}
-                onClick={() => setSelectedNode(n)}
+                onClick={() => setSelectedIndex(idx)}
               >
                 <div
                   className="w-32 h-32 border-4 border-cyan-500 rounded-xl overflow-hidden bg-slate-900 relative"
@@ -293,48 +317,92 @@ export default function LineaTiempoPage() {
       {selectedNode && (
         <div
           className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80"
-          onClick={() => setSelectedNode(null)}
+          onClick={closeModal}
         >
           <div
-            className="w-[90%] max-w-[800px] bg-[#0b1220] border-[8px] border-black rounded-2xl shadow-[0_12px_0_#000] relative overflow-hidden"
+            className="retro-modal w-[90%] max-w-[860px] bg-[#020617] border-[8px] border-black rounded-2xl shadow-[0_12px_0_#000] relative overflow-hidden"
             onClick={(e) => e.stopPropagation()}
             style={{ imageRendering: "pixelated" }}
           >
-            {/* cabecera */}
-            <div className="bg-[#2e1b6b] px-6 py-4 border-b-[6px] border-black flex items-center justify-between">
-              <h2 className="text-yellow-300 font-[PressStart] text-xs md:text-sm tracking-wider">
+            {/* Cabecera */}
+            <div className="bg-[#2e1b6b] px-5 md:px-6 py-3 md:py-4 border-b-[6px] border-black flex items-center justify-between">
+              <h2 className="text-yellow-300 font-[PressStart] text-[10px] md:text-xs tracking-wider">
                 {t(selectedNode.altKey).toUpperCase()}
               </h2>
               <button
-                className="text-white font-[PressStart] text-xs px-3 py-1 border-[3px] border-black rounded-md bg-red-700 hover:bg-red-600 active:translate-y-[2px]"
+                className="text-white font-[PressStart] text-[10px] px-3 py-1 border-[3px] border-black rounded-md bg-red-700 hover:bg-red-600 active:translate-y-[2px]"
                 type="button"
-                onClick={() => setSelectedNode(null)}
+                onClick={closeModal}
               >
                 X
               </button>
             </div>
 
-            {/* contenido */}
-            <div className="p-6 flex flex-col gap-4 items-center">
-              <div className="w-full h-[60vh] max-h-[520px] bg-black border-[6px] border-cyan-500 rounded-xl flex items-center justify-center overflow-hidden">
-                <Image
-                  src={selectedNode.image}
-                  alt={t(selectedNode.altKey)}
-                  width={900}
-                  height={600}
-                  className="h-full w-auto object-contain"
-                  style={{ imageRendering: "pixelated" }}
-                />
+            {/* Contenido */}
+            <div className="p-5 md:p-6 flex flex-col gap-4 items-center">
+              <div className="w-full flex items-center gap-3 md:gap-4">
+                {/* Botón anterior */}
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  className="hidden sm:flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#1c1234] text-yellow-300 border-[4px] border-black rounded-md shadow-[0_6px_0_#000] active:translate-y-[2px]"
+                >
+                  {"<"}
+                </button>
+
+                {/* Imagen grande */}
+                <div className="relative flex-1 h-[55vh] max-h-[520px] bg-black border-[6px] border-cyan-500 rounded-xl overflow-hidden">
+                  {/* overlay líneas retro */}
+                  <div className="pointer-events-none absolute inset-0 opacity-25 mix-blend-soft-light retro-scanlines" />
+                  <Image
+                    key={selectedNode.id}
+                    src={selectedNode.image}
+                    alt={t(selectedNode.altKey)}
+                    width={900}
+                    height={600}
+                    className="h-full w-auto max-w-full mx-auto object-contain retro-image"
+                    style={{ imageRendering: "pixelated" }}
+                  />
+                </div>
+
+                {/* Botón siguiente */}
+                <button
+                  type="button"
+                  onClick={goNext}
+                  className="hidden sm:flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#1c1234] text-yellow-300 border-[4px] border-black rounded-md shadow-[0_6px_0_#000] active:translate-y-[2px]"
+                >
+                  {">"}
+                </button>
               </div>
+
+              {/* Botones prev/next móviles */}
+              <div className="flex sm:hidden justify-center gap-4 mt-1">
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  className="flex items-center justify-center px-5 py-2 bg-[#1c1234] text-yellow-300 border-[4px] border-black rounded-md shadow-[0_6px_0_#000] active:translate-y-[2px] font-[PressStart] text-[10px]"
+                >
+                  {"<"} PREV
+                </button>
+                <button
+                  type="button"
+                  onClick={goNext}
+                  className="flex items-center justify-center px-5 py-2 bg-[#1c1234] text-yellow-300 border-[4px] border-black rounded-md shadow-[0_6px_0_#000] active:translate-y-[2px] font-[PressStart] text-[10px]"
+                >
+                  NEXT {">"}
+                </button>
+              </div>
+
               <p
-                className="text-white text-sm md:text-base leading-relaxed text-center"
+                className="text-white text-sm md:text-base leading-relaxed text-center mt-1"
                 style={{ fontFamily: "Arial, sans-serif" }}
               >
                 {t(selectedNode.descKey)}
               </p>
+
               <button
                 type="button"
-                onClick={() => setSelectedNode(null)}
+                onClick={closeModal}
                 className="mt-2 bg-[#5a3921] hover:bg-[#6e4528] text-white border-[6px] border-black rounded-md shadow-[0_8px_0_#000] hover:shadow-[0_5px_0_#000] active:translate-y-1 transition-transform px-10 py-3 font-[PressStart] text-[12px] md:text-[14px] tracking-wide"
               >
                 {t("timeline.back").toUpperCase()}
@@ -344,7 +412,7 @@ export default function LineaTiempoPage() {
         </div>
       )}
 
-      {/* Animación fadeIn para el tooltip */}
+      {/* Animaciones */}
       <style jsx>{`
         @keyframes fadeIn {
           from {
@@ -356,6 +424,53 @@ export default function LineaTiempoPage() {
         }
         .animate-fadeIn {
           animation: fadeIn 0.2s ease-out;
+        }
+
+        /* Aparición del modal con efecto retro / zoom */
+        @keyframes retroZoom {
+          0% {
+            transform: scale(0.75) translateY(10px);
+            opacity: 0;
+            filter: blur(1px);
+          }
+          40% {
+            transform: scale(1.03) translateY(-3px);
+            opacity: 1;
+            filter: none;
+          }
+          100% {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+          }
+        }
+        .retro-modal {
+          animation: retroZoom 180ms steps(4, end);
+        }
+
+        /* Líneas horizontales tipo CRT */
+        .retro-scanlines {
+          background-image: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.2) 1px,
+            rgba(0, 0, 0, 0) 3px
+          );
+          background-size: 100% 4px;
+        }
+
+        /* Pequeño “latigazo” al cambiar de foto */
+        @keyframes retroImageSwitch {
+          0% {
+            transform: scale(0.96) translateX(-4px);
+          }
+          50% {
+            transform: scale(1.02) translateX(2px);
+          }
+          100% {
+            transform: scale(1) translateX(0);
+          }
+        }
+        .retro-image {
+          animation: retroImageSwitch 160ms steps(3, end);
         }
       `}</style>
     </div>
