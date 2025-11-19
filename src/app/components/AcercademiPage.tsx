@@ -49,8 +49,8 @@ export default function AcercaPage() {
 
   // Alternar avatar/foto
   const [showPhoto, setShowPhoto] = useState(false);
-  const currentImage = showPhoto ? "/assets/mi-foto.png" : "/assets/avatar-parado.png";
-  const currentAlt = showPhoto ? "Foto de Deivid" : "Avatar pixel art";
+  const currentImage = showPhoto ? "/assets/perfil.jpg" : "/assets/avatar-parado.png";
+  const currentAlt = showPhoto ? "Foto de perfil" : "Avatar pixel art";
 
   // fondos
   const bgUrl = isDark ? "/assets/habitacion-gamer.png" : "/assets/modo-light-habitacion.png";
@@ -156,8 +156,8 @@ export default function AcercaPage() {
               <Image
                 src={currentImage}
                 alt={currentAlt}
-                width={150}
-                height={150}
+                width={190}
+                height={190}
                 style={{ imageRendering: "pixelated" }}
               />
             </div>
@@ -296,7 +296,7 @@ export default function AcercaPage() {
             <div
               className={`${panelCard} border-[6px] border-black rounded-md shadow-[0_8px_0_#000] px-4 py-3 sm:px-5 sm:py-4 w-full max-w-[520px] mx-auto md:mx-0`}
             >
-              <p className="text-[11px] sm:text-[12px] leading-relaxed sm:leading-relaxed text-white font-[PressStart]">
+              <p className="text-[11px] sm:text-[12px] leading-relaxed sm:leading-relaxed text:white font-[PressStart]">
                 {aboutText}
               </p>
             </div>
@@ -389,8 +389,9 @@ export default function AcercaPage() {
                 {">"}
               </button>
 
+              {/* Precarga silenciosa de imágenes */}
               <img src="/assets/avatar-parado.png" alt="" style={{ display: "none" }} />
-              <img src="/assets/mi-foto.png" alt="" style={{ display: "none" }} />
+              <img src="/assets/perfil.jpg" alt="" style={{ display: "none" }} />
             </div>
 
             {/* PASATIEMPOS */}
